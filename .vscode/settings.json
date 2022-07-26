@@ -1,0 +1,20 @@
+{
+    "files.associations": {
+        "yaul.h": "c",
+        "cpu.h": "c",
+        "endian.h": "c",
+        "cache.h": "c",
+        "map.h": "c",
+        "fileclient.h": "c",
+        "dbgio.h": "c",
+        "scrn.h": "c",
+        "vram.h": "c",
+        "stdbool.h": "c",
+        "bios.h": "c",
+        "stdint.h": "c",
+        "stdint-gcc.h": "c",
+        "vdp1.config.h": "c",
+        "sd_dir.h": "c",
+        "cmd.h": "c"
+    }
+}

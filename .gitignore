@@ -1,0 +1,10 @@
+*.o
+*.bin
+*.elf
+*.d
+*.s
+*.iso
+*.cue
+build/
+cd/
+node_modules
