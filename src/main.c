@@ -19,16 +19,37 @@ static void browser_get_item(browser_t *browser, uint32_t item, char *dst, int m
 {
     if (item < sd_dir->hdr.count)
     {
-        // sprintf(dst, "item: %d", item);
+        // sprintf(dst, "item: %x", sd_dir_entries[item].flag);
         strncpy(dst, sd_dir_entries[item].filename, max_len);
     }
+}
+
+static void browser_change_dir(browser_t *browser, int16_t id)
+{
+    fenrir_select_direntry(id);
+    fenrir_refresh_entries(sd_dir, sd_dir_entries);
+    browser->count = sd_dir->hdr.count;
+    browser->page = 0;
+    browser->selected = 0;
+    browser->old_page = -1;
 }
 
 static void browser_input_callback(browser_t *browser)
 {
     if (browser->digital.held.button.a)
     {
-        fenrir_launch_game(browser->selected, fenrir_boot_direct);
+        if (sd_dir_entries[browser->selected].flag & SD_DIR_FLAG_DIRECTORY)
+        {
+            browser_change_dir(browser, sd_dir_entries[browser->selected].id);
+        }
+        else
+        {
+            fenrir_launch_game(sd_dir_entries[browser->selected].id, fenrir_boot_cd_player);
+        }
+    }
+    else if (browser->digital.held.button.b)
+    {
+        browser_change_dir(browser, PARENT_DIRECTORY);
     }
 }
 
@@ -101,8 +122,8 @@ void vdp2_init()
 
     vdp2_vram_cycp_set(&vram_cycp);
 
-   // copy_bitmap_data(&format);
-   // copy_palette(&format);
+    // copy_bitmap_data(&format);
+    //  copy_palette(&format);
 
     vdp2_scrn_bitmap_format_set(&format);
     vdp2_scrn_priority_set(VDP2_SCRN_NBG0, 2);
@@ -118,9 +139,9 @@ void *zalloc(size_t l)
 
 int main(void)
 {
-    dbgio_init();
-    dbgio_dev_default_init(DBGIO_DEV_VDP2_ASYNC);
-    dbgio_dev_font_load();
+    //  dbgio_init();
+    // dbgio_dev_default_init(DBGIO_DEV_VDP2_ASYNC);
+    // dbgio_dev_font_load();
 
     vdp1_init();
     font_to_vram();
@@ -160,10 +181,31 @@ int main(void)
     browser.pal_base = (uintptr_t)vdp1_vram_partitions.clut_base;
     browser.gouraud_base = (uintptr_t)vdp1_vram_partitions.gouraud_base;
 
+    // set palette color
+    uint32_t pal_addr = (0x25C00000 | (uint32_t)browser.pal_base);
+    color_rgb1555_t *color_0 = (color_rgb1555_t *)pal_addr;
+    color_rgb1555_t *color_1 = (color_rgb1555_t *)(pal_addr + 16);
+    for (int i = 0; i < 32; i++)
+    {
+        color_0[i] = COLOR_RGB1555(1, 0x0F, i, 0x1F);
+        color_1[i] = COLOR_RGB1555(1, 0x0F, 0x0F, i);
+    }
+
+    // set gauraud color
+    uint32_t g_addr = (0x25C00000 | (uint32_t)browser.gouraud_base);
+    uint16_t *gouraud = (uint16_t *)g_addr;
+    memset(gouraud, 0xff, 4 * sizeof(uint16_t));
+
     browser_init(&browser);
+
     while (1)
     {
         browser_update(&browser);
+
+        vdp1_sync_render();
+        vdp1_sync();
+        vdp2_sync();
+        vdp2_sync_wait();
     }
 }
 

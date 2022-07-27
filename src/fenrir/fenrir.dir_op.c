@@ -31,7 +31,7 @@ int fenrir_select_direntry(int16_t id)
     // others
     else
     {
-        cd_block_sector_read(FENRIR_IO_SELECT + id, (void *)tmp);
+        cd_block_sector_read(FENRIR_IO_SELECT + id + 1, (void *)tmp);
     }
 
     // wait a few...

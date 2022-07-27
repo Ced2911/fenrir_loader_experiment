@@ -36,12 +36,12 @@ void fenrir_refresh_entries(sd_dir_t *sd_dir, sd_dir_entry_t *sd_dir_entries)
 {
     if (EMU_BUILD)
     {
-        sd_dir->hdr.count = 2000;
+        sd_dir->hdr.count = 100;
         sd_dir->hdr.use_cover = 1;
         // emulator
         for (int i = 0; i < sd_dir->hdr.count; i++)
         {
-            sd_dir_entries[i].id=i;
+            sd_dir_entries[i].id = i;
             snprintf(sd_dir_entries[i].filename, 55, "%d Dragon Ball Z - La Grande Legende des Boules de Cristal (France, Spain)", i);
         }
         // sd_dir->hdr.sd_card_status = 1;
@@ -59,7 +59,7 @@ void fenrir_refresh_entries(sd_dir_t *sd_dir, sd_dir_entry_t *sd_dir_entries)
         uint32_t sect_to_read = (sd_dir->hdr.count + n_entry_per_sector - 1) / n_entry_per_sector;
         uint32_t read = 0;
         if (sect_to_read > 0)
-            cd_block_sectors_read(FENRIR_READ_FILEBROWSER_START_FAD, (void *)sd_dir_entries, sect_to_read);
+            cd_block_sectors_read(FENRIR_READ_FILEBROWSER_START_FAD, (void *)sd_dir_entries, sect_to_read * 2048);
         else
             memset(sd_dir_entries, 0, 2048);
     }
@@ -68,37 +68,54 @@ void fenrir_refresh_entries(sd_dir_t *sd_dir, sd_dir_entry_t *sd_dir_entries)
     //     qsort(sd_dir_entries, sd_dir->hdr.count, sizeof(sd_dir_entry_t), sd_compare);
 }
 
-void fenrir_launch_game(uint32_t id, int boot_method)
+__attribute__((noreturn)) void fenrir_launch_game(uint32_t id, int boot_method)
 {
+    // stop interrupts and slave cpu
+    cpu_intc_mask_set(15);
+    scu_ic_mask_set(SCU_IC_MASK_ALL);
+    scu_dma_stop();
+    scu_dsp_program_stop();
+
+    cpu_dmac_stop();
+    cpu_dmac_disable();
+
+    smpc_smc_sshoff_call();
+
+    // launch game
     fenrir_call(FENRIR_EVENT_LAUNCH_ID_START_FAD + id);
 
-    // todo - stop all interupt + slave
+    // todo
+    // return;
 
-    switch (boot_method)
+    while (1)
     {
-    case fenrir_boot_dev:
+        switch (boot_method)
+        {
+            /** todo **/
+        case fenrir_boot_dev:
+            break;
+        case fenrir_boot_direct:
         /** todo **/
-        break;
-    case fenrir_boot_direct:
-    /** todo **/
-    case fenrir_boot_cd_player:
-        bios_cd_player_execute();
-        break;
-    case fenrir_boot_card:
-    /** todo **/
-    case fenrir_boot_reset:
-        smpc_smc_resenab_call();
-        break;
+        case fenrir_boot_cd_player:
+            bios_cd_player_execute();
+            break;
+        case fenrir_boot_card:
+        /** todo **/
+        case fenrir_boot_reset:
+            smpc_smc_nmireq_call();
+            break;
+        };
     }
 }
 
-// uint8_t call_buffer[2352];
+static uint8_t buffer[2352];
 void fenrir_call(uint32_t sector_addr)
 {
     /** todo **/
     // uint8_t *buffer = malloc(2048);
-    cd_block_cmd_disk_seek(sector_addr);
+    cd_block_sector_read(sector_addr, buffer);
     // free(buffer);
+    // cd_block_cmd_disk_seek(sector_addr);
 }
 
 void fenrir_set_region(uint32_t region_id)

@@ -94,7 +94,7 @@ static void browser_draw_items(browser_t *browser)
         // build and enqueue the polygone
         const vdp1_cmdt_draw_mode_t draw_mode = {
             .raw = 0x0000,
-            .bits.cc_mode = 4,    // enable gouraud
+            .bits.cc_mode = 0,    // todo: enable gouraud
             .bits.color_mode = 1, // 16color 4bit
             .bits.trans_pixel_disable = false,
             .bits.pre_clipping_disable = true,
@@ -147,6 +147,7 @@ void browser_update(browser_t *browser)
     smpc_peripheral_digital_port(1, &browser->digital);
 
     const int page = browser->page;
+    const int selected = browser->selected;
 
     /*****************************************************
      * Process input
@@ -192,6 +193,12 @@ void browser_update(browser_t *browser)
     /*****************************************************
      * Draw
      ****************************************************/
+    uint32_t pal = (uint32_t)browser->pal_base;
+    const int start = MIN(browser->page * browser->file_per_page, browser->count);
+    const int end = MIN(start + browser->file_per_page, browser->count);
+    const int item_count = end - start;
+    const int item_in_page = browser->selected % browser->file_per_page;
+
     cmdt = &cmdt_list->cmdts[ORDER_BUFFER_STARTING_INDEX];
 
     draw_selector(browser, browser->selected);
@@ -200,19 +207,26 @@ void browser_update(browser_t *browser)
     if (browser->old_page != browser->page)
         browser_draw_items(browser);
 
+    // Hightlight selected item
+    for (int i = 0; i < item_count; i++)
+    {
+        vdp1_cmdt_t *item_cmd = &cmdt_list->cmdts[ORDER_BUFFER_STARTING_INDEX + 1 + i];
+        uint32_t pal_offset = 0;
+        if (i == item_in_page)
+        {
+            pal_offset = 32;
+        }
+        vdp1_cmdt_param_color_mode1_set(item_cmd, pal + pal_offset);
+    }
+
     browser->old_page = browser->page;
 
     // finish drawing
-    cmdt = &cmdt_list->cmdts[ORDER_BUFFER_STARTING_INDEX + 1 + browser->file_per_page];
+    cmdt = &cmdt_list->cmdts[ORDER_BUFFER_STARTING_INDEX + 1 + item_count];
     vdp1_cmdt_end_set(cmdt++);
 
     cmdt_list->count = cmdt - cmdt_list->cmdts;
     vdp1_sync_cmdt_list_put(cmdt_list, 0);
-
-    vdp1_sync_render();
-    vdp1_sync();
-    vdp2_sync();
-    vdp2_sync_wait();
 }
 
 void browser_init(browser_t *browser)
@@ -220,7 +234,7 @@ void browser_init(browser_t *browser)
     /*****************************************************
      * Browser
      ****************************************************/
-    browser->selected = 2;
+    browser->selected = 0;
     browser->page = 0;
     browser->old_page = -1;
 

@@ -15,6 +15,13 @@
         "stdint-gcc.h": "c",
         "vdp1.config.h": "c",
         "sd_dir.h": "c",
-        "cmd.h": "c"
+        "cmd.h": "c",
+        "font.h": "c",
+        "assert.h": "c",
+        "vdp.h": "c",
+        "vdp2.h": "c",
+        "cram.h": "c",
+        "cdefs.h": "c",
+        "fenrir.h": "c"
     }
 }
