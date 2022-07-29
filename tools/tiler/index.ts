@@ -20,6 +20,7 @@ const map: number[] = []
 
 function buildPalette(image: Jimp) {
     const palette: Record<number, RGBA> = {}
+    palette[0] = { r: 0, g: 0, b: 0, a: 1 };
     image.scan(0, 0, image.bitmap.width, image.bitmap.height, function (x, y, idx) {
         var red = this.bitmap.data[idx + 0];
         var green = this.bitmap.data[idx + 1];
@@ -57,7 +58,7 @@ function RGB8888To555(rgba: RGBA) {
     return `COLOR_RGB1555(${rgba.a ? 1 : 0}, ${Math.floor(rgba.r / 8)}, ${Math.floor(rgba.g / 8)}, ${Math.floor(rgba.b / 8)})`
 }
 
-Jimp.read('../../assets/bitmap.png')
+Jimp.read('../../assets/mvsc_bg.png')
     .then(image => {
         const pal = buildPalette(image)
         const img = buildImage(image, pal)

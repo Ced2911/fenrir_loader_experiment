@@ -9,11 +9,11 @@
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
-#define BROWSER_OFFSET_Y 20
-#define BROWSER_OFFSET_X 20
-#define BROWSER_LINE_HEIGHT 16
-#define BROWSER_FOCUSED_ITEM_COLOR 1
-#define BROWSER_ITEM_COLOR 0
+#define BROWSER_OFFSET_Y (browser->browser_ui_config.x_offset)
+#define BROWSER_OFFSET_X (browser->browser_ui_config.y_offset)
+#define BROWSER_LINE_HEIGHT (browser->browser_ui_config.line_height)
+#define BROWSER_FOCUSED_ITEM_COLOR (browser->browser_ui_config.font_focus_color)
+#define BROWSER_ITEM_COLOR (browser->browser_ui_config.font_color)
 
 #define ELEMENT_COUNT(n) (sizeof((n)) / sizeof(*(n)))
 
@@ -30,7 +30,7 @@ static void draw_selector(browser_t *browser, int y)
     const int16_t area_y = browser->browser_ui_config.y_offset;
     const int16_t area_x = browser->browser_ui_config.bar.x;
     const int16_t area_w = browser->browser_ui_config.bar.w;
-    const int16_t bar_w = browser->browser_ui_config.bar.w - 4;
+    const int16_t bar_w = browser->browser_ui_config.bar.w;
     const int16_t bar_h = browser->browser_ui_config.bar.h;
 
     const vdp1_cmdt_draw_mode_t draw_mode = {
@@ -41,9 +41,9 @@ static void draw_selector(browser_t *browser, int y)
     const int selected = browser->selected;
     const int count = browser->count;
 
-    const int16_t position = (((selected << 16) / (count - 1)) * (area_h - bar_h - 4)) >> 16;
-    const int16_t bar_x = area_x + 2;
-    const int16_t bar_y = area_y + position + 2;
+    const int16_t position = (((selected << 16) / (count - 1)) * (area_h - bar_h)) >> 16;
+    const int16_t bar_x = area_x;
+    const int16_t bar_y = area_y + position;
 
     cmdt->cmd_xa = bar_x + bar_w;
     cmdt->cmd_ya = bar_y;

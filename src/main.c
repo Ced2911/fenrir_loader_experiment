@@ -75,7 +75,7 @@ void vdp2_init()
     format.cc_count = VDP2_SCRN_CCC_PALETTE_256;
     format.bitmap_pattern = (uint32_t)VDP2_VRAM_ADDR(0, 0x00000);
     format.color_palette = (uint32_t)VDP2_CRAM_MODE_0_OFFSET(0, 0, 0);
-    format.bitmap_size.width = 512;
+    format.bitmap_size.width = 1024;
     format.bitmap_size.height = 512;
     format.rp_mode = 0;
     format.sf_type = VDP2_SCRN_SF_TYPE_NONE;
@@ -122,12 +122,13 @@ void vdp2_init()
 
     vdp2_vram_cycp_set(&vram_cycp);
 
-    // copy_bitmap_data(&format);
-    //  copy_palette(&format);
+    copy_bitmap_data(&format);
+    copy_palette(&format);
 
     vdp2_scrn_bitmap_format_set(&format);
     vdp2_scrn_priority_set(VDP2_SCRN_NBG0, 2);
     vdp2_scrn_display_set(VDP2_SCRN_NBG0_DISP);
+    vdp2_scrn_scroll_x_set(VDP2_SCRN_NBG0, FIX16(512));
 }
 
 void *zalloc(size_t l)
@@ -162,14 +163,14 @@ int main(void)
         .browser_ui_config = {
             .font_color = 0,
             .font_focus_color = 1,
-            .line_height = 10,
+            .line_height = 16,
             .font_height = 9,
             .browser_w = 120,
-            .x_offset = 30,
-            .y_offset = 25,
+            .x_offset = 20,
+            .y_offset = 24,
             .bar = {
                 .visible = 1,
-                .x = 20,
+                .x = 12,
                 .h = 12,
                 .w = 5,
             },
@@ -196,6 +197,12 @@ int main(void)
     uint16_t *gouraud = (uint16_t *)g_addr;
     memset(gouraud, 0xff, 4 * sizeof(uint16_t));
 
+    // animate bg
+    fix16_t bg_x = FIX16(512);
+    fix16_t bg_y = FIX16(0);
+    fix16_t bg_v_x = FIX16(0.7);
+    fix16_t bg_v_y = FIX16(-0.7);
+
     browser_init(&browser);
 
     while (1)
@@ -206,6 +213,12 @@ int main(void)
         vdp1_sync();
         vdp2_sync();
         vdp2_sync_wait();
+
+        vdp2_scrn_scroll_x_set(VDP2_SCRN_NBG0, bg_x);
+        vdp2_scrn_scroll_y_set(VDP2_SCRN_NBG0, bg_y);
+
+        bg_x += bg_v_x;
+        bg_y += bg_v_y;
     }
 }
 
