@@ -84,7 +84,7 @@ static void browser_draw_items(browser_t *browser)
         const uint32_t gouraud = (uint32_t)browser->gouraud_base;
 
         // get item text
-        browser->get_item(browser, i, entry, 40);
+        browser->get_item(browser, i, entry, sizeof(entry));
 
         // create texture in ram buffer
         font_texture_t *tex = &browser->font_textures[i - start];
@@ -237,7 +237,4 @@ void browser_init(browser_t *browser)
     browser->selected = 0;
     browser->page = 0;
     browser->old_page = -1;
-
-    // Allocate a buffer for texture cache
-    browser->texture_buffer = (uintptr_t)malloc(browser->file_per_page * (512 * 16));
 }

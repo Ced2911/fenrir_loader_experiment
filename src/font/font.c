@@ -32,10 +32,10 @@ extern const char army12[33028];
 #define C_RGB(r, g, b) (((b)&0x1F) << 10 | ((g)&0x1F) << 5 | ((r)&0x1F) | 0x8000)
 
 static const uint16_t color_[] = {
-    C_RGB(0, 0, 0),
-    C_RGB(0, 0, 0),
-    C_RGB(0, 0, 0),
-    C_RGB(0, 0, 0),
+    C_RGB(31, 0, 0),
+    C_RGB(31, 0, 0),
+    C_RGB(31, 0, 0),
+    C_RGB(31, 0, 0),
     //
     C_RGB(31, 1, 31),
     C_RGB(31, 1, 31),
@@ -74,11 +74,26 @@ static const uint16_t color_[] = {
     C_RGB(31, 31, 31),
 };
 
-static const uint16_t palettes[] = {
-    0xFFFF,
-    0xFFFF,
-    0xFFFF,
-    0xFFFF,
+static const color_rgb1555_t palettes[] = {
+    COLOR_RGB1555(1, 0x0F, 0, 0x1F),
+    COLOR_RGB1555(1, 0x0F, 0, 0x1F),
+    COLOR_RGB1555(1, 0x0F, 0, 0x1F),
+    COLOR_RGB1555(1, 0x0F, 0, 0x1F),
+
+    COLOR_RGB1555(1, 0, 0x0F, 0x1F),
+    COLOR_RGB1555(1, 0, 0x0F, 0x1F),
+    COLOR_RGB1555(1, 0, 0x0F, 0x1F),
+    COLOR_RGB1555(1, 0, 0x0F, 0x1F),
+
+    COLOR_RGB1555(1, 0x1F, 0x0F, 0),
+    COLOR_RGB1555(1, 0x1F, 0x0F, 0),
+    COLOR_RGB1555(1, 0x1F, 0x0F, 0),
+    COLOR_RGB1555(1, 0x1F, 0x0F, 0),
+
+    COLOR_RGB1555(1, 0x0F, 0x1F, 0),
+    COLOR_RGB1555(1, 0x0F, 0x1F, 0),
+    COLOR_RGB1555(1, 0x0F, 0x1F, 0),
+    COLOR_RGB1555(1, 0x0F, 0x1F, 0),
 };
 
 static void font_dma_upload(menu_font_vdp_t *menu_font_vdp, void *dst, void *src, size_t len)
@@ -174,33 +189,38 @@ static inline void memcpy4bpp(uint8_t *d, uint8_t *s, uint32_t nb, int off)
 #define CHAR_W 16
 #define CHAR_H 16
 
-static uint8_t __draw_font_10(uint8_t letter, int x, int y, uint8_t *dst, uint32_t pitch, uint16_t color)
+static uint8_t font_get_letter_width(uint8_t letter)
 {
-    extern uint8_t bg0_vram[];
-    const uint32_t w = CHAR_W;
+    return THEME_FONT->font_width[letter];
+}
+
+static uint8_t __draw_font_10(uint8_t letter, int x, int y, uint8_t *dst, uint32_t pitch)
+{
+    const uint8_t letter_w = font_get_letter_width(letter);
     const uint32_t h = CHAR_H;
+    const uint32_t w = CHAR_W;
+
     uint8_t *font = (uint8_t *)(THEME_FONT->font);
     uint8_t *src = &font[(letter - 32) * ((w * h / 2))];
 
     for (uint32_t yoff = y; yoff < ((y + h)); yoff++)
     {
-        memcpy4bpp(&dst[yoff * pitch + x / 2], src, w, x & 1);
+        memcpy4bpp(&dst[yoff * pitch + x / 2], src, letter_w, x & 1);
         src += w / 2;
     }
 
-    return THEME_FONT->font_width[letter];
+    return letter_w;
 }
 
 size_t font_texture_font_create(font_texture_t *tex, char *text)
 {
-    int w_str = font_get_text_len(text) + 8;
+    int w_str = font_get_text_len(text);
+    uint32_t pitch = align_8(w_str + 1) / 2;
     int length = strlen(text);
-    uint32_t pitch = align_8((w_str + 1) / 2);
     int x = 0;
     int y = 0;
     tex->h = CHAR_H;
     tex->w = pitch * 2;
-    uint16_t color = 1;
 
     // erase texture
     uint32_t texture_size = tex->h * pitch;
@@ -210,16 +230,11 @@ size_t font_texture_font_create(font_texture_t *tex, char *text)
     for (int i = 0; i < length; i++)
     {
         if (text[i] != ' ')
-            x += __draw_font_10(text[i], x, y, (uint8_t *)tex->addr, pitch, color);
+            x += __draw_font_10(text[i], x, y, (uint8_t *)tex->addr, pitch);
         else
             x += THEME_FONT->font_width[' '];
     }
     return tex->h * pitch;
-}
-
-static uint8_t font_get_letter_width(uint8_t letter)
-{
-    return THEME_FONT->font_width[letter];
 }
 
 int font_get_text_len(char *format, ...)

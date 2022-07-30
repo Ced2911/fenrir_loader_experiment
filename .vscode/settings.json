@@ -22,6 +22,7 @@
         "vdp2.h": "c",
         "cram.h": "c",
         "cdefs.h": "c",
-        "fenrir.h": "c"
+        "fenrir.h": "c",
+        "browser.h": "c"
     }
 }

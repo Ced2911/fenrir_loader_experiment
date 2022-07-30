@@ -4,7 +4,7 @@
 #include "fenrir/fenrir.h"
 #include "vdp1.config.h"
 #include "font/font.h"
-#include "screens/browser.h"
+#include "screens/gamelist.h"
 #include "../assets/bitmap.h"
 #include "../assets/test.h"
 
@@ -14,44 +14,6 @@
 sd_dir_t *sd_dir;
 status_sector_t *status_sector;
 sd_dir_entry_t *sd_dir_entries;
-
-static void browser_get_item(browser_t *browser, uint32_t item, char *dst, int max_len)
-{
-    if (item < sd_dir->hdr.count)
-    {
-        // sprintf(dst, "item: %x", sd_dir_entries[item].flag);
-        strncpy(dst, sd_dir_entries[item].filename, max_len);
-    }
-}
-
-static void browser_change_dir(browser_t *browser, int16_t id)
-{
-    fenrir_select_direntry(id);
-    fenrir_refresh_entries(sd_dir, sd_dir_entries);
-    browser->count = sd_dir->hdr.count;
-    browser->page = 0;
-    browser->selected = 0;
-    browser->old_page = -1;
-}
-
-static void browser_input_callback(browser_t *browser)
-{
-    if (browser->digital.held.button.a)
-    {
-        if (sd_dir_entries[browser->selected].flag & SD_DIR_FLAG_DIRECTORY)
-        {
-            browser_change_dir(browser, sd_dir_entries[browser->selected].id);
-        }
-        else
-        {
-            fenrir_launch_game(sd_dir_entries[browser->selected].id, fenrir_boot_cd_player);
-        }
-    }
-    else if (browser->digital.held.button.b)
-    {
-        browser_change_dir(browser, PARENT_DIRECTORY);
-    }
-}
 
 static void copy_bitmap_data(const vdp2_scrn_bitmap_format_t *format)
 {
@@ -140,6 +102,8 @@ void *zalloc(size_t l)
 
 int main(void)
 {
+    vdp1_vram_partitions_t vdp1_vram_partitions;
+    vdp1_vram_partitions_get(&vdp1_vram_partitions);
     //  dbgio_init();
     // dbgio_dev_default_init(DBGIO_DEV_VDP2_ASYNC);
     // dbgio_dev_font_load();
@@ -152,73 +116,17 @@ int main(void)
     status_sector = (status_sector_t *)zalloc(sizeof(status_sector_t));
     sd_dir_entries = (sd_dir_entry_t *)zalloc(sizeof(sd_dir_entry_t) * 2500);
 
-    fenrir_read_status_sector(status_sector);
-    fenrir_refresh_entries(sd_dir, sd_dir_entries);
-
-    browser_t browser = {
-        .count = sd_dir->hdr.count,
-        .file_per_page = 12,
-        .input_handler = browser_input_callback,
-        .get_item = browser_get_item,
-        .browser_ui_config = {
-            .font_color = 0,
-            .font_focus_color = 1,
-            .line_height = 16,
-            .font_height = 9,
-            .browser_w = 120,
-            .x_offset = 20,
-            .y_offset = 24,
-            .bar = {
-                .visible = 1,
-                .x = 12,
-                .h = 12,
-                .w = 5,
-            },
-        }};
-
-    vdp1_vram_partitions_t vdp1_vram_partitions;
-    vdp1_vram_partitions_get(&vdp1_vram_partitions);
-    browser.texture_base = (uintptr_t)vdp1_vram_partitions.texture_base;
-    browser.pal_base = (uintptr_t)vdp1_vram_partitions.clut_base;
-    browser.gouraud_base = (uintptr_t)vdp1_vram_partitions.gouraud_base;
-
-    // set palette color
-    uint32_t pal_addr = (0x25C00000 | (uint32_t)browser.pal_base);
-    color_rgb1555_t *color_0 = (color_rgb1555_t *)pal_addr;
-    color_rgb1555_t *color_1 = (color_rgb1555_t *)(pal_addr + 16);
-    for (int i = 0; i < 32; i++)
-    {
-        color_0[i] = COLOR_RGB1555(1, 0x0F, i, 0x1F);
-        color_1[i] = COLOR_RGB1555(1, 0x0F, 0x0F, i);
-    }
-
-    // set gauraud color
-    uint32_t g_addr = (0x25C00000 | (uint32_t)browser.gouraud_base);
-    uint16_t *gouraud = (uint16_t *)g_addr;
-    memset(gouraud, 0xff, 4 * sizeof(uint16_t));
-
-    // animate bg
-    fix16_t bg_x = FIX16(512);
-    fix16_t bg_y = FIX16(0);
-    fix16_t bg_v_x = FIX16(0.7);
-    fix16_t bg_v_y = FIX16(-0.7);
-
-    browser_init(&browser);
+    screen_t *screen = &gamelist_screen;
+    screen->init();
 
     while (1)
     {
-        browser_update(&browser);
+        screen->update();
 
         vdp1_sync_render();
         vdp1_sync();
         vdp2_sync();
         vdp2_sync_wait();
-
-        vdp2_scrn_scroll_x_set(VDP2_SCRN_NBG0, bg_x);
-        vdp2_scrn_scroll_y_set(VDP2_SCRN_NBG0, bg_y);
-
-        bg_x += bg_v_x;
-        bg_y += bg_v_y;
     }
 }
 
