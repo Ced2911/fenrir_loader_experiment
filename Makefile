@@ -10,6 +10,7 @@ SH_SRCS:= \
 	assets/army12.c \
 	assets/bitmap.c \
 	src/main.c \
+	src/noise.c \
 	src/vdp1.config.c \
 	src/font/font.c \
 	src/fenrir/fenrir.c \

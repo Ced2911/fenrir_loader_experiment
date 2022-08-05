@@ -33,9 +33,9 @@ extern const char army12[33028];
 
 static const uint16_t color_[] = {
     C_RGB(31, 0, 0),
-    C_RGB(31, 0, 0),
-    C_RGB(31, 0, 0),
-    C_RGB(31, 0, 0),
+    C_RGB(31, 31, 0),
+    C_RGB(31, 0, 31),
+    C_RGB(0, 0, 31),
     //
     C_RGB(31, 1, 31),
     C_RGB(31, 1, 31),
@@ -160,14 +160,12 @@ uint8_t draw_char_width(uint8_t letter)
     return font->font_width[letter];
 }
 
-//
-// 4bpp font support
-//
 static inline void memcpy4bpp(uint8_t *d, uint8_t *s, uint32_t nb, int off)
 {
+    // src is always aligned to 8b
     if (off == 0)
     {
-        for (uint32_t xoff = 0; xoff < (nb / 2); xoff++)
+        for (uint32_t xoff = 0; xoff < nb; xoff++)
         {
             *d++ = *s++;
         }
@@ -175,9 +173,8 @@ static inline void memcpy4bpp(uint8_t *d, uint8_t *s, uint32_t nb, int off)
     else
     {
         uint8_t s0 = d[0] & 0xF;
-        for (uint32_t xoff = 0; xoff < (nb / 2); xoff++)
+        for (uint32_t xoff = 0; xoff < nb; xoff++)
         {
-            //*d++ = *s++;
             uint8_t s1 = *s++;
             *d++ = s0 << 4 | s1 >> 4;
 
@@ -205,7 +202,7 @@ static uint8_t __draw_font_10(uint8_t letter, int x, int y, uint8_t *dst, uint32
 
     for (uint32_t yoff = y; yoff < ((y + h)); yoff++)
     {
-        memcpy4bpp(&dst[yoff * pitch + x / 2], src, letter_w, x & 1);
+        memcpy4bpp(&dst[yoff * pitch + x / 2], src, letter_w / 2, x & 1);
         src += w / 2;
     }
 

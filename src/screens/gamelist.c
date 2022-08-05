@@ -2,6 +2,12 @@
 #include "browser.h"
 #include "screen.h"
 #include "fenrir/fenrir.h"
+#include "vdp2.config.h"
+#include "noise.h"
+
+extern sd_dir_t *sd_dir;
+extern status_sector_t *status_sector;
+extern sd_dir_entry_t *sd_dir_entries;
 
 // @todo theme ?
 typedef struct
@@ -12,11 +18,74 @@ typedef struct
     fix16_t bg_v_y;
 } gamelist_ctx_t;
 
-extern sd_dir_t *sd_dir;
-extern status_sector_t *status_sector;
-extern sd_dir_entry_t *sd_dir_entries;
+static gamelist_ctx_t gamelist_ctx = {
+    .bg_x = FIX16(512),
+    .bg_y = FIX16(0),
+    .bg_v_x = FIX16(0.7),
+    .bg_v_y = FIX16(-0.7)};
 
-gamelist_ctx_t gamelist_ctx;
+static void browser_input_callback(browser_t *browser);
+static void browser_change_dir(browser_t *browser, int16_t id);
+static void browser_get_item(browser_t *browser, uint32_t item, char *dst, int max_len);
+
+static browser_t browser = {
+    .count = 0,
+    .file_per_page = 12,
+    .input_handler = browser_input_callback,
+    .get_item = browser_get_item,
+    .browser_ui_config = {
+        .font_color = 0,
+        .font_focus_color = 1,
+        .line_height = 16,
+        .font_height = 9,
+        .browser_w = 120,
+        .x_offset = 20,
+        .y_offset = 24,
+        .bar = {
+            .visible = 1,
+            .x = 12,
+            .h = 12,
+            .w = 5,
+        },
+    }};
+
+// 00c040
+// 00f000
+// 008060
+// 00f0f0
+
+#define NOISE_PALETTES                                    \
+    {                                                     \
+        COLOR_RGB1555(1, 0x00, 0xC0 >> 3, 0x40 >> 3),     \
+            COLOR_RGB1555(1, 0x00, 0xF0 >> 3, 0x00 >> 3), \
+            COLOR_RGB1555(1, 0x00, 0x80 >> 3, 0x60 >> 3), \
+            COLOR_RGB1555(1, 0x00, 0xF0 >> 3, 0xF0 >> 3), \
+                                                          \
+            COLOR_RGB1555(1, 0x00, 0xC0 >> 3, 0x40 >> 3), \
+            COLOR_RGB1555(1, 0x00, 0xF0 >> 3, 0x00 >> 3), \
+            COLOR_RGB1555(1, 0x00, 0x80 >> 3, 0x60 >> 3), \
+            COLOR_RGB1555(1, 0x00, 0xF0 >> 3, 0xF0 >> 3), \
+                                                          \
+            COLOR_RGB1555(1, 0x00, 0xC0 >> 3, 0x40 >> 3), \
+            COLOR_RGB1555(1, 0x00, 0xF0 >> 3, 0x00 >> 3), \
+            COLOR_RGB1555(1, 0x00, 0x80 >> 3, 0x60 >> 3), \
+            COLOR_RGB1555(1, 0x00, 0xF0 >> 3, 0xF0 >> 3), \
+                                                          \
+            COLOR_RGB1555(1, 0x00, 0xC0 >> 3, 0x40 >> 3), \
+            COLOR_RGB1555(1, 0x00, 0xF0 >> 3, 0x00 >> 3), \
+            COLOR_RGB1555(1, 0x00, 0x80 >> 3, 0x60 >> 3), \
+            COLOR_RGB1555(1, 0x00, 0xF0 >> 3, 0xF0 >> 3), \
+    }
+
+noise_cfg_t noise_cfg = {
+    .cell_addr = NBG1_CELL_ADDR,
+    .pattern_addr = NGB1_PATTERN_ADDR,
+    .pal_addr = VDP2_CRAM_ADDR(0x100),
+    .noise_palettes = NOISE_PALETTES,
+    .noise_palettes_count = 16,
+    .texture_h = 256,
+    .texture_w = 256,
+};
 
 static void browser_get_item(browser_t *browser, uint32_t item, char *dst, int max_len)
 {
@@ -57,27 +126,6 @@ static void browser_input_callback(browser_t *browser)
     }
 }
 
-static browser_t browser = {
-    .count = 0,
-    .file_per_page = 12,
-    .input_handler = browser_input_callback,
-    .get_item = browser_get_item,
-    .browser_ui_config = {
-        .font_color = 0,
-        .font_focus_color = 1,
-        .line_height = 16,
-        .font_height = 9,
-        .browser_w = 120,
-        .x_offset = 20,
-        .y_offset = 24,
-        .bar = {
-            .visible = 1,
-            .x = 12,
-            .h = 12,
-            .w = 5,
-        },
-    }};
-
 static void gamelist_init()
 {
     // setup browser textures
@@ -86,12 +134,6 @@ static void gamelist_init()
     browser.texture_base = (uintptr_t)vdp1_vram_partitions.texture_base;
     browser.pal_base = (uintptr_t)vdp1_vram_partitions.clut_base;
     browser.gouraud_base = (uintptr_t)vdp1_vram_partitions.gouraud_base;
-
-    // setup vdp2
-    gamelist_ctx.bg_x = FIX16(512);
-    gamelist_ctx.bg_y = FIX16(0);
-    gamelist_ctx.bg_v_x = FIX16(0.7);
-    gamelist_ctx.bg_v_y = FIX16(-0.7);
 
     // Read gamelist
     fenrir_read_status_sector(status_sector);
@@ -102,6 +144,8 @@ static void gamelist_init()
 
     browser_init(&browser);
     browser_update(&browser);
+
+    noise_init(&noise_cfg);
 }
 
 static void gamelist_update()
@@ -115,6 +159,8 @@ static void gamelist_update()
 
     // render browser
     browser_update(&browser);
+
+    noise_update(&noise_cfg);
 }
 
 screen_t gamelist_screen = {

@@ -23,6 +23,8 @@
         "cram.h": "c",
         "cdefs.h": "c",
         "fenrir.h": "c",
-        "browser.h": "c"
+        "browser.h": "c",
+        "sprite.h": "c",
+        "noise.h": "c"
     }
 }
