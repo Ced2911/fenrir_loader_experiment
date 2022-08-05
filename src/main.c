@@ -31,39 +31,18 @@ static void copy_palette(const vdp2_scrn_bitmap_format_t *format)
 
 static void vdp2_ngb0_init()
 {
-#if 0
-    vdp2_scrn_bitmap_format_t format = {
-        .scroll_screen = VDP2_SCRN_NBG0,
-        .cc_count = VDP2_SCRN_CCC_PALETTE_256,
-        .bitmap_pattern = (uint32_t)NGB0_PATTERN_ADDR,
-        .color_palette = (uint32_t)NBG0_COLOR_ADDR,
-        .bitmap_size.width = 1024,
-        .bitmap_size.height = 512,
-        .rp_mode = 0,
-        .sf_type = VDP2_SCRN_SF_TYPE_NONE,
-        .sf_code = VDP2_SCRN_SF_CODE_A,
-        .sf_mode = 0,
-    };
-
-    copy_bitmap_data(&format);
-    copy_palette(&format);
-
-    vdp2_scrn_bitmap_format_set(&format);
-    vdp2_scrn_priority_set(VDP2_SCRN_NBG0, 2);
-    vdp2_scrn_scroll_x_set(VDP2_SCRN_NBG0, FIX16(512));
-#else
     const vdp2_scrn_cell_format_t format = {
         .scroll_screen = VDP2_SCRN_NBG0,
         .cc_count = VDP2_SCRN_CCC_PALETTE_256,
         .character_size = 1 * 1,
         .pnd_size = 1,
         .auxiliary_mode = 1,
-        .plane_size = 2 * 2,
+        .plane_size = 1 * 1,
         .cp_table = NBG0_CELL_ADDR,
         .color_palette = NBG0_COLOR_ADDR,
         .map_bases = {
             .planes = {
-                NGB0_PATTERN_ADDR, NGB0_PATTERN_ADDR + 0x04000, NGB0_PATTERN_ADDR + 0x08000, NGB0_PATTERN_ADDR + 0x0c000}}};
+                NGB0_PATTERN_ADDR, NGB0_PATTERN_ADDR + 0x02000, NGB0_PATTERN_ADDR + 0x00000, NGB0_PATTERN_ADDR + 0x02000}}};
 
     vdp_dma_enqueue((void *)NBG0_COLOR_ADDR, pal, palLength);
     vdp_dma_enqueue((void *)NBG0_CELL_ADDR, cells, cellsLength);
@@ -71,8 +50,6 @@ static void vdp2_ngb0_init()
 
     vdp2_scrn_cell_format_set(&format);
     vdp2_scrn_priority_set(VDP2_SCRN_NBG0, 2);
-    // vdp2_scrn_scroll_x_set(VDP2_SCRN_NBG0, FIX16(512));
-#endif
 }
 
 static void vdp2_ngb1_init()
