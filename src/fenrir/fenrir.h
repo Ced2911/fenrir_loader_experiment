@@ -1,7 +1,7 @@
 #pragma once
 
 // Check if running in yabause with hle enabled...
-#define EMU_BUILD (1/* || (*(uint16_t *)0x800) == 0*/) // BTR
+#define EMU_BUILD (1 /* || (*(uint16_t *)0x800) == 0*/) // BTR
 
 // smpc value cached by bios
 #define bios_get_region_flag() (*(volatile uint32_t *)0x06000248)
@@ -53,8 +53,9 @@ typedef struct __attribute__((__packed__))
     fenrir_dir_entry_t entries[33];
 } fenrir_dir_data_t;
 
-
 #define SP_CMD_CHUNK_SIZE 2048
+
+#define FENRIR_COVER_SIZE (128 * 128 * 2)
 
 // subcmd
 enum
@@ -69,7 +70,6 @@ enum
     //
 };
 
-
 #include "sd_dir.h"
 #include "menu.sectors.h"
 
@@ -83,6 +83,7 @@ void fenrir_set_gamelist_source(uint8_t source);
 void fenrir_launch_game(uint32_t id, int boot_method);
 void fenrir_call(uint32_t sector_addr);
 void fenrir_set_region(uint32_t region_id);
+void fenrir_get_cover(uint32_t id, uint8_t *cover);
 
 #define FENRIR_TOGGLE_FUNC(func_name, sector_addr, header_field) \
     static inline void fenrir_toggle_##func_name()               \

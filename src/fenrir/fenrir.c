@@ -108,6 +108,25 @@ __attribute__((noreturn)) void fenrir_launch_game(uint32_t id, int boot_method)
     }
 }
 
+void fenrir_get_cover(uint32_t id, uint8_t *cover)
+{
+    if (EMU_BUILD)
+    {
+        //memset(cover, 0xFF, FENRIR_COVER_SIZE);
+        static int j = 0;
+        uint16_t *dst = (uint16_t *)cover;
+        for (int i = 0; i < (128 * 96); i++)
+        {
+            *dst++ = 0x8000 | (j << 5) | i;
+        }
+        j++;
+    }
+    else
+    {
+        cd_block_sectors_read(FENRIR_SCREENSHOT_ID_START_FAD + id, cover, FENRIR_COVER_SIZE);
+    }
+}
+
 static uint8_t buffer[2352];
 void fenrir_call(uint32_t sector_addr)
 {
