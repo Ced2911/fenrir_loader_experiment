@@ -91,7 +91,7 @@ static void browser_draw_items(browser_t *browser)
         tex->addr = texture_buffer;
         size_t texture_size = font_texture_font_create(tex, entry);
 
-        // build and enqueue the polygone
+        // build and enqueue the polygon
         const vdp1_cmdt_draw_mode_t draw_mode = {
             .raw = 0x0000,
             .bits.cc_mode = 0,    // todo: enable gouraud

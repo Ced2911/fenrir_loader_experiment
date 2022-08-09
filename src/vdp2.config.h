@@ -1,4 +1,4 @@
-//
+#pragma once
 
 #define NGB0_PATTERN_ADDR (VDP2_VRAM_ADDR(0, 0x00000))  // 0x4000 used
 #define NBG0_CELL_ADDR (VDP2_VRAM_ADDR(1, 0x00000))
@@ -9,3 +9,6 @@
 #define NBG1_COLOR_ADDR (VDP2_CRAM_MODE_0_OFFSET(0, 0, 0))
 
 #define RBG0_BITMAP_ADDR  (VDP2_VRAM_ADDR(2, 0x00000))
+
+
+void vdp2_init();

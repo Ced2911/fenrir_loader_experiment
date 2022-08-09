@@ -2,7 +2,9 @@
 #include "browser.h"
 #include "screen.h"
 #include "fenrir/fenrir.h"
+#include "vdp1.config.h"
 #include "vdp2.config.h"
+#include "ui.config.h"
 #include "noise.h"
 
 #define _CPU_IN_SPINLOCK(x)         \
@@ -68,7 +70,7 @@ noise_cfg_t noise_cfg = {
     .pattern_addr = NGB1_PATTERN_ADDR,
     .pal_addr = VDP2_CRAM_ADDR(0x100),
     .cell_w = 128 / 8,
-    .cell_h = 128 / 8,
+    .cell_h = 96 / 8,
     .cell_x = 200 / 8,
     .cell_y = 100 / 8};
 
@@ -120,7 +122,9 @@ static void _slave_entry(void)
 
     _CPU_IN_SPINLOCK({ gamelist_ctx.last_selected_item = browser.selected; })
 
-    fenrir_get_cover(item, RBG0_BITMAP_ADDR /*gamelist_ctx.game_cover*/);
+    uintptr_t addr = browser.texture_base + FONT_CACHE_SIZE;
+
+    fenrir_get_cover(item, addr /*gamelist_ctx.game_cover*/);
     // vdp_dma_enqueue(RBG0_BITMAP_ADDR, gamelist_ctx.game_cover, FENRIR_COVER_SIZE);
     // scu_dma_transfer(0, RBG0_BITMAP_ADDR, gamelist_ctx.game_cover, FENRIR_COVER_SIZE);
 
@@ -160,7 +164,7 @@ static void gamelist_init()
 
     // init ressources
     gamelist_ctx.game_cover = (uintptr_t)malloc(FENRIR_COVER_SIZE);
-    browser.texture_buffer = (uintptr_t)malloc(browser.file_per_page * (512 * 16));
+    browser.texture_buffer = (uintptr_t)malloc(FONT_CACHE_SIZE);
     noise_init(&noise_cfg);
 
     // setup browser textures
@@ -185,6 +189,31 @@ static void gamelist_init()
 
     // setup slave
     cpu_dual_slave_set(_slave_entry);
+
+    // add preview area
+    vdp1_cmdt_t *cmdt = &cmdt_list->cmdts[ORDER_BUFFER_SKIP];
+    // build and enqueue the polygon
+    const vdp1_cmdt_draw_mode_t draw_mode = {
+        .raw = 0x0000,
+        .bits.cc_mode = 0,                                // todo: enable gouraud
+        .bits.color_mode = CMDT_PMOD_CM_RGB_32768_COLORS, // 16color 4bit
+        .bits.trans_pixel_disable = false,
+        .bits.pre_clipping_disable = true,
+        .bits.end_code_disable = true};
+
+    const vdp1_cmdt_color_bank_t color_bank = {
+        .type_0.data.dc = 0};
+
+    cmdt->cmd_xa = 80;
+    cmdt->cmd_ya = 120;
+
+    vdp1_cmdt_normal_sprite_set(cmdt);
+    vdp1_cmdt_param_color_mode1_set(cmdt, 0);
+    vdp1_cmdt_param_gouraud_base_set(cmdt, 0);
+    vdp1_cmdt_param_draw_mode_set(cmdt, draw_mode);
+    vdp1_cmdt_param_size_set(cmdt, 128, 96);
+
+    vdp1_cmdt_param_char_base_set(cmdt, browser.texture_base + FONT_CACHE_SIZE);
 }
 
 static void gamelist_destroy()

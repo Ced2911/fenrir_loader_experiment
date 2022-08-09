@@ -12,6 +12,8 @@ SH_SRCS:= \
 	src/main.c \
 	src/noise.c \
 	src/vdp1.config.c \
+	src/vdp2.config.c \
+	src/ui.config.c \
 	src/font/font.c \
 	src/fenrir/fenrir.c \
 	src/fenrir/fenrir.dir_op.c \
