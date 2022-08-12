@@ -16,7 +16,10 @@ static void vdp2_ngb0_init()
         .color_palette = NBG0_COLOR_ADDR,
         .map_bases = {
             .planes = {
-                NGB0_PATTERN_ADDR, NGB0_PATTERN_ADDR + 0x02000, NGB0_PATTERN_ADDR + 0x00000, NGB0_PATTERN_ADDR + 0x02000}}};
+                NGB0_PATTERN_ADDR + 0x00000,
+                NGB0_PATTERN_ADDR + 0x02000,
+                NGB0_PATTERN_ADDR + 0x00000,
+                NGB0_PATTERN_ADDR + 0x02000}}};
 
     vdp_dma_enqueue((void *)NBG0_COLOR_ADDR,
                     (void *)ui_config.screens.gamelist.background.pal_addr,

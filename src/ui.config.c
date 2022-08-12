@@ -1,7 +1,7 @@
 #include <yaul.h>
 #include "ui.config.h"
 #include "../assets/bitmap.h"
-#include "../assets/test.h"
+#include "../assets/mvsc_bg.h"
 
 #define NOISE_PALETTES                                    \
     {                                                     \
@@ -32,12 +32,12 @@ ui_config_t ui_config = {
             .background = {
                 .velocity_x = FIX16(0.7),
                 .velocity_y = FIX16(-0.7),
-                .cell_addr = (uintptr_t)mvsc__cell,
-                .cell_sz = mvsc__cell_sz,
-                .pal_addr = (uintptr_t)mvsc__pal,
-                .pal_sz = mvsc__pal_sz,
-                .pattern_addr = (uintptr_t)mvsc__pattern,
-                .pattern_sz = mvsc__pattern_sz
+                .cell_addr = (uintptr_t)mvsc_bg_cell,
+                .cell_sz = mvsc_bg_cell_sz,
+                .pal_addr = (uintptr_t)mvsc_bg_pal,
+                .pal_sz = mvsc_bg_pal_sz,
+                .pattern_addr = (uintptr_t)mvsc_bg_pattern,
+                .pattern_sz = mvsc_bg_pattern_sz
             },
             .cover = {
                 .noise_palettes = NOISE_PALETTES,

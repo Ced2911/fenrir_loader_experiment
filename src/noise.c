@@ -46,7 +46,7 @@ void noise_init(noise_cfg_t *noise_cfg)
     }
 
     // add noise
-    for (int n, y = noise_cfg->cell_y; y < (noise_cfg->cell_y + noise_cfg->cell_h); y++)
+    for (size_t n = 0, y = noise_cfg->cell_y; y < (noise_cfg->cell_y + noise_cfg->cell_h); y++)
     {
         for (int x = noise_cfg->cell_x; x < (noise_cfg->cell_x + noise_cfg->cell_w); x++, n++)
         {
@@ -54,7 +54,7 @@ void noise_init(noise_cfg_t *noise_cfg)
         }
     }
 
-    vdp_dma_enqueue((void *)noise_cfg->pal_addr, noise_cfg->noise_palette, noise_cfg->noise_palettes_sz);
+    vdp_dma_enqueue((void *)noise_cfg->pal_addr, (void *)noise_cfg->noise_palette, noise_cfg->noise_palettes_sz);
 }
 
 void noise_update(noise_cfg_t *noise_cfg)
@@ -62,10 +62,10 @@ void noise_update(noise_cfg_t *noise_cfg)
     // change noise palette to create noise animation
     static int i = 0;
     i++;
-    for (int x = 0; x < noise_cfg->noise_palettes_sz / sizeof(color_rgb1555_t); x++)
+    for (size_t x = 0; x < noise_cfg->noise_palettes_sz / sizeof(color_rgb1555_t); x++)
     {
         uint8_t idx = (__rand() >> 16) & 0xf;
         work_palettes[x] = ((color_rgb1555_t *)noise_cfg->noise_palette)[idx];
     }
-    vdp_dma_enqueue((void *)noise_cfg->pal_addr, work_palettes, noise_cfg->noise_palettes_sz);
+    vdp_dma_enqueue((void *)noise_cfg->pal_addr, (void *)work_palettes, noise_cfg->noise_palettes_sz);
 }

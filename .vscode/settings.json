@@ -27,6 +27,7 @@
         "sprite.h": "c",
         "noise.h": "c",
         "test.h": "c",
-        "bitmap.h": "c"
+        "bitmap.h": "c",
+        "mvsc_bg.h": "c"
     }
 }

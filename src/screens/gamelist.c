@@ -100,13 +100,16 @@ static void browser_input_callback(browser_t *browser)
 
 static void _slave_entry(void)
 {
-    int item = browser.selected;
+    static int item = 0;
+    int selected = 0;
 
-    _CPU_IN_SPINLOCK({ gamelist_ctx.last_selected_item = browser.selected; })
+    _CPU_IN_SPINLOCK({ selected = browser.selected; })
 
     uintptr_t addr = browser.texture_base + FONT_CACHE_SIZE;
 
-    fenrir_get_cover(item, addr);
+    fenrir_get_cover(selected, (uint8_t *)addr);
+
+    item = selected;
 }
 
 static void gamelist_vbk()
@@ -133,6 +136,7 @@ static void gamelist_update()
     if (browser.selected != gamelist_ctx.last_selected_item)
     {
         cpu_dual_slave_notify();
+        gamelist_ctx.last_selected_item = browser.selected;
     }
 }
 
@@ -167,7 +171,7 @@ static void gamelist_init()
      * Apply theme configuration
      ****************************************************/
     // noise theme
-    noise_cfg.noise_palette = ui_config.screens.gamelist.cover.noise_palettes;
+    noise_cfg.noise_palette = (uintptr_t)ui_config.screens.gamelist.cover.noise_palettes;
     noise_cfg.noise_palettes_sz = NOISE_PALETTE_SIZE * sizeof(int16_t);
     noise_cfg.cell_x = ui_config.screens.gamelist.cover.x / 8;
     noise_cfg.cell_y = ui_config.screens.gamelist.cover.y / 8;
@@ -214,11 +218,14 @@ static void gamelist_init()
     // build and enqueue the polygon
     const vdp1_cmdt_draw_mode_t draw_mode = {
         .raw = 0x0000,
-        .bits.cc_mode = 0,                                // todo: enable gouraud
-        .bits.color_mode = CMDT_PMOD_CM_RGB_32768_COLORS, // 16color 4bit
+        .bits.cc_mode = 0,
+        .bits.color_mode = CMDT_PMOD_CM_RGB_32768_COLORS,
         .bits.trans_pixel_disable = false,
         .bits.pre_clipping_disable = true,
         .bits.end_code_disable = true};
+
+    const int tex_w = 128;
+    const int tex_h = 96;
 
     const vdp1_cmdt_color_bank_t color_bank = {
         .type_0.data.dc = 0};
@@ -226,11 +233,20 @@ static void gamelist_init()
     cmdt->cmd_xa = ui_config.screens.gamelist.cover.x;
     cmdt->cmd_ya = ui_config.screens.gamelist.cover.y;
 
-    vdp1_cmdt_normal_sprite_set(cmdt);
+    cmdt->cmd_xb = ui_config.screens.gamelist.cover.x + tex_w;
+    cmdt->cmd_yb = ui_config.screens.gamelist.cover.y;
+
+    cmdt->cmd_xc = ui_config.screens.gamelist.cover.x + tex_w;
+    cmdt->cmd_yc = ui_config.screens.gamelist.cover.y + tex_h;
+
+    cmdt->cmd_xd = ui_config.screens.gamelist.cover.x;
+    cmdt->cmd_yd = ui_config.screens.gamelist.cover.y + tex_h;
+
+    vdp1_cmdt_scaled_sprite_set(cmdt);
     vdp1_cmdt_param_color_mode1_set(cmdt, 0);
     vdp1_cmdt_param_gouraud_base_set(cmdt, 0);
     vdp1_cmdt_param_draw_mode_set(cmdt, draw_mode);
-    vdp1_cmdt_param_size_set(cmdt, FENRIR_COVER_W, FENRIR_COVER_H);
+    vdp1_cmdt_param_size_set(cmdt, tex_w, tex_h);
 
     vdp1_cmdt_param_char_base_set(cmdt, browser.texture_base + FONT_CACHE_SIZE);
 }

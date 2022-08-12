@@ -89,7 +89,12 @@ function RGB8888To555(rgba: RGBA) {
     return `COLOR_RGB1555(${rgba.a ? 1 : 0}, ${Math.floor(rgba.r / 8)}, ${Math.floor(rgba.g / 8)}, ${Math.floor(rgba.b / 8)})`
 }
 
-Jimp.read('../../assets/mvsc_bg.png')
+const argv = [...process.argv]
+const key = argv.pop()
+const output = argv.pop()
+const input = argv.pop()
+
+Jimp.read(input)
     .then(image => {
         const pal = buildPalette(image)
         const img = buildImage(image, pal)
@@ -114,11 +119,7 @@ Jimp.read('../../assets/mvsc_bg.png')
 
         pattern.push(...Object.values(pages).flatMap(x => x))
 
-
-        console.log(pattern.length);
-        console.log(Object.values(cells).length)
-
-        let k = 'mvsc_';
+        let k = key;
 
         let patternstr = `
 static const unsigned long ${k}_pattern_sz = ${pattern.length}*sizeof(unsigned short);
@@ -137,7 +138,7 @@ static const color_rgb1555_t ${k}_pal[] = {
     ${Object.values(pal).map(c => RGB8888To555(c)).join(',')}
 };`
         //console.log(tilesstr)
-        writeFile('../../assets/test.h', `// Auto generated\n\n` + palstr + patternstr + cellstr, () => { })
+        writeFile(output, `// Auto generated\n\n` + palstr + patternstr + cellstr, () => { })
     })
     .catch(err => {
         console.error(err);
