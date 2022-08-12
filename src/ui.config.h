@@ -12,6 +12,20 @@ typedef struct
 
 typedef struct
 {
+    uintptr_t pattern_addr;
+    uintptr_t cell_addr;
+    uintptr_t pal_addr;
+    
+    size_t pattern_sz;
+    size_t cell_sz;
+    size_t pal_sz;
+
+    fix16_t velocity_x;
+    fix16_t velocity_y;
+} ui_config_background_t;
+
+typedef struct
+{
     struct
     {
         uint16_t w;
@@ -49,12 +63,7 @@ typedef struct
                 color_rgb1555_t noise_palettes[NOISE_PALETTE_SIZE];
             } cover;
 
-            struct
-            {
-                fix16_t velocity_x;
-                fix16_t velocity_y;
-            } background;
-
+            ui_config_background_t background;
             ui_config_browser_t browser;
 
         } gamelist;

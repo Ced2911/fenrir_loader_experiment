@@ -25,6 +25,8 @@
         "fenrir.h": "c",
         "browser.h": "c",
         "sprite.h": "c",
-        "noise.h": "c"
+        "noise.h": "c",
+        "test.h": "c",
+        "bitmap.h": "c"
     }
 }

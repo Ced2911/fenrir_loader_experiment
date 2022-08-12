@@ -1,8 +1,7 @@
 
 #include <yaul.h>
+#include "ui.config.h"
 #include "vdp2.config.h"
-#include "../assets/bitmap.h"
-#include "../assets/test.h"
 
 static void vdp2_ngb0_init()
 {
@@ -19,9 +18,17 @@ static void vdp2_ngb0_init()
             .planes = {
                 NGB0_PATTERN_ADDR, NGB0_PATTERN_ADDR + 0x02000, NGB0_PATTERN_ADDR + 0x00000, NGB0_PATTERN_ADDR + 0x02000}}};
 
-    vdp_dma_enqueue((void *)NBG0_COLOR_ADDR, pal, palLength);
-    vdp_dma_enqueue((void *)NBG0_CELL_ADDR, cells, cellsLength);
-    vdp_dma_enqueue((void *)NGB0_PATTERN_ADDR, pattern, patternLength);
+    vdp_dma_enqueue((void *)NBG0_COLOR_ADDR,
+                    (void *)ui_config.screens.gamelist.background.pal_addr,
+                    ui_config.screens.gamelist.background.pal_sz);
+
+    vdp_dma_enqueue((void *)NBG0_CELL_ADDR,
+                    (void *)ui_config.screens.gamelist.background.cell_addr,
+                    ui_config.screens.gamelist.background.cell_sz);
+
+    vdp_dma_enqueue((void *)NGB0_PATTERN_ADDR,
+                    (void *)ui_config.screens.gamelist.background.pattern_addr,
+                    ui_config.screens.gamelist.background.pattern_sz);
 
     vdp2_scrn_cell_format_set(&format);
     vdp2_scrn_priority_set(VDP2_SCRN_NBG0, 2);

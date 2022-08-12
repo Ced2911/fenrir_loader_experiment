@@ -118,30 +118,26 @@ Jimp.read('../../assets/mvsc_bg.png')
         console.log(pattern.length);
         console.log(Object.values(cells).length)
 
+        let k = 'mvsc_';
+
         let patternstr = `
-const unsigned long patternLength = ${pattern.length}*sizeof(unsigned short);
-const unsigned short pattern[] = {
+static const unsigned long ${k}_pattern_sz = ${pattern.length}*sizeof(unsigned short);
+static const unsigned short ${k}_pattern[] = {
     ${pattern.join(',')}
 };`
         let cellstr = `
-const unsigned long cellsLength = ${Object.values(cells).length * 8 * 8}*sizeof(unsigned char);
-const unsigned char cells[] = {
+static const unsigned long ${k}_cell_sz = ${Object.values(cells).length * 8 * 8}*sizeof(unsigned char);
+static const unsigned char ${k}_cell[] = {
     ${Object.values(cells).flatMap(x => x).join(',')}
 };`
 
-        let tilesstr = `
-const unsigned long bitmapLength = ${img.length}*sizeof(unsigned char);
-const unsigned char bitmap[] = {
-    ${img.join(',')}
-};`
-
         let palstr = `
-const unsigned long palLength = ${Object.values(pal).length}*sizeof(color_rgb1555_t);
-const color_rgb1555_t pal[] = {
+static const unsigned long ${k}_pal_sz = ${Object.values(pal).length}*sizeof(color_rgb1555_t);
+static const color_rgb1555_t ${k}_pal[] = {
     ${Object.values(pal).map(c => RGB8888To555(c)).join(',')}
 };`
         //console.log(tilesstr)
-        writeFile('../../assets/test.h', tilesstr + palstr + patternstr + cellstr, () => { })
+        writeFile('../../assets/test.h', `// Auto generated\n\n` + palstr + patternstr + cellstr, () => { })
     })
     .catch(err => {
         console.error(err);
