@@ -36,7 +36,7 @@ void fenrir_refresh_entries(sd_dir_t *sd_dir, sd_dir_entry_t *sd_dir_entries)
 {
     if (EMU_BUILD)
     {
-        sd_dir->hdr.count = 100;
+        sd_dir->hdr.count = 12;
         sd_dir->hdr.use_cover = 1;
         // emulator
         for (int i = 0; i < sd_dir->hdr.count; i++)

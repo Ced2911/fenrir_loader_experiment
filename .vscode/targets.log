@@ -6,12 +6,12 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Aug  9 18:55:44 2022
+# Make data base, printed on Fri Aug 12 07:11:43 2022
 
 # Variables
 
 # environment
-REMOTE_CONTAINERS_SOCKETS = ["/tmp/vscode-ssh-auth-f9f6a2f1b9ec5a683136b9816ec0f47caae23c12.sock"]
+REMOTE_CONTAINERS_SOCKETS = ["/tmp/vscode-ssh-auth-68de62056cae011912705302f310ac37c01e40fa.sock"]
 # makefile (from 'Makefile', line 39)
 SH_CFLAGS = -W -Wall -Wextra -Wunused-parameter -Wstrict-aliasing -Wno-main -Wno-format -save-temps=obj -O2 -I. -save-temps=obj  -Isrc -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable 
 # environment
@@ -41,12 +41,12 @@ YAUL_OPTION_SPIN_ON_ABORT = 1
 # automatic
 @D = $(patsubst %/,%,$(dir $@))
 # makefile (from '/opt/tool-chains/sh2eb-elf/share/post.common.mk', line 49)
+ 
 SH_LDFLAGS = -Wl,--gc-sections -Wl,-Map,$(SH_BUILD_PATH)/$(SH_PROGRAM).map $(SH_DEFSYMS)
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # default
 .VARIABLES := 
- 
 # makefile (from '/opt/tool-chains/sh2eb-elf/share/post.common.mk', line 63)
 SH_TEMPS := /workspaces/loader_yaul/build/@workspaces@loader_yaul@assets@army12.i /workspaces/loader_yaul/build/@workspaces@loader_yaul@assets@bitmap.i /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@fenrir@fenrir.asserts.i /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@fenrir@fenrir.i /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@fenrir@fenrir.dir_op.i /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@fenrir@region.i /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@font@font.i /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@main.i /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@noise.i /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@screens@browser.i /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@screens@gamelist.i /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@ui.config.i /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@vdp1.config.i /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@vdp2.config.i /workspaces/loader_yaul/build/@workspaces@loader_yaul@assets@army12.ii /workspaces/loader_yaul/build/@workspaces@loader_yaul@assets@bitmap.ii /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@fenrir@fenrir.asserts.ii /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@fenrir@fenrir.ii /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@fenrir@fenrir.dir_op.ii /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@fenrir@region.ii /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@font@font.ii /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@main.ii /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@noise.ii /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@screens@browser.ii /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@screens@gamelist.ii /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@ui.config.ii /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@vdp1.config.ii /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@vdp2.config.ii /workspaces/loader_yaul/build/@workspaces@loader_yaul@assets@army12.s /workspaces/loader_yaul/build/@workspaces@loader_yaul@assets@bitmap.s /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@fenrir@fenrir.asserts.s /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@fenrir@fenrir.s /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@fenrir@fenrir.dir_op.s /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@fenrir@region.s /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@font@font.s /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@main.s /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@noise.s /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@screens@browser.s /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@screens@gamelist.s /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@ui.config.s /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@vdp1.config.s /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@vdp2.config.s
 # environment
@@ -86,7 +86,7 @@ M68K_CC := /opt/tool-chains/sh2eb-elf/bin/m68keb-elf-gcc
 # makefile (from '/opt/tool-chains/sh2eb-elf/share/post.common.mk', line 26)
 SH_SRCS_UNIQ = $(sort $(SH_SRCS))
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # makefile (from '/opt/tool-chains/sh2eb-elf/share/pre.common.mk', line 107)
@@ -96,7 +96,7 @@ IP_1ST_READ_SIZE = 0
 # environment
 MFLAGS = -pqrR
 # environment
-SSH_AUTH_SOCK = /tmp/vscode-ssh-auth-f9f6a2f1b9ec5a683136b9816ec0f47caae23c12.sock
+SSH_AUTH_SOCK = /tmp/vscode-ssh-auth-68de62056cae011912705302f310ac37c01e40fa.sock
 # default
 .SHELLFLAGS := -c
 # automatic
@@ -134,7 +134,7 @@ SH_SRCS_S :=
 # makefile (from 'Makefile', line 9)
 SH_SRCS := assets/army12.c assets/bitmap.c src/main.c src/noise.c src/vdp1.config.c src/vdp2.config.c src/ui.config.c src/font/font.c src/fenrir/fenrir.c src/fenrir/fenrir.dir_op.c src/fenrir/fenrir.asserts.c src/fenrir/region.c src/screens/gamelist.c src/screens/browser.c 
 # environment
-VSCODE_NLS_CONFIG = {"locale":"fr","availableLanguages":{"*":"fr"},"_languagePackId":"b0bb751258a71d5203cf053d90ac9f6f.fr","_translationsConfigFile":"/root/.vscode-server/data/clp/b0bb751258a71d5203cf053d90ac9f6f.fr/tcf.json","_cacheRoot":"/root/.vscode-server/data/clp/b0bb751258a71d5203cf053d90ac9f6f.fr","_resolvedLanguagePackCoreLocation":"/root/.vscode-server/data/clp/b0bb751258a71d5203cf053d90ac9f6f.fr/da76f93349a72022ca4670c1b84860304616aaa2","_corruptedFile":"/root/.vscode-server/data/clp/b0bb751258a71d5203cf053d90ac9f6f.fr/corrupted.info","_languagePackSupport":true}
+VSCODE_NLS_CONFIG = {"locale":"fr","availableLanguages":{"*":"fr"},"_languagePackId":"c7e2ab29f04a1f7605fe59032ea1fa0d.fr","_translationsConfigFile":"/root/.vscode-server/data/clp/c7e2ab29f04a1f7605fe59032ea1fa0d.fr/tcf.json","_cacheRoot":"/root/.vscode-server/data/clp/c7e2ab29f04a1f7605fe59032ea1fa0d.fr","_resolvedLanguagePackCoreLocation":"/root/.vscode-server/data/clp/c7e2ab29f04a1f7605fe59032ea1fa0d.fr/da76f93349a72022ca4670c1b84860304616aaa2","_corruptedFile":"/root/.vscode-server/data/clp/c7e2ab29f04a1f7605fe59032ea1fa0d.fr/corrupted.info","_languagePackSupport":true}
 # environment
 YAUL_BUILD = build
 # default
@@ -174,7 +174,7 @@ V_BEGIN_BLUE = [1;34m
 # makefile (from 'Makefile', line 34)
 IP_SLAVE_STACK_ADDR := 0x06002000
 # environment
-REMOTE_CONTAINERS_IPC = /tmp/vscode-remote-containers-ipc-f9f6a2f1b9ec5a683136b9816ec0f47caae23c12.sock
+REMOTE_CONTAINERS_IPC = /tmp/vscode-remote-containers-ipc-68de62056cae011912705302f310ac37c01e40fa.sock
 # environment
 REMOTE_CONTAINERS = true
 # automatic
@@ -244,7 +244,7 @@ NOCOLOR =
 # makefile (from 'Makefile', line 29)
 IP_RELEASE_DATE := 20210301
 # environment
-VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-54e0f343-beda-4f72-ae84-eb381618d6b8.sock
+VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-65c4c826-5338-4b5f-9984-f21c5f52c241.sock
 # makefile (from '/opt/tool-chains/sh2eb-elf/share/post.common.mk', line 67)
 SH_INCLUDE_DIRS := -I. -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/bcl -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/tga -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/g3d -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/dbgio -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/arp -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/dram-cart -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/scsp -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc
 # makefile (from '/opt/tool-chains/sh2eb-elf/share/pre.common.mk', line 105)
@@ -296,7 +296,7 @@ IP_PERIPHERALS := JAMKST
 # makefile (from '/opt/tool-chains/sh2eb-elf/share/pre.common.mk', line 108)
 M68K_AR := /opt/tool-chains/sh2eb-elf/bin/m68keb-elf-ar
 # variable set hash-table stats:
-# Load=142/1024=14%, Rehash=0, Collisions=28/790=4%
+# Load=142/1024=14%, Rehash=0, Collisions=28/787=4%
 
 # Pattern-specific Variable Values
 
@@ -327,10 +327,10 @@ M68K_AR := /opt/tool-chains/sh2eb-elf/bin/m68keb-elf-ar
 %.bin:
 
 %.elf:
+ 
 
 # 9 implicit rules, 0 (0.0%) terminal.
 # Files
- 
 
 # Not a target:
 .cpp:
@@ -341,7 +341,7 @@ M68K_AR := /opt/tool-chains/sh2eb-elf/bin/m68keb-elf-ar
 # Not a target:
 /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@vdp2.config.d:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-09 18:55:40.3745849
+#  Last modified 2022-08-09 18:56:18.5940081
 #  File has been updated.
 #  Successfully updated.
 
@@ -370,7 +370,7 @@ fenrir-yaul.ss: /workspaces/loader_yaul/build/fenrir-yaul.bin /workspaces/loader
 # Not a target:
 /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@screens@gamelist.d:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-09 18:55:20.829462
+#  Last modified 2022-08-10 16:22:47.6885067
 #  File has been updated.
 #  Successfully updated.
 
@@ -390,7 +390,7 @@ fenrir-yaul.ss: /workspaces/loader_yaul/build/fenrir-yaul.bin /workspaces/loader
 
 /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@noise.o: src/noise.c src/noise.c /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/yaul.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/bios.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/cdefs.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stddef.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint-gcc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/cache.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/map.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdbool.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/divu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/instructions.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_trig.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_vec2.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_vec3.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_mat3.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_plane.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/dmac.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/assert.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/dual.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/frt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/registers.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/endian.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/intc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/sci.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/sync.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/wdt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/peripheral.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/queue.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/rtc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/smc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/dma.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/ic.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/dsp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/timer.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart/usb-cart.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart/usb-cart/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/arp/arp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash/flash.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash/flash/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/dram-cart/dram-cart.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block/cmd.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/cmdt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/string.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/sprite.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/color.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/env.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/vram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/sys/callback-list.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/cram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/math.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/color.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int32.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int8.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/uint32.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/uint8.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn_macros.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/vram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/tvmd.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/scsp/scsp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/ip/ip.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/gdb/gdb.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/dbgio/dbgio.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/mm/memb.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/mm/mm_stats.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/init.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/sys/dma-queue.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/ssload.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/fs/cd/cdfs.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/stdio.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdarg.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/bits/alltypes.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/types.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block.h src/noise.h
 #  Implicit rule search has not been done.
-#  Last modified 2022-08-07 19:34:39.6595658
+#  Last modified 2022-08-10 11:26:47.8952026
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from '/opt/tool-chains/sh2eb-elf/share/post.common.mk', line 138):
@@ -418,14 +418,14 @@ fenrir-yaul.ss: /workspaces/loader_yaul/build/fenrir-yaul.bin /workspaces/loader
 # Not a target:
 src/screens/gamelist.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-09 18:35:19.8336458
+#  Last modified 2022-08-10 16:22:45.555014
 #  File has been updated.
 #  Successfully updated.
 
 # Not a target:
 /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@fenrir@region.d:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-07 19:01:41.2195234
+#  Last modified 2022-08-10 15:35:15.1755854
 #  File has been updated.
 #  Successfully updated.
 
@@ -453,7 +453,7 @@ src/screens/gamelist.c:
 # Not a target:
 src/fenrir/fenrir.h:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-07 18:12:39.9574024
+#  Last modified 2022-08-10 15:34:55.0179968
 #  File has been updated.
 #  Successfully updated.
 
@@ -479,9 +479,10 @@ src/vdp2.config.h:
 
 # Not a target:
 /opt/tool-chains/sh2eb-elf/share/yaul/ip/ip.sx:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
+#  Implicit rule search has been done.
+#  Last modified 2022-06-16 04:51:26
+#  File has been updated.
+#  Successfully updated.
 
 # Not a target:
 /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/yaul.h:
@@ -507,7 +508,7 @@ src/screens/screen.h:
 # Not a target:
 src/ui.config.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-09 18:54:10.7607747
+#  Last modified 2022-08-10 16:17:09.8049768
 #  File has been updated.
 #  Successfully updated.
 
@@ -520,7 +521,7 @@ src/ui.config.c:
 
 /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@vdp1.config.o: src/vdp1.config.c src/vdp1.config.c src/vdp1.config.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/yaul.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/bios.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/cdefs.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stddef.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint-gcc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/cache.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/map.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdbool.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/divu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/instructions.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_trig.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_vec2.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_vec3.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_mat3.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_plane.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/dmac.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/assert.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/dual.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/frt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/registers.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/endian.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/intc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/sci.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/sync.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/wdt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/peripheral.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/queue.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/rtc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/smc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/dma.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/ic.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/dsp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/timer.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart/usb-cart.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart/usb-cart/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/arp/arp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash/flash.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash/flash/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/dram-cart/dram-cart.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block/cmd.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/cmdt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/string.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/sprite.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/color.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/env.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/vram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/sys/callback-list.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/cram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/math.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/color.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int32.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int8.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/uint32.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/uint8.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn_macros.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/vram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/tvmd.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/scsp/scsp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/ip/ip.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/gdb/gdb.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/dbgio/dbgio.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/mm/memb.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/mm/mm_stats.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/init.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/sys/dma-queue.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/ssload.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/fs/cd/cdfs.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/stdio.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdarg.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/bits/alltypes.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/types.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block.h
 #  Implicit rule search has not been done.
-#  Last modified 2022-08-09 17:07:28.3417544
+#  Last modified 2022-08-09 18:59:52.7850388
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from '/opt/tool-chains/sh2eb-elf/share/post.common.mk', line 138):
@@ -537,7 +538,7 @@ src/ui.config.c:
 # Not a target:
 src/vdp2.config.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-09 18:54:50.0512197
+#  Last modified 2022-08-09 18:56:13.7367444
 #  File has been updated.
 #  Successfully updated.
 
@@ -551,7 +552,7 @@ src/vdp2.config.c:
 # Not a target:
 src/screens/browser.h:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-22 12:50:52.9063078
+#  Last modified 2022-08-10 11:25:17.2625615
 #  File has been updated.
 #  Successfully updated.
 
@@ -565,7 +566,7 @@ src/screens/browser.h:
 # Not a target:
 /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@vdp1.config.d:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-09 17:07:28.3056698
+#  Last modified 2022-08-09 18:59:52.7449717
 #  File has been updated.
 #  Successfully updated.
 
@@ -613,14 +614,14 @@ src/fenrir/fenrir.dir_op.c:
 # Not a target:
 /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@font@font.d:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-06 07:33:13.1300081
+#  Last modified 2022-08-09 19:01:49.407203
 #  File has been updated.
 #  Successfully updated.
 
 # Not a target:
 /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@screens@browser.d:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-09 17:07:27.8521891
+#  Last modified 2022-08-10 16:15:48.4866983
 #  File has been updated.
 #  Successfully updated.
 
@@ -640,7 +641,7 @@ Makefile:
 
 /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@fenrir@fenrir.o: src/fenrir/fenrir.c src/fenrir/fenrir.c /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/stdlib.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/cdefs.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stddef.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/ctype.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint-gcc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/yaul.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/bios.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/cache.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/map.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdbool.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/divu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/instructions.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_trig.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_vec2.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_vec3.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_mat3.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_plane.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/dmac.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/assert.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/dual.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/frt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/registers.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/endian.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/intc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/sci.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/sync.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/wdt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/peripheral.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/queue.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/rtc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/smc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/dma.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/ic.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/dsp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/timer.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart/usb-cart.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart/usb-cart/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/arp/arp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash/flash.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash/flash/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/dram-cart/dram-cart.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block/cmd.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/cmdt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/string.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/sprite.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/color.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/env.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/vram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/sys/callback-list.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/cram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/math.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/color.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int32.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int8.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/uint32.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/uint8.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn_macros.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/vram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/tvmd.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/scsp/scsp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/ip/ip.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/gdb/gdb.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/dbgio/dbgio.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/mm/memb.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/mm/mm_stats.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/init.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/sys/dma-queue.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/ssload.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/fs/cd/cdfs.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/stdio.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdarg.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/bits/alltypes.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/types.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block.h src/fenrir/fenrir.h src/fenrir/sd_dir.h src/fenrir/menu.sectors.h
 #  Implicit rule search has not been done.
-#  Last modified 2022-08-08 18:38:35.073822
+#  Last modified 2022-08-10 15:56:53.9636457
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from '/opt/tool-chains/sh2eb-elf/share/post.common.mk', line 138):
@@ -650,7 +651,7 @@ Makefile:
 
 /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@font@font.o: src/font/font.c src/font/font.c /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint-gcc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/yaul.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/bios.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/cdefs.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stddef.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/cache.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/map.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdbool.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/divu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/instructions.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_trig.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_vec2.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_vec3.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_mat3.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_plane.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/dmac.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/assert.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/dual.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/frt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/registers.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/endian.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/intc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/sci.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/sync.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/wdt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/peripheral.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/queue.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/rtc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/smc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/dma.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/ic.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/dsp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/timer.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart/usb-cart.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart/usb-cart/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/arp/arp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash/flash.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash/flash/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/dram-cart/dram-cart.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block/cmd.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/cmdt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/string.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/sprite.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/color.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/env.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/vram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/sys/callback-list.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/cram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/math.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/color.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int32.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int8.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/uint32.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/uint8.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn_macros.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/vram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/tvmd.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/scsp/scsp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/ip/ip.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/gdb/gdb.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/dbgio/dbgio.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/mm/memb.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/mm/mm_stats.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/init.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/sys/dma-queue.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/ssload.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/fs/cd/cdfs.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/stdio.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdarg.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/bits/alltypes.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/types.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block.h src/font/font.h
 #  Implicit rule search has not been done.
-#  Last modified 2022-08-06 07:33:13.2045189
+#  Last modified 2022-08-09 19:01:49.4639414
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from '/opt/tool-chains/sh2eb-elf/share/post.common.mk', line 138):
@@ -658,38 +659,19 @@ Makefile:
 	@/opt/tool-chains/sh2eb-elf/bin/sh2eb-elf-gcc -MT  /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@font@font.o -MF /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@font@font.d -MD -W -Wall -Wextra -Wunused-parameter -Wstrict-aliasing -Wno-main -Wno-format -save-temps=obj -O2 -I. -save-temps=obj  -Isrc -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable  -specs=yaul.specs -specs=yaul-main.specs -c -o  /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@font@font.o src/font/font.c
 	@  /opt/tool-chains/sh2eb-elf/share/wrap-error /opt/tool-chains/sh2eb-elf/share/update-cdb  /usr/bin/gcc " /workspaces/loader_yaul/src/font/font.c" " /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@font@font.o"  /workspaces/loader_yaul/src/font/  compile_commands.json  -W -Wall -Wextra -Wunused-parameter -Wstrict-aliasing -Wno-main -Wno-format -save-temps=obj -O2 -I. -save-temps=obj  -Isrc -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable  -isystem /opt/tool-chains/sh2eb-elf/bin/../lib/gcc/sh2eb-elf/11.2.0/include -isystem /opt/tool-chains/sh2eb-elf/bin/../lib/gcc/sh2eb-elf/11.2.0/include-fixed -isystem /opt/tool-chains/sh2eb-elf/bin/../lib/gcc/sh2eb-elf/11.2.0/../../../../sh2eb-elf/sys-include -isystem /opt/tool-chains/sh2eb-elf/bin/../lib/gcc/sh2eb-elf/11.2.0/../../../../sh2eb-elf/include -I. -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/bcl -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/tga -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/g3d -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/dbgio -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/arp -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/dram-cart -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/scsp -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc
 
-/workspaces/loader_yaul/build/@workspaces@loader_yaul@src@vdp2.config.o: src/vdp2.config.c src/vdp2.config.c src/vdp2.config.h
+/workspaces/loader_yaul/build/@workspaces@loader_yaul@src@vdp2.config.o: src/vdp2.config.c src/vdp2.config.c /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/yaul.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/bios.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/cdefs.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stddef.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint-gcc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/cache.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/map.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdbool.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/divu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/instructions.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_trig.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_vec2.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_vec3.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_mat3.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_plane.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/dmac.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/assert.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/dual.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/frt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/registers.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/endian.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/intc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/sci.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/sync.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/wdt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/peripheral.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/queue.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/rtc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/smc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/dma.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/ic.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/dsp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/timer.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart/usb-cart.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart/usb-cart/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/arp/arp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash/flash.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash/flash/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/dram-cart/dram-cart.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block/cmd.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/cmdt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/string.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/sprite.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/color.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/env.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/vram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/sys/callback-list.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/cram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/math.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/color.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int32.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int8.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/uint32.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/uint8.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn_macros.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/vram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/tvmd.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/scsp/scsp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/ip/ip.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/gdb/gdb.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/dbgio/dbgio.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/mm/memb.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/mm/mm_stats.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/init.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/sys/dma-queue.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/ssload.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/fs/cd/cdfs.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/stdio.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdarg.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/bits/alltypes.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/types.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block.h src/vdp2.config.h src/../assets/bitmap.h src/../assets/test.h
 #  Implicit rule search has not been done.
-#  Implicit/static pattern stem: '/workspaces/loader_yaul/build/@workspaces@loader_yaul@src@vdp2.config'
-#  File does not exist.
+#  Last modified 2022-08-09 18:56:19.6232468
 #  File has been updated.
-#  Needs to be updated (-q is set).
-# automatic
-# @ := /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@vdp2.config.o
-# automatic
-# * := /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@vdp2.config
-# automatic
-# < := src/vdp2.config.c
-# automatic
-# + := src/vdp2.config.c src/vdp2.config.c src/vdp2.config.h
-# automatic
-# % := 
-# automatic
-# ^ := src/vdp2.config.c src/vdp2.config.h
-# automatic
-# ? := src/vdp2.config.c src/vdp2.config.h
-# automatic
-# | := 
-# variable set hash-table stats:
-# Load=8/32=25%, Rehash=0, Collisions=1/11=9%
+#  Successfully updated.
 #  recipe to execute (from '/opt/tool-chains/sh2eb-elf/share/post.common.mk', line 138):
 	@printf -- "[1;33msrc/vdp2.config.c[m\n"
 	@/opt/tool-chains/sh2eb-elf/bin/sh2eb-elf-gcc -MT  /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@vdp2.config.o -MF /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@vdp2.config.d -MD -W -Wall -Wextra -Wunused-parameter -Wstrict-aliasing -Wno-main -Wno-format -save-temps=obj -O2 -I. -save-temps=obj  -Isrc -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable  -specs=yaul.specs -specs=yaul-main.specs -c -o  /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@vdp2.config.o src/vdp2.config.c
 	@  /opt/tool-chains/sh2eb-elf/share/wrap-error /opt/tool-chains/sh2eb-elf/share/update-cdb  /usr/bin/gcc " /workspaces/loader_yaul/src/vdp2.config.c" " /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@vdp2.config.o"  /workspaces/loader_yaul/src/  compile_commands.json  -W -Wall -Wextra -Wunused-parameter -Wstrict-aliasing -Wno-main -Wno-format -save-temps=obj -O2 -I. -save-temps=obj  -Isrc -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable  -isystem /opt/tool-chains/sh2eb-elf/bin/../lib/gcc/sh2eb-elf/11.2.0/include -isystem /opt/tool-chains/sh2eb-elf/bin/../lib/gcc/sh2eb-elf/11.2.0/include-fixed -isystem /opt/tool-chains/sh2eb-elf/bin/../lib/gcc/sh2eb-elf/11.2.0/../../../../sh2eb-elf/sys-include -isystem /opt/tool-chains/sh2eb-elf/bin/../lib/gcc/sh2eb-elf/11.2.0/../../../../sh2eb-elf/include -I. -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/bcl -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/tga -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/g3d -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/dbgio -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/arp -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/dram-cart -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/scsp -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu -I/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc
 
-/workspaces/loader_yaul/build/@workspaces@loader_yaul@src@screens@browser.o: src/screens/browser.c src/screens/browser.c /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/string.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/cdefs.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stddef.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/stdio.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdarg.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/bits/alltypes.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/stdlib.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/yaul.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/bios.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint-gcc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/cache.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/map.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdbool.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/divu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/instructions.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_trig.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_vec2.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_vec3.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_mat3.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_plane.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/dmac.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/assert.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/dual.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/frt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/registers.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/endian.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/intc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/sci.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/sync.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/wdt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/peripheral.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/queue.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/rtc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/smc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/dma.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/ic.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/dsp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/timer.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart/usb-cart.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart/usb-cart/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/arp/arp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash/flash.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash/flash/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/dram-cart/dram-cart.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block/cmd.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/cmdt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/sprite.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/color.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/env.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/vram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/sys/callback-list.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/cram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/math.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/color.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int32.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int8.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/uint32.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/uint8.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn_macros.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/vram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/tvmd.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/scsp/scsp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/ip/ip.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/gdb/gdb.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/dbgio/dbgio.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/mm/memb.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/mm/mm_stats.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/init.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/sys/dma-queue.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/ssload.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/fs/cd/cdfs.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/types.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block.h src/screens/browser.h src/font/font.h src/vdp1.config.h
+/workspaces/loader_yaul/build/@workspaces@loader_yaul@src@screens@browser.o: src/screens/browser.c src/screens/browser.c /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/string.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/cdefs.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stddef.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/stdio.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdarg.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/bits/alltypes.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/stdlib.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/yaul.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/bios.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint-gcc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/cache.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/map.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdbool.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/divu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/instructions.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_trig.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_vec2.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_vec3.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_mat3.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_plane.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/dmac.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/assert.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/dual.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/frt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/registers.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/endian.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/intc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/sci.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/sync.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/wdt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/peripheral.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/queue.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/rtc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/smc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/dma.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/ic.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/dsp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/timer.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart/usb-cart.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart/usb-cart/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/arp/arp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash/flash.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash/flash/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/dram-cart/dram-cart.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block/cmd.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/cmdt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/sprite.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/color.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/env.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/vram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/sys/callback-list.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/cram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/math.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/color.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int32.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int8.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/uint32.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/uint8.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn_macros.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/vram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/tvmd.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/scsp/scsp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/ip/ip.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/gdb/gdb.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/dbgio/dbgio.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/mm/memb.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/mm/mm_stats.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/init.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/sys/dma-queue.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/ssload.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/fs/cd/cdfs.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/types.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block.h src/screens/browser.h src/font/font.h src/ui.config.h src/vdp1.config.h
 #  Implicit rule search has not been done.
-#  Last modified 2022-08-09 17:07:27.9274106
+#  Last modified 2022-08-10 16:15:48.5575493
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from '/opt/tool-chains/sh2eb-elf/share/post.common.mk', line 138):
@@ -700,7 +682,7 @@ Makefile:
 # Not a target:
 /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@ui.config.d:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-09 18:55:40.3116513
+#  Last modified 2022-08-10 16:17:11.8985119
 #  File has been updated.
 #  Successfully updated.
 
@@ -713,8 +695,9 @@ Makefile:
 
 /workspaces/loader_yaul/build/IP.BIN: /opt/tool-chains/sh2eb-elf/share/yaul/ip/ip.sx /workspaces/loader_yaul/build/fenrir-yaul.bin
 #  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
+#  Last modified 2022-08-10 16:22:48.9274597
+#  File has been updated.
+#  Successfully updated.
 #  recipe to execute (from '/opt/tool-chains/sh2eb-elf/share/post.common.mk', line 174):
 	$(ECHO)$(YAUL_INSTALL_ROOT)/share/wrap-error $(YAUL_INSTALL_ROOT)/bin/make-ip \
 	    "$(SH_BUILD_PATH)/$(SH_PROGRAM).bin" \
@@ -788,9 +771,9 @@ clean:
 	    $(SH_BUILD_PATH)/CART-IP.BIN.map \
 	    $(CDB_FILE)
 
-/workspaces/loader_yaul/build/@workspaces@loader_yaul@src@screens@gamelist.o: src/screens/gamelist.c src/screens/gamelist.c /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/stdlib.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/cdefs.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stddef.h src/screens/browser.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint-gcc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/yaul.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/bios.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/cache.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/map.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdbool.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/divu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/instructions.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_trig.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_vec2.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_vec3.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_mat3.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_plane.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/dmac.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/assert.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/dual.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/frt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/registers.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/endian.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/intc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/sci.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/sync.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/wdt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/peripheral.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/queue.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/rtc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/smc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/dma.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/ic.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/dsp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/timer.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart/usb-cart.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart/usb-cart/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/arp/arp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash/flash.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash/flash/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/dram-cart/dram-cart.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block/cmd.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/cmdt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/string.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/sprite.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/color.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/env.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/vram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/sys/callback-list.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/cram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/math.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/color.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int32.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int8.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/uint32.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/uint8.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn_macros.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/vram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/tvmd.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/scsp/scsp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/ip/ip.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/gdb/gdb.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/dbgio/dbgio.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/mm/memb.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/mm/mm_stats.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/init.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/sys/dma-queue.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/ssload.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/fs/cd/cdfs.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/stdio.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdarg.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/bits/alltypes.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/types.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block.h src/font/font.h src/screens/screen.h src/fenrir/fenrir.h src/fenrir/sd_dir.h src/fenrir/menu.sectors.h src/vdp1.config.h src/vdp2.config.h src/ui.config.h src/noise.h
+/workspaces/loader_yaul/build/@workspaces@loader_yaul@src@screens@gamelist.o: src/screens/gamelist.c src/screens/gamelist.c /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/stdlib.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/cdefs.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stddef.h src/screens/browser.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint-gcc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/yaul.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/bios.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/cache.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/map.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdbool.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/divu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/instructions.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_trig.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_vec2.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_vec3.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_mat3.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_plane.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/dmac.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/assert.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/dual.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/frt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/registers.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/endian.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/intc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/sci.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/sync.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/wdt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/peripheral.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/queue.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/rtc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/smc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/dma.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/ic.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/dsp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/timer.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart/usb-cart.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart/usb-cart/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/arp/arp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash/flash.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash/flash/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/dram-cart/dram-cart.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block/cmd.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/cmdt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/string.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/sprite.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/color.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/env.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/vram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/sys/callback-list.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/cram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/math.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/color.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int32.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int8.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/uint32.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/uint8.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn_macros.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/vram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/tvmd.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/scsp/scsp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/ip/ip.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/gdb/gdb.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/dbgio/dbgio.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/mm/memb.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/mm/mm_stats.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/init.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/sys/dma-queue.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/ssload.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/fs/cd/cdfs.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/stdio.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdarg.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/bits/alltypes.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/types.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block.h src/font/font.h src/ui.config.h src/screens/screen.h src/fenrir/fenrir.h src/fenrir/sd_dir.h src/fenrir/menu.sectors.h src/vdp1.config.h src/vdp2.config.h src/noise.h
 #  Implicit rule search has not been done.
-#  Last modified 2022-08-09 18:55:20.9095527
+#  Last modified 2022-08-10 16:22:47.773613
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from '/opt/tool-chains/sh2eb-elf/share/post.common.mk', line 138):
@@ -801,7 +784,7 @@ clean:
 # Not a target:
 src/font/font.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-01 14:07:27.5502281
+#  Last modified 2022-08-09 19:01:44.2956867
 #  File has been updated.
 #  Successfully updated.
 
@@ -815,15 +798,15 @@ src/font/font.c:
 # Not a target:
 /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/map.h:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-16 04:51:26
  
+#  Last modified 2022-06-16 04:51:26
 #  File has been updated.
 #  Successfully updated.
 
 # Not a target:
 src/ui.config.h:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-09 18:52:20.9863264
+#  Last modified 2022-08-10 11:23:03.158179
 #  File has been updated.
 #  Successfully updated.
 
@@ -864,7 +847,7 @@ src/ui.config.h:
 # Not a target:
 src/font/font.h:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-21 09:40:24.9564719
+#  Last modified 2022-08-09 19:01:00.5951435
 #  File has been updated.
 #  Successfully updated.
 
@@ -899,7 +882,7 @@ src/font/font.h:
 # Not a target:
 src/main.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-09 18:54:59.9244172
+#  Last modified 2022-08-09 18:57:28.6822446
 #  File has been updated.
 #  Successfully updated.
 
@@ -948,7 +931,7 @@ src/vdp1.config.h:
 # Not a target:
 src/vdp1.config.c:
 #  Implicit rule search has been done.
-#  Last modified 2021-03-18 16:43:42.9680041
+#  Last modified 2022-08-09 18:59:40.959319
 #  File has been updated.
 #  Successfully updated.
 
@@ -1087,7 +1070,7 @@ list-targets:
 # Not a target:
 /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@fenrir@fenrir.d:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-08 18:38:35.0058223
+#  Last modified 2022-08-10 15:56:53.9007279
 #  File has been updated.
 #  Successfully updated.
 
@@ -1104,10 +1087,10 @@ list-targets:
 #  File has been updated.
 #  Successfully updated.
 
-/workspaces/loader_yaul/build/@workspaces@loader_yaul@src@ui.config.o: src/ui.config.c src/ui.config.c
+/workspaces/loader_yaul/build/@workspaces@loader_yaul@src@ui.config.o: src/ui.config.c src/ui.config.c /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/yaul.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/bios.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/cdefs.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stddef.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint-gcc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/cache.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/map.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdbool.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/divu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/instructions.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_trig.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_vec2.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_vec3.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_mat3.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_plane.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/dmac.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/assert.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/dual.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/frt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/registers.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/endian.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/intc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/sci.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/sync.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/wdt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/peripheral.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/queue.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/rtc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/smc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/dma.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/ic.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/dsp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/timer.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart/usb-cart.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart/usb-cart/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/arp/arp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash/flash.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash/flash/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/dram-cart/dram-cart.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block/cmd.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/cmdt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/string.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/sprite.h /opt/tool-ch 
+ains/sh2eb-elf/sh2eb-elf/include/yaul/math/color.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/env.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/vram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/sys/callback-list.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/cram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/math.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/color.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int32.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int8.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/uint32.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/uint8.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn_macros.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/vram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/tvmd.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/scsp/scsp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/ip/ip.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/gdb/gdb.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/dbgio/dbgio.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/mm/memb.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/mm/mm_stats.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/init.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/sys/dma-queue.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/ssload.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/fs/cd/cdfs.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/stdio.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdarg.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/bits/alltypes.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/types.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block.h src/ui.config.h
 #  Implicit rule search has not been done.
- 
-#  Last modified 2022-08-09 18:55:40.3303472
+#  Last modified 2022-08-10 16:17:11.9277177
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from '/opt/tool-chains/sh2eb-elf/share/post.common.mk', line 138):
@@ -1119,9 +1102,7 @@ fenrir-yaul.cue: | fenrir-yaul.iso
 #  Implicit rule search has not been done.
 #  Last modified 2022-08-06 07:34:35.51381
 #  File has been updated.
-#  Needs to be updated (-q is set).
-# variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/3=0%
+#  Successfully updated.
 #  recipe to execute (from '/opt/tool-chains/sh2eb-elf/share/post.common.mk', line 170):
 	@printf -- "$(V_BEGIN_YELLOW)$@$(V_END)\n"
 	$(ECHO)$(YAUL_INSTALL_ROOT)/share/wrap-error $(YAUL_INSTALL_ROOT)/bin/make-cue "$(SH_PROGRAM).iso"
@@ -1145,9 +1126,7 @@ all: build
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has been updated.
-#  Needs to be updated (-q is set).
-# variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/3=0%
+#  Successfully updated.
 
 # Not a target:
 /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/queue.h:
@@ -1159,7 +1138,7 @@ all: build
 # Not a target:
 /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@main.d:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-09 18:55:19.6552694
+#  Last modified 2022-08-10 15:35:15.3577009
 #  File has been updated.
 #  Successfully updated.
 
@@ -1180,7 +1159,7 @@ all: build
 # Not a target:
 /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@fenrir@fenrir.asserts.d:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-07 19:01:40.6550449
+#  Last modified 2022-08-10 15:35:14.6785791
 #  File has been updated.
 #  Successfully updated.
 
@@ -1193,11 +1172,9 @@ src/fenrir/menu.sectors.h:
 
 build: fenrir-yaul.cue
 #  Implicit rule search has been done.
-#  Last modified 2022-08-09 18:55:40.3849434
+#  Last modified 2022-08-10 16:22:48.9264587
 #  File has been updated.
-#  Needs to be updated (-q is set).
-# variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/3=0%
+#  Successfully updated.
 
 # Not a target:
 /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block/cmd.h:
@@ -1223,7 +1200,7 @@ build: fenrir-yaul.cue
 # Not a target:
 src/screens/browser.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-09 17:02:54.284528
+#  Last modified 2022-08-10 16:15:40.7787003
 #  File has been updated.
 #  Successfully updated.
 
@@ -1249,11 +1226,9 @@ src/screens/browser.c:
 
 /workspaces/loader_yaul/build/fenrir-yaul.bin: /workspaces/loader_yaul/build/fenrir-yaul.elf
 #  Implicit rule search has not been done.
-#  Last modified 2022-08-09 17:10:11.7857761
+#  Last modified 2022-08-10 16:22:48.8919634
 #  File has been updated.
-#  Needs to be updated (-q is set).
-# variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/3=0%
+#  Successfully updated.
 #  recipe to execute (from '/opt/tool-chains/sh2eb-elf/share/post.common.mk', line 128):
 	@printf -- "$(V_BEGIN_YELLOW)$(@F)$(V_END)\n"
 	$(ECHO)$(SH_OBJCOPY) -O binary $< $@
@@ -1276,7 +1251,7 @@ src/screens/browser.c:
 # Not a target:
 src/fenrir/fenrir.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-08 18:38:32.5546591
+#  Last modified 2022-08-10 15:56:51.6071126
 #  File has been updated.
 #  Successfully updated.
 
@@ -1289,7 +1264,7 @@ src/fenrir/fenrir.c:
 
 /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@fenrir@fenrir.dir_op.o: src/fenrir/fenrir.dir_op.c src/fenrir/fenrir.dir_op.c /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/yaul.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/bios.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/cdefs.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stddef.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint-gcc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/cache.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/map.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdbool.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/divu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/instructions.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_trig.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_vec2.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_vec3.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_mat3.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_plane.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/dmac.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/assert.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/dual.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/frt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/registers.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/endian.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/intc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/sci.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/sync.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/wdt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/peripheral.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/queue.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/rtc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/smc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/dma.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/ic.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/dsp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/timer.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart/usb-cart.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart/usb-cart/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/arp/arp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash/flash.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash/flash/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/dram-cart/dram-cart.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block/cmd.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/cmdt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/string.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/sprite.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/color.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/env.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/vram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/sys/callback-list.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/cram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/math.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/color.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int32.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int8.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/uint32.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/uint8.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn_macros.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/vram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/tvmd.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/scsp/scsp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/ip/ip.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/gdb/gdb.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/dbgio/dbgio.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/mm/memb.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/mm/mm_stats.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/init.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/sys/dma-queue.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/ssload.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/fs/cd/cdfs.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/stdio.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdarg.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/bits/alltypes.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/types.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block.h src/fenrir/fenrir.h src/fenrir/sd_dir.h src/fenrir/menu.sectors.h
 #  Implicit rule search has not been done.
-#  Last modified 2022-08-07 19:01:41.1548677
+#  Last modified 2022-08-10 15:35:15.1197679
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from '/opt/tool-chains/sh2eb-elf/share/post.common.mk', line 138):
@@ -1306,11 +1281,9 @@ src/fenrir/fenrir.c:
 
 fenrir-yaul.iso: /workspaces/loader_yaul/build/fenrir-yaul.bin /workspaces/loader_yaul/build/IP.BIN
 #  Implicit rule search has not been done.
-#  Last modified 2022-08-09 17:10:12.1440855
+#  Last modified 2022-08-10 16:22:49.1934503
 #  File has been updated.
-#  Needs to be updated (-q is set).
-# variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/3=0%
+#  Successfully updated.
 #  recipe to execute (from '/opt/tool-chains/sh2eb-elf/share/post.common.mk', line 151):
 	@printf -- "$(V_BEGIN_YELLOW)$@$(V_END)\n"
 	$(ECHO)$(MAKE) --no-print-directory $$([ -z "$(SILENT)" ] || printf -- "-s") -f $(THIS_FILE) pre-build-iso
@@ -1341,7 +1314,7 @@ fenrir-yaul.iso: /workspaces/loader_yaul/build/fenrir-yaul.bin /workspaces/loade
 # Not a target:
 /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@noise.d:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-07 19:34:39.6018391
+#  Last modified 2022-08-10 11:26:47.8047806
 #  File has been updated.
 #  Successfully updated.
 
@@ -1361,14 +1334,11 @@ fenrir-yaul.iso: /workspaces/loader_yaul/build/fenrir-yaul.bin /workspaces/loade
 
 /workspaces/loader_yaul/build/fenrir-yaul.elf: /workspaces/loader_yaul/build/@workspaces@loader_yaul@assets@army12.o /workspaces/loader_yaul/build/@workspaces@loader_yaul@assets@bitmap.o /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@fenrir@fenrir.asserts.o /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@fenrir@fenrir.o /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@fenrir@fenrir.dir_op.o /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@fenrir@region.o /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@font@font.o /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@main.o /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@noise.o /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@screens@browser.o /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@screens@gamelist.o /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@ui.config.o /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@vdp1.config.o /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@vdp2.config.o
 #  Implicit rule search has not been done.
-#  File does not exist.
+#  Last modified 2022-08-10 16:22:48.7609756
 #  File has been updated.
-#  Needs to be updated (-q is set).
-# variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/3=0%
+#  Successfully updated.
 #  recipe to execute (from '/opt/tool-chains/sh2eb-elf/share/post.common.mk', line 133):
 	@printf -- "$(V_BEGIN_YELLOW)$(@F)$(V_END)\n"
- 
 	$(ECHO)$(SH_LD) $(foreach specs,$(SH_SPECS),-specs=$(specs)) $(foreach specs,$(SH_CXX_SPECS),-specs=$(specs)) $(SH_OBJS_UNIQ) $(SH_LDFLAGS) $(foreach lib,$(SH_LIBRARIES),-l$(lib)) -o $@
 	$(ECHO)$(SH_NM) $(SH_BUILD_PATH)/$(SH_PROGRAM).elf > $(SH_BUILD_PATH)/$(SH_PROGRAM).sym
 	$(ECHO)$(SH_OBJDUMP) -S $(SH_BUILD_PATH)/$(SH_PROGRAM).elf > $(SH_BUILD_PATH)/$(SH_PROGRAM).asm
@@ -1382,13 +1352,14 @@ fenrir-yaul.iso: /workspaces/loader_yaul/build/fenrir-yaul.bin /workspaces/loade
 # Not a target:
 src/../assets/test.h:
 #  Implicit rule search has been done.
+ 
 #  Last modified 2022-08-05 18:02:48.3354366
 #  File has been updated.
 #  Successfully updated.
 
 /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@fenrir@fenrir.asserts.o: src/fenrir/fenrir.asserts.c src/fenrir/fenrir.asserts.c /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/assert.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/cdefs.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stddef.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint-gcc.h src/fenrir/fenrir.h src/fenrir/sd_dir.h src/fenrir/menu.sectors.h
 #  Implicit rule search has not been done.
-#  Last modified 2022-08-07 19:01:40.6809514
+#  Last modified 2022-08-10 15:35:14.7065782
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from '/opt/tool-chains/sh2eb-elf/share/post.common.mk', line 138):
@@ -1440,7 +1411,7 @@ src/../assets/test.h:
 # Not a target:
 src/noise.h:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-07 19:07:15.4951925
+#  Last modified 2022-08-10 11:20:10.1475964
 #  File has been updated.
 #  Successfully updated.
 
@@ -1454,7 +1425,7 @@ src/noise.h:
 # Not a target:
 src/noise.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-07 19:34:33.2539204
+#  Last modified 2022-08-10 11:20:11.4945194
 #  File has been updated.
 #  Successfully updated.
 
@@ -1491,9 +1462,9 @@ src/fenrir/sd_dir.h:
 #  File has been updated.
 #  Successfully updated.
 
-/workspaces/loader_yaul/build/@workspaces@loader_yaul@src@main.o: src/main.c src/main.c /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/yaul.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/bios.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/cdefs.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stddef.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint-gcc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/cache.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/map.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdbool.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/divu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/instructions.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_trig.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_vec2.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_vec3.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_mat3.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_plane.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/dmac.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/assert.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/dual.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/frt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/registers.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/endian.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/intc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/sci.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/sync.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/wdt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/peripheral.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/queue.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/rtc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/smc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/dma.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/ic.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/dsp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/timer.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart/usb-cart.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart/usb-cart/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/arp/arp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash/flash.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash/flash/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/dram-cart/dram-cart.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block/cmd.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/cmdt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/string.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/sprite.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/color.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/env.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/vram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/sys/callback-list.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/cram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/math.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/color.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int32.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int8.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/uint32.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/uint8.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn_macros.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/vram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/tvmd.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/scsp/scsp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/ip/ip.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/gdb/gdb.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/dbgio/dbgio.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/mm/memb.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/mm/mm_stats.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/init.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/sys/dma-queue.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/ssload.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/fs/cd/cdfs.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/stdio.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdarg.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/bits/alltypes.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/types.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/stdlib.h src/fenrir/fenrir.h src/fenrir/sd_dir.h src/fenrir/menu.sectors.h src/vdp1.config.h src/vdp2.config.h src/font/font.h src/screens/gamelist.h src/screens/screen.h src/../assets/bitmap.h src/../assets/test.h
+/workspaces/loader_yaul/build/@workspaces@loader_yaul@src@main.o: src/main.c src/main.c /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/yaul.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/bios.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/cdefs.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stddef.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint-gcc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/cache.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/map.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdbool.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/divu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/instructions.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_trig.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_vec2.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_vec3.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_mat3.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16_plane.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/dmac.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/assert.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/dual.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/frt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/registers.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/endian.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/intc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/sci.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/sync.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/cpu/wdt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/peripheral.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/queue.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/rtc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/smc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/cpu/smpc/smpc/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/dma.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/ic.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/dsp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu/timer.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart/usb-cart.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/usb-cart/usb-cart/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/arp/arp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash/flash.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/flash/flash/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs0/dram-cart/dram-cart.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block/cmd.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/cmdt.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/string.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/scu.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/sprite.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/color.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/env.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp1/vram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/sys/callback-list.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/cram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/map.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/math.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/color.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/fix.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int16.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int32.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int8.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/uint32.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/uint8.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn_macros.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/vram.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/tvmd.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/scsp/scsp.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/ip/ip.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/gdb/gdb.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/dbgio/dbgio.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/mm/memb.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/mm/mm_stats.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/init.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/sys/dma-queue.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/ssload.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/fs/cd/cdfs.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/stdio.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdarg.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/bits/alltypes.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/types.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/a/cs2/cd-block/cd-block.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/stdlib.h src/fenrir/fenrir.h src/fenrir/sd_dir.h src/fenrir/menu.sectors.h src/vdp1.config.h src/vdp2.config.h src/font/font.h src/screens/gamelist.h src/screens/screen.h
 #  Implicit rule search has not been done.
-#  Last modified 2022-08-09 18:55:20.6680106
+#  Last modified 2022-08-10 15:35:15.4031534
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from '/opt/tool-chains/sh2eb-elf/share/post.common.mk', line 138):
@@ -1511,7 +1482,7 @@ src/fenrir/sd_dir.h:
 # Not a target:
 /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@fenrir@fenrir.dir_op.d:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-07 19:01:41.0931271
+#  Last modified 2022-08-10 15:35:15.0644517
 #  File has been updated.
 #  Successfully updated.
 
@@ -1524,7 +1495,7 @@ src/fenrir/sd_dir.h:
 
 /workspaces/loader_yaul/build/@workspaces@loader_yaul@src@fenrir@region.o: src/fenrir/region.c src/fenrir/region.c /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdint-gcc.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/stdio.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stddef.h /opt/tool-chains/sh2eb-elf/lib/gcc/sh2eb-elf/11.2.0/include/stdarg.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/cdefs.h /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/bits/alltypes.h src/fenrir/fenrir.h src/fenrir/sd_dir.h src/fenrir/menu.sectors.h
 #  Implicit rule search has not been done.
-#  Last modified 2022-08-07 19:01:41.2570498
+#  Last modified 2022-08-10 15:35:15.2089263
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from '/opt/tool-chains/sh2eb-elf/share/post.common.mk', line 138):
@@ -1617,7 +1588,6 @@ post-build-iso:
 # Not a target:
 /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/math/int32.h:
 #  Implicit rule search has been done.
- 
 #  Last modified 2022-06-16 04:51:26
 #  File has been updated.
 #  Successfully updated.
@@ -1632,6 +1602,7 @@ post-build-iso:
 # Not a target:
 /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/sys/types.h:
 #  Implicit rule search has been done.
+ 
 #  Last modified 2022-06-16 04:51:26
 #  File has been updated.
 #  Successfully updated.
@@ -1692,21 +1663,21 @@ pre-build-iso:
 #  Successfully updated.
 
 # files hash-table stats:
-# Load=177/1024=17%, Rehash=0, Collisions=177/1172=15%
+# Load=177/1024=17%, Rehash=0, Collisions=209/1355=15%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 2 (1) / strings = 206 / storage = 9522 B / avg = 46 B
-# current buf: size = 8162 B / used = 1389 B / count = 34 / avg = 40 B
+# strcache buffers: 2 (1) / strings = 205 / storage = 9452 B / avg = 46 B
+# current buf: size = 8162 B / used = 1319 B / count = 33 / avg = 39 B
 # other used: total = 8133 B / count = 172 / avg = 47 B
 # other free: total = 29 B / max = 29 B / min = 29 B / avg = 29 B
 
-# strcache performance: lookups = 1024 / hit rate = 79%
+# strcache performance: lookups = 1206 / hit rate = 83%
 # hash-table stats:
-# Load=206/8192=3%, Rehash=0, Collisions=34/1024=3%
-# Finished Make data base on Tue Aug  9 18:55:44 2022
+# Load=205/8192=3%, Rehash=0, Collisions=42/1206=3%
+# Finished Make data base on Fri Aug 12 07:11:43 2022
 
  

@@ -9,11 +9,11 @@
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
-#define BROWSER_OFFSET_Y (browser->browser_ui_config.x_offset)
-#define BROWSER_OFFSET_X (browser->browser_ui_config.y_offset)
+#define BROWSER_OFFSET_Y (browser->browser_ui_config.x)
+#define BROWSER_OFFSET_X (browser->browser_ui_config.y)
 #define BROWSER_LINE_HEIGHT (browser->browser_ui_config.line_height)
-#define BROWSER_FOCUSED_ITEM_COLOR (browser->browser_ui_config.font_focus_color)
-#define BROWSER_ITEM_COLOR (browser->browser_ui_config.font_color)
+#define BROWSER_FOCUSED_ITEM_COLOR (1)
+#define BROWSER_ITEM_COLOR (0)
 
 #define ELEMENT_COUNT(n) (sizeof((n)) / sizeof(*(n)))
 
@@ -26,15 +26,16 @@ static void draw_selector(browser_t *browser, int y)
     /*****************************************************
      * Draw browser selector position
      ****************************************************/
-    const int16_t area_h = browser->browser_ui_config.line_height * browser->file_per_page;
-    const int16_t area_y = browser->browser_ui_config.y_offset;
-    const int16_t area_x = browser->browser_ui_config.bar.x;
-    const int16_t area_w = browser->browser_ui_config.bar.w;
-    const int16_t bar_w = browser->browser_ui_config.bar.w;
-    const int16_t bar_h = browser->browser_ui_config.bar.h;
+    const int16_t area_h = browser->browser_ui_config.line_height * browser->file_per_page + 1;
+    const int16_t area_y = browser->browser_ui_config.y - browser->browser_ui_config.line_height / 2;
+    const int16_t area_x = browser->browser_ui_config.x - browser->browser_ui_config.position_bar.w;
+    const int16_t area_w = browser->browser_ui_config.position_bar.w;
+    const int16_t bar_w = browser->browser_ui_config.position_bar.w;
+    const int16_t bar_h = browser->browser_ui_config.position_bar.h;
 
     const vdp1_cmdt_draw_mode_t draw_mode = {
-        .raw = 0x0000};
+        .raw = 0x0000,
+        .bits.cc_mode = CMDT_PMOD_CC_GOURAUD};
 
     const color_rgb1555_t color = COLOR_RGB1555(1, 0x0F, 0x1F, 0x1F);
 
@@ -60,6 +61,7 @@ static void draw_selector(browser_t *browser, int y)
     vdp1_cmdt_polygon_set(cmdt);
     vdp1_cmdt_param_draw_mode_set(cmdt, draw_mode);
     vdp1_cmdt_param_color_set(cmdt, color);
+    vdp1_cmdt_param_gouraud_base_set(cmdt, browser->gouraud_base + 0 * sizeof(int16_t));
 
     cmdt++;
 }
@@ -94,7 +96,7 @@ static void browser_draw_items(browser_t *browser)
         // build and enqueue the polygon
         const vdp1_cmdt_draw_mode_t draw_mode = {
             .raw = 0x0000,
-            .bits.cc_mode = 0,    // todo: enable gouraud
+            .bits.cc_mode = CMDT_PMOD_CC_GOURAUD,
             .bits.color_mode = 1, // 16color 4bit
             .bits.trans_pixel_disable = false,
             .bits.pre_clipping_disable = true,
@@ -136,7 +138,6 @@ static int num_entry(browser_t *browser)
 
 void browser_update(browser_t *browser)
 {
-
     const int max_page = (int)(browser->count - 1) / browser->file_per_page;
     const uint32_t nummenu = num_entry(browser);
 
@@ -217,6 +218,7 @@ void browser_update(browser_t *browser)
             pal_offset = 32;
         }
         vdp1_cmdt_param_color_mode1_set(item_cmd, pal + pal_offset);
+        vdp1_cmdt_param_gouraud_base_set(item_cmd, browser->gouraud_base + 4 * sizeof(int16_t));
     }
 
     browser->old_page = browser->page;

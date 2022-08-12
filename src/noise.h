@@ -1,34 +1,14 @@
 #pragma once
 #include <stdint.h>
-
-#define NOISE_PALETTES                                    \
-    {                                                     \
-        COLOR_RGB1555(1, 0x00, 0xC0 >> 3, 0x40 >> 3),     \
-            COLOR_RGB1555(1, 0x00, 0xF0 >> 3, 0x00 >> 3), \
-            COLOR_RGB1555(1, 0x00, 0x80 >> 3, 0x60 >> 3), \
-            COLOR_RGB1555(1, 0x00, 0xF0 >> 3, 0xF0 >> 3), \
-                                                          \
-            COLOR_RGB1555(1, 0x00, 0xC0 >> 3, 0x40 >> 3), \
-            COLOR_RGB1555(1, 0x00, 0xF0 >> 3, 0x00 >> 3), \
-            COLOR_RGB1555(1, 0x00, 0x80 >> 3, 0x60 >> 3), \
-            COLOR_RGB1555(1, 0x00, 0xF0 >> 3, 0xF0 >> 3), \
-                                                          \
-            COLOR_RGB1555(1, 0x00, 0xC0 >> 3, 0x40 >> 3), \
-            COLOR_RGB1555(1, 0x00, 0xF0 >> 3, 0x00 >> 3), \
-            COLOR_RGB1555(1, 0x00, 0x80 >> 3, 0x60 >> 3), \
-            COLOR_RGB1555(1, 0x00, 0xF0 >> 3, 0xF0 >> 3), \
-                                                          \
-            COLOR_RGB1555(1, 0x00, 0xC0 >> 3, 0x40 >> 3), \
-            COLOR_RGB1555(1, 0x00, 0xF0 >> 3, 0x00 >> 3), \
-            COLOR_RGB1555(1, 0x00, 0x80 >> 3, 0x60 >> 3), \
-            COLOR_RGB1555(1, 0x00, 0xF0 >> 3, 0xF0 >> 3), \
-    }
+#define NOISE_PALETTE_SIZE (16)
 
 typedef struct
 {
     uintptr_t cell_addr;
     uintptr_t pattern_addr;
     uintptr_t pal_addr;
+    uintptr_t noise_palette;
+    size_t noise_palettes_sz;
     // ui theme 
     uint16_t cell_x;
     uint16_t cell_y;

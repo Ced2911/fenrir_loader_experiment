@@ -14,6 +14,30 @@ typedef struct
 {
     struct
     {
+        uint16_t w;
+        uint16_t h;
+        color_rgb1555_t color;
+        color_rgb1555_t gouraud[4];
+    } position_bar;
+
+    struct
+    {
+        color_rgb1555_t color;
+        color_rgb1555_t gouraud[4];
+    } item_colors, item_focused_colors;
+
+    uint16_t x;
+    uint16_t y;
+    // used to create a clipping area
+    uint16_t w;
+    uint16_t h;
+    uint16_t line_height;
+} ui_config_browser_t;
+
+typedef struct
+{
+    struct
+    {
         struct
         {
             struct
@@ -31,29 +55,7 @@ typedef struct
                 fix16_t velocity_y;
             } background;
 
-            struct
-            {
-                struct
-                {
-                    uint16_t w;
-                    uint16_t h;
-                    color_rgb1555_t color;
-                    color_rgb1555_t gouraud[4];
-                } position_bar;
-
-                struct
-                {
-                    color_rgb1555_t color;
-                    color_rgb1555_t gouraud[4];
-                } item_colors, item_focused_colors;
-
-                uint16_t x;
-                uint16_t y;
-                // used to create a clipping area
-                uint16_t w;
-                uint16_t h;
-                uint16_t line_height;
-            } browser;
+            ui_config_browser_t browser;
 
         } gamelist;
     } screens;

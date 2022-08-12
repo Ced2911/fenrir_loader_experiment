@@ -55,7 +55,9 @@ typedef struct __attribute__((__packed__))
 
 #define SP_CMD_CHUNK_SIZE 2048
 
-#define FENRIR_COVER_SIZE (128 * 128 * 2)
+#define FENRIR_COVER_W (128)
+#define FENRIR_COVER_H (128)
+#define FENRIR_COVER_SIZE (FENRIR_COVER_W * FENRIR_COVER_H * 2)
 
 // subcmd
 enum
