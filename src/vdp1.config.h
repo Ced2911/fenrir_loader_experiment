@@ -13,3 +13,4 @@ extern vdp1_cmdt_list_t *cmdt_list;
 void vdp1_init();
 
 #define FONT_CACHE_SIZE (32*1024)
+#define VDP2_CRAM_LUT   (0x80)

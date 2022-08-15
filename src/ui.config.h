@@ -6,8 +6,8 @@ typedef struct
 {
     int char_width;
     int char_height;
-    uintptr_t data;
-    uintptr_t char_spacing;
+    uint8_t* data;
+    uint8_t* char_spacing;
 } ui_config_font_t;
 
 typedef struct
@@ -36,7 +36,7 @@ typedef struct
 
     struct
     {
-        color_rgb1555_t color;
+        color_rgb1555_t colors[2];
         color_rgb1555_t gouraud[4];
     } item_colors, item_focused_colors;
 

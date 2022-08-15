@@ -1,0 +1,31 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "C/C++: dbg font",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/tools/fonts/font",
+            "args": ["/workspaces/loader_yaul/assets/Street Fighter Alpha Regular.bff", "/workspaces/loader_yaul/assets/sfa.c", "sfa"],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/tools/fonts/",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Activer l'impression en mode Pretty pour gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Définir la version désassemblage sur Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "C/C++: gcc build font tools",
+            "miDebuggerPath": "/usr/bin/gdb"
+        }
+    ]
+}

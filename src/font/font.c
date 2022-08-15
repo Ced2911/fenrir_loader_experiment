@@ -2,26 +2,11 @@
 #include <yaul.h>
 #include <assert.h>
 #include "font.h"
+#include "ui.config.h"
 
 #define align_8(addr) (((addr) + 7) & (~7))
 
-#define THEME_FONT_WIDTH 256
-#define THEME_FONT_HEIGHT 256
-#define THEME_FONT_COUNT 256
-
-#define CHAR_W 16
-#define CHAR_H 16
-
-typedef struct
-{
-    uint32_t font_height;
-    uint8_t font_width[THEME_FONT_COUNT];
-    uint8_t font[THEME_FONT_WIDTH * THEME_FONT_HEIGHT / 2]; // 8bpp
-} menu_font_t;
-
-extern const char army12[33028];
-
-#define THEME_FONT ((const menu_font_t *)(army12))
+#define THEME_FONT (&ui_config.main_font)
 
 static inline void memcpy4bpp(uint8_t *d, uint8_t *s, uint32_t nb, int off)
 {
@@ -48,16 +33,16 @@ static inline void memcpy4bpp(uint8_t *d, uint8_t *s, uint32_t nb, int off)
 
 static uint8_t font_get_letter_width(uint8_t letter)
 {
-    return THEME_FONT->font_width[letter];
+    return THEME_FONT->char_spacing[letter];
 }
 
 static uint8_t __draw_font_10(uint8_t letter, int x, int y, uint8_t *dst, uint32_t pitch)
 {
     const uint8_t letter_w = font_get_letter_width(letter);
-    const uint32_t h = CHAR_H;
-    const uint32_t w = CHAR_W;
+    const uint32_t h = THEME_FONT->char_height;
+    const uint32_t w = THEME_FONT->char_width;
 
-    uint8_t *font = (uint8_t *)(THEME_FONT->font);
+    uint8_t *font = (uint8_t *)(THEME_FONT->data);
     uint8_t *src = &font[(letter - 32) * ((w * h / 2))];
 
     for (uint32_t yoff = y; yoff < ((y + h)); yoff++)
@@ -76,7 +61,7 @@ size_t font_texture_font_create(font_texture_t *tex, char *text)
     int length = strlen(text);
     int x = 0;
     int y = 0;
-    tex->h = CHAR_H;
+    tex->h = THEME_FONT->char_height;
     tex->w = pitch * 2;
 
     // erase texture
@@ -89,7 +74,7 @@ size_t font_texture_font_create(font_texture_t *tex, char *text)
         if (text[i] != ' ')
             x += __draw_font_10(text[i], x, y, (uint8_t *)tex->addr, pitch);
         else
-            x += THEME_FONT->font_width[' '];
+            x += THEME_FONT->char_spacing[' '];
     }
     return tex->h * pitch;
 }

@@ -22,6 +22,17 @@
             "intelliSenseMode": "linux-gcc-x64",
             "compileCommands": "${workspaceFolder}/compile_commands.json",
             "configurationProvider": "ms-vscode.makefile-tools"
+        },
+        {
+            "name": "linux",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/sbin/gcc",
+            "cStandard": "gnu17",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "linux-gcc-x64"
         }
     ],
     "version": 4

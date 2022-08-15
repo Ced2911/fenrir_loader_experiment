@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "tiler": "ts-node index.ts ../../assets/mvsc_bg.png ../../assets/mvsc_bg.h mvsc_bg"
+    "tiler": "yarn bg",    
+    "bg": "ts-node index.ts ../../assets/mvsc_bg.png ../../assets/mvsc_bg.h mvsc_bg",
+    "layer": "ts-node index.ts ../../assets/layer.png ../../assets/layer.h layer"
   },
   "author": "",
   "license": "ISC",

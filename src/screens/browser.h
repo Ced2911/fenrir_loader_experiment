@@ -4,6 +4,10 @@
 #include "font/font.h"
 #include "ui.config.h"
 
+
+#define BROWSER_FOCUSED_ITEM_COLOR (16)
+#define BROWSER_ITEM_COLOR (0)
+
 struct browser_s;
 typedef struct browser_s browser_t;
 

@@ -46,12 +46,7 @@ static browser_t browser = {
     .input_handler = browser_input_callback,
     .get_item = browser_get_item};
 
-// 00c040
-// 00f000
-// 008060
-// 00f0f0
-
-noise_cfg_t noise_cfg = {
+static noise_cfg_t noise_cfg = {
     .cell_addr = NBG1_CELL_ADDR,
     .pattern_addr = NGB1_PATTERN_ADDR,
     .pal_addr = VDP2_CRAM_ADDR(0x100)};
@@ -98,18 +93,17 @@ static void browser_input_callback(browser_t *browser)
     }
 }
 
+static int browser_selected __uncached = -1;
+
 static void _slave_entry(void)
 {
-    static int item = 0;
     int selected = 0;
 
-    _CPU_IN_SPINLOCK({ selected = browser.selected; })
+    _CPU_IN_SPINLOCK({ selected = browser_selected; })
 
     uintptr_t addr = browser.texture_base + FONT_CACHE_SIZE;
 
     fenrir_get_cover(selected, (uint8_t *)addr);
-
-    item = selected;
 }
 
 static void gamelist_vbk()
@@ -135,8 +129,9 @@ static void gamelist_update()
     // if entry changed, load the cover
     if (browser.selected != gamelist_ctx.last_selected_item)
     {
-        cpu_dual_slave_notify();
         gamelist_ctx.last_selected_item = browser.selected;
+        browser_selected = sd_dir_entries[browser.selected].id;
+        cpu_dual_slave_notify();
     }
 }
 
@@ -183,19 +178,27 @@ static void gamelist_init()
 
     // palette colors
     color_rgb1555_t *pal = (color_rgb1555_t *)browser.pal_base;
-    pal[0] = ui_config.screens.gamelist.browser.item_colors.color;
-    pal[1] = ui_config.screens.gamelist.browser.item_focused_colors.color;
-    pal[2] = ui_config.screens.gamelist.browser.position_bar.color;
+    pal[BROWSER_ITEM_COLOR + 1] = ui_config.screens.gamelist.browser.item_colors.colors[0];
+    pal[BROWSER_ITEM_COLOR + 2] = ui_config.screens.gamelist.browser.item_colors.colors[1];
+
+    pal[BROWSER_FOCUSED_ITEM_COLOR + 1] = ui_config.screens.gamelist.browser.item_focused_colors.colors[0];
+    pal[BROWSER_FOCUSED_ITEM_COLOR + 2] = ui_config.screens.gamelist.browser.item_focused_colors.colors[1];
+
+    pal[32 + 1] = ui_config.screens.gamelist.browser.position_bar.color;
 
     // gouraud colors
     color_rgb1555_t *gouraud = (color_rgb1555_t *)browser.gouraud_base;
     for (int i = 0; i < 4; i++)
     {
         gouraud[i + 0] = ui_config.screens.gamelist.browser.item_colors.gouraud[i];
-        gouraud[i + 4] = ui_config.screens.gamelist.browser.item_focused_colors.gouraud[i];
-        gouraud[i + 8] = ui_config.screens.gamelist.browser.position_bar.gouraud[i];
+        gouraud[i + 16] = ui_config.screens.gamelist.browser.item_focused_colors.gouraud[i];
+        gouraud[i + 24] = ui_config.screens.gamelist.browser.position_bar.gouraud[i];
     }
 
+    // vdp2 color (each banks is 0x10)
+    color_rgb1555_t *cram = (color_rgb1555_t *)(VDP2_CRAM_MODE_0_OFFSET(0, 0, 0) + VDP2_CRAM_LUT);
+    cram[1] = ui_config.screens.gamelist.browser.item_colors.colors[1];
+    cram[16 + 1] = ui_config.screens.gamelist.browser.item_focused_colors.colors[1];
     /*****************************************************
      *
      ****************************************************/
