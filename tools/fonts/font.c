@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <assert.h>
 
 #define THEME_FONT_WIDTH 256
 #define THEME_FONT_HEIGHT 256
@@ -41,25 +42,19 @@ long filesize(FILE *fp)
 void convert_font_8bpp(uint8_t *_src, uint8_t *_dst, uint8_t p, uint32_t w, uint32_t h, uint8_t grid_size_w, uint8_t grid_size_h)
 {
     uint8_t *dst = _dst;
-    int count = (w * h) / (grid_size_w * grid_size_w);
+    int count = (w * h) / (grid_size_w * grid_size_h);
 
     for (int letter = 0; letter < count; letter++)
     {
         uint32_t x_offset = (letter * grid_size_w) % w;
-        uint32_t y_offset = ((letter * grid_size_w) / w) * grid_size_w;
-        for (uint32_t y = 0; y < grid_size_w; y++)
+        uint32_t y_offset = ((letter * grid_size_w) / w) * grid_size_h;
+        for (uint32_t y = 0; y < grid_size_h; y++)
         {
             uint8_t *src = &_src[x_offset + ((y_offset + y) * w)];
             for (uint32_t x = 0; x < grid_size_w; x++)
             {
                 uint32_t pixel = *src++;
-                /*
                 if (pixel)
-                    *dst++ = p;
-                else
-                    *dst++ = 0;
-                    */
-                if (pixel && y < grid_size_h)
                     *dst = p;
                 dst++;
             }
@@ -135,10 +130,12 @@ int convert_font(const char *filename, menu_font_t *menu_font, FontFileHeader *f
     uint8_t *char_table = file_buff + WIDTH_DATA_OFFSET;
     uint8_t *pixel_buff = file_buff + MAP_DATA_OFFSET;
 
+    assert(font->BPP == 8);
+
     memcpy(ffh, font, sizeof(FontFileHeader));
 
     // shadow
-    // convert_font_8bpp(pixel_buff, buff + (1 + (font->CellWidth)), 2, font->ImageWidth, font->ImageHeight, font->CellWidth, font->CellHeight - 1);
+    convert_font_8bpp(pixel_buff, buff + (1 + (font->CellWidth)), 2, font->ImageWidth, font->ImageHeight, font->CellWidth, font->CellHeight);
 
     // normal
     convert_font_8bpp(pixel_buff, buff, 1, font->ImageWidth, font->ImageHeight, font->CellWidth, font->CellHeight);
@@ -171,7 +168,7 @@ void bin2c(FILE *f_output, const char *name, menu_font_t *buf, FontFileHeader *f
     fprintf(f_output, "\n};\n\n");
 
     fprintf(f_output, "const uint8_t %s_font_bitmap[] = {", name);
-    for (int i = 0, need_comma = 0; i < THEME_FONT_WIDTH * THEME_FONT_HEIGHT / 2; ++i)
+    for (int i = 0, need_comma = 0; i < (ffh->CellWidth * ffh->CellHeight * THEME_FONT_COUNT) / 2; ++i)
     {
         if (need_comma)
             fprintf(f_output, ", ");

@@ -13,7 +13,8 @@
 #define BROWSER_OFFSET_X (browser->browser_ui_config.y)
 #define BROWSER_LINE_HEIGHT (browser->browser_ui_config.line_height)
 
-#define BROWSER_CMDT_ITEM(i) (i << 1)
+#define BROWSER_CMDT_ITEM(i) (ORDER_BUFFER_STARTING_INDEX + 1 + (i * 2))
+#define BROWSER_CMDT_SHADOW(i) (BROWSER_CMDT_ITEM(i) + 1)
 
 #define ELEMENT_COUNT(n) (sizeof((n)) / sizeof(*(n)))
 
@@ -110,7 +111,6 @@ static void browser_draw_items(browser_t *browser)
         size_t texture_size = font_texture_font_create(tex, entry);
 
         // build and enqueue the polygon
-
         // add shadow
         cmdt->cmd_xa = menux + 1;
         cmdt->cmd_ya = menuy + 1 + ((i - start) * BROWSER_LINE_HEIGHT);
@@ -123,6 +123,7 @@ static void browser_draw_items(browser_t *browser)
         vdp1_cmdt_param_char_base_set(cmdt, vdp_texture_base);
         vdp1_cmdt_param_gouraud_base_set(cmdt, gouraud);
 
+        vdp1_cmdt_jump_skip_next(cmdt);
         cmdt++;
 
         // add front
@@ -138,8 +139,6 @@ static void browser_draw_items(browser_t *browser)
         vdp1_cmdt_param_gouraud_base_set(cmdt, gouraud);
 
         cmdt++;
-        // duplicate cmd for shadow effect
-        // vdp1_cmdt_jump_skip_next(cmdt);
 
         vdp_texture_base += texture_size;
         texture_buffer += texture_size;
@@ -165,8 +164,8 @@ static void browser_set_item_color(browser_t *browser, int item, int is_focused)
         .type_0.data.dc = is_focused ? (VDP2_CRAM_LUT + 0x20) >> 1 : (VDP2_CRAM_LUT) >> 1};
     const uint32_t pal = (uint32_t)browser->pal_base;
 
-    vdp1_cmdt_t *item_shadow_cmd = &cmdt_list->cmdts[ORDER_BUFFER_STARTING_INDEX + 1 + BROWSER_CMDT_ITEM(item)];
-    vdp1_cmdt_t *item_cmd = &cmdt_list->cmdts[ORDER_BUFFER_STARTING_INDEX + 1 + BROWSER_CMDT_ITEM(item) + 1];
+    vdp1_cmdt_t *item_shadow_cmd = &cmdt_list->cmdts[BROWSER_CMDT_ITEM(item)];
+    vdp1_cmdt_t *item_cmd = &cmdt_list->cmdts[BROWSER_CMDT_ITEM(item) + 1];
     uint32_t pal_offset = 0;
     uint32_t gouraud_offset = 0;
     if (is_focused)
@@ -261,7 +260,7 @@ void browser_update(browser_t *browser)
     browser->old_page = browser->page;
 
     // finish drawing
-    cmdt = &cmdt_list->cmdts[ORDER_BUFFER_STARTING_INDEX + 1 + BROWSER_CMDT_ITEM(item_count)];
+    cmdt = &cmdt_list->cmdts[BROWSER_CMDT_ITEM(item_count)];
     vdp1_cmdt_end_set(cmdt++);
 
     cmdt_list->count = cmdt - cmdt_list->cmdts;
