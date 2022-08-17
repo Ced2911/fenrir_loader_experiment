@@ -2,6 +2,7 @@
 #include "ui.config.h"
 #include "../assets/bitmap.h"
 #include "../assets/mvsc_bg.h"
+#include "../assets//marvel_fenrir.h"
 #include "../assets/sfa.c"
 
 #define THEME_FONT_WIDTH 256
@@ -57,6 +58,17 @@ ui_config_t ui_config = {
                 .pattern_addr = (uintptr_t)mvsc_bg_pattern,
                 .pattern_sz = mvsc_bg_pattern_sz,
             },
+
+            .fg = {
+                .velocity_x = 0,
+                .velocity_y = 0,
+                .cell_addr = (uintptr_t)marvel_fenrir_cell,
+                .cell_sz = marvel_fenrir_cell_sz,
+                .pal_addr = (uintptr_t)marvel_fenrir_pal,
+                .pal_sz = marvel_fenrir_pal_sz,
+                .pattern_addr = (uintptr_t)marvel_fenrir_pattern,
+                .pattern_sz = mvsc_bg_pattern_sz,
+            },
             .cover = {
                 .noise_palettes = NOISE_PALETTES,
                 .x = 80,
@@ -97,8 +109,7 @@ ui_config_t ui_config = {
                     },
                 },
                 .position_bar = {
-                    .color = 
-                        COLOR_RGB1555(1, 0x00, 0x11, 0x11),
+                    .color = COLOR_RGB1555(1, 0x00, 0x11, 0x11),
                     .gouraud = {
                         COLOR_RGB1555(1, 0x00, 0x1F, 0x1F),
                         COLOR_RGB1555(1, 0x1F, 0x00, 0x1F),

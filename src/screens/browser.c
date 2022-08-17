@@ -111,6 +111,7 @@ static void browser_draw_items(browser_t *browser)
         size_t texture_size = font_texture_font_create(tex, entry);
 
         // build and enqueue the polygon
+        /*
         // add shadow
         cmdt->cmd_xa = menux + 1;
         cmdt->cmd_ya = menuy + 1 + ((i - start) * BROWSER_LINE_HEIGHT);
@@ -122,6 +123,7 @@ static void browser_draw_items(browser_t *browser)
 
         vdp1_cmdt_param_char_base_set(cmdt, vdp_texture_base);
         vdp1_cmdt_param_gouraud_base_set(cmdt, gouraud);
+        */
 
         vdp1_cmdt_jump_skip_next(cmdt);
         cmdt++;

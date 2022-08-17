@@ -68,16 +68,14 @@ function tileImage(image: Jimp, paletteArray: RGBA[], cbk: Function) {
                 const green = this.bitmap.data[idx + 1];
                 const blue = this.bitmap.data[idx + 2];
                 const alpha = this.bitmap.data[idx + 3];
-                const rgba = { r: red, g: green, b: blue, a: alpha }
 
                 const pixel = Jimp.rgbaToInt(red, green, blue, alpha);
-                const pal = paletteArray.findIndex((t) => { return pixel === Jimp.rgbaToInt(t.r, t.g, t.b, t.a) })
+                const pal = pixel == 0 ? 0 : paletteArray.findIndex((t) => { return pixel === Jimp.rgbaToInt(t.r, t.g, t.b, t.a) })
 
                 data.push(pal)
             });
 
             cbk(data, tiles.length, x / 8, y / 8);
-
             tiles.push(data)
         }
     }

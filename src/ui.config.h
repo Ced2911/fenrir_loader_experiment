@@ -6,8 +6,8 @@ typedef struct
 {
     int char_width;
     int char_height;
-    uint8_t* data;
-    uint8_t* char_spacing;
+    uint8_t *data;
+    uint8_t *char_spacing;
 } ui_config_font_t;
 
 typedef struct
@@ -15,7 +15,7 @@ typedef struct
     uintptr_t pattern_addr;
     uintptr_t cell_addr;
     uintptr_t pal_addr;
-    
+
     size_t pattern_sz;
     size_t cell_sz;
     size_t pal_sz;
@@ -62,7 +62,7 @@ typedef struct
                 uint16_t h;
                 color_rgb1555_t noise_palettes[NOISE_PALETTE_SIZE];
             } cover;
-
+            ui_config_background_t fg;
             ui_config_background_t background;
             ui_config_browser_t browser;
 
