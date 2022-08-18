@@ -1,7 +1,30 @@
 
 #include <yaul.h>
+#include "assets/vdp2.h"
 #include "ui.config.h"
 #include "vdp2.config.h"
+
+static void upload_cells(ui_config_background_t *bg, const vdp2_scrn_cell_format_t *format)
+{
+    if (bg->cell_addr)
+    {
+        vdp_dma_enqueue((void *)format->cp_table,
+                        (void *)bg->cell_addr,
+                        bg->cell_sz);
+    }
+    if (bg->pal_addr)
+    {
+        vdp_dma_enqueue((void *)format->color_palette,
+                        (void *)bg->pal_addr,
+                        bg->pal_sz);
+    }
+    if (bg->pattern_addr)
+    {
+        vdp_dma_enqueue((void *)format->map_bases.planes[0],
+                        (void *)bg->pattern_addr,
+                        bg->pattern_sz);
+    }
+}
 
 static void vdp2_ngb0_init()
 {
@@ -13,7 +36,7 @@ static void vdp2_ngb0_init()
         .auxiliary_mode = 1,
         .plane_size = 1 * 1,
         .cp_table = NBG0_CELL_ADDR,
-        .color_palette = NBG0_COLOR_ADDR,
+        .color_palette = VDP2_CRAM_ADDR(0x200),
         .map_bases = {
             .planes = {
                 NGB0_PATTERN_ADDR + 0x00000,
@@ -21,17 +44,7 @@ static void vdp2_ngb0_init()
                 NGB0_PATTERN_ADDR + 0x00000,
                 NGB0_PATTERN_ADDR + 0x02000}}};
 
-    vdp_dma_enqueue((void *)VDP2_CRAM_ADDR(0x200),
-                    (void *)ui_config.screens.gamelist.background.pal_addr,
-                    ui_config.screens.gamelist.background.pal_sz);
-
-    vdp_dma_enqueue((void *)NBG0_CELL_ADDR,
-                    (void *)ui_config.screens.gamelist.background.cell_addr,
-                    ui_config.screens.gamelist.background.cell_sz);
-
-    vdp_dma_enqueue((void *)NGB0_PATTERN_ADDR,
-                    (void *)ui_config.screens.gamelist.background.pattern_addr,
-                    ui_config.screens.gamelist.background.pattern_sz);
+    upload_cells(&ui_config.screens.gamelist.background, &format);
 
     vdp2_scrn_cell_format_set(&format);
     vdp2_scrn_priority_set(VDP2_SCRN_NBG0, 2);
@@ -72,7 +85,7 @@ static void vdp2_ngb2_init()
         .auxiliary_mode = 0,
         .plane_size = 1 * 1,
         .cp_table = NBG2_CELL_ADDR,
-        .color_palette = 0,
+        .color_palette = NBG2_COLOR_ADDR,
         .map_bases = {
             .planes = {
                 NGB2_PATTERN_ADDR,
@@ -81,21 +94,11 @@ static void vdp2_ngb2_init()
                 NGB2_PATTERN_ADDR,
             }}};
 
+    upload_cells(&ui_config.screens.gamelist.fg, &format);
+
     vdp2_scrn_cell_format_set(&format);
     vdp2_scrn_priority_set(VDP2_SCRN_NBG2, 4);
-    vdp2_cram_offset_set(VDP2_SCRN_NBG2, 0 /*VDP2_CRAM_ADDR(0x200)*/);
-
-    vdp_dma_enqueue((void *)NBG2_COLOR_ADDR,
-                    (void *)ui_config.screens.gamelist.fg.pal_addr,
-                    ui_config.screens.gamelist.fg.pal_sz);
-
-    vdp_dma_enqueue((void *)NBG2_CELL_ADDR,
-                    (void *)ui_config.screens.gamelist.fg.cell_addr,
-                    ui_config.screens.gamelist.fg.cell_sz);
-
-    vdp_dma_enqueue((void *)NGB2_PATTERN_ADDR,
-                    (void *)ui_config.screens.gamelist.fg.pattern_addr,
-                    ui_config.screens.gamelist.fg.pattern_sz);
+    vdp2_cram_offset_set(VDP2_SCRN_NBG2, 0);
 }
 
 void vdp2_init()

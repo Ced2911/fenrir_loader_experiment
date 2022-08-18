@@ -4,6 +4,7 @@
 #include "../assets/mvsc_bg.h"
 #include "../assets//marvel_fenrir.h"
 #include "../assets/sfa.c"
+#include "../assets/vdp2.h"
 
 #define THEME_FONT_WIDTH 256
 #define THEME_FONT_HEIGHT 256
