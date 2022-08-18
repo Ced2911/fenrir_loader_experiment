@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "tiler": "yarn bg && yarn layer",    
+    "tiler": "ts-node index.ts",    
+    "_tiler": "yarn bg && yarn layer",    
     "bg": "ts-node index.ts ../../assets/mvsc_bg.png ../../assets/mvsc_bg.h mvsc_bg",
     "layer": "ts-node index.ts ../../assets/marvel_fenrir.png ../../assets/marvel_fenrir.h marvel_fenrir"
   },

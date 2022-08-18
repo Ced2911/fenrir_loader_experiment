@@ -1,143 +1,111 @@
 import Jimp from 'jimp';
 import { writeFile } from 'fs';
 import { createHash } from 'crypto';
+import { buildPalette, tileImage, RGBA, RGB8888To555 } from './tiler'
 
-export interface RGBA {
-    r: number;
-    g: number;
-    b: number;
-    a: number;
+interface CONFIG_IMAGE {
+    key: string,
+    file: string
 }
-export interface TILE {
-    hash: string;
-    data: number[];
-}
-
-const TILE_W = 8;
-const TILE_H = 8;
-
-const tiles: Record<string, TILE> = {}
-const map: number[] = []
-
-function buildPalette(image: Jimp) {
-    const palette: Record<number, RGBA> = {}
-    palette[0] = { r: 0, g: 0, b: 0, a: 1 };
-    image.scan(0, 0, image.bitmap.width, image.bitmap.height, function (x, y, idx) {
-        var red = this.bitmap.data[idx + 0];
-        var green = this.bitmap.data[idx + 1];
-        var blue = this.bitmap.data[idx + 2];
-        var alpha = this.bitmap.data[idx + 3];
-
-        var pixel = Jimp.rgbaToInt(red, green, blue, alpha);
-
-        if (palette[pixel] === undefined) {
-            palette[pixel] = { r: red, g: green, b: blue, a: alpha }
-        }
-    });
-    return Object.values(palette)
+interface CONFIG {
+    images: CONFIG_IMAGE[],
+    output: string
 }
 
-function buildImage(image: Jimp, paletteArray: RGBA[]) {
-    const data: number[] = [];
-    image.scan(0, 0, image.bitmap.width, image.bitmap.height, function (x, y, idx) {
-        const red = this.bitmap.data[idx + 0];
-        const green = this.bitmap.data[idx + 1];
-        const blue = this.bitmap.data[idx + 2];
-        const alpha = this.bitmap.data[idx + 3];
-        const rgba = { r: red, g: green, b: blue, a: alpha }
+const config = require('./config.json') as CONFIG;
 
-        const pixel = Jimp.rgbaToInt(red, green, blue, alpha);
-        const pal = paletteArray.findIndex((t) => { return pixel === Jimp.rgbaToInt(t.r, t.g, t.b, t.a) })
+// console.log(config)
 
-        data.push(pal)
-    });
+async function main() {
+    // contain all tiles for all screens
+    const cells: Record<string, number[]> = {}
+    const cellsPerScreen: Record<string, number> = {}
 
-    return data
-}
+    // pattern for each file/screen
+    const pattern: Record<string, number[]> = {}
 
-function tileImage(image: Jimp, paletteArray: RGBA[], cbk: Function) {
-    const tiles: number[][] = [];
+    // palette for each file/screen
+    const palettes: Record<string, RGBA[]> = {}
 
-    for (let y = 0; y < image.bitmap.height; y += 8) {
-        for (let x = 0; x < image.bitmap.width; x += 8) {
+    await Promise.all(config.images.map(async ({ key, file }) => {
+        // 1st step build palettes
+        await Jimp.read(file)
+            .then(image => {
+                palettes[key] = buildPalette(image)
+            })
 
-            const data: number[] = [];
+        // 2nd unik tiles
+        await Jimp.read(file)
+            .then(image => {
+                const screenHash = {}
+                tileImage(image, palettes[key], (cellData) => {
+                    const hash = createHash('sha256').update(Buffer.from(cellData)).digest('hex');
+                    cells[hash] = cellData;
+                    screenHash[hash] = hash;
+                })
+                cellsPerScreen[key] = Object.values(screenHash).length;
+            })
 
-            image.scan(x, y, 8, 8, function (x, y, idx) {
-                const red = this.bitmap.data[idx + 0];
-                const green = this.bitmap.data[idx + 1];
-                const blue = this.bitmap.data[idx + 2];
-                const alpha = this.bitmap.data[idx + 3];
+        // 3rd pattern
+        await Jimp.read(file)
+            .then(image => {
+                const pages: Record<number, number[]> = { 0: [], 1: [], 2: [], 3: [] }
 
-                const pixel = Jimp.rgbaToInt(red, green, blue, alpha);
-                const pal = pixel == 0 ? 0 : paletteArray.findIndex((t) => { return pixel === Jimp.rgbaToInt(t.r, t.g, t.b, t.a) })
+                tileImage(image, palettes[key], (cellData, tilen, x, y) => {
+                    const hash = createHash('sha256').update(Buffer.from(cellData)).digest('hex');
 
-                data.push(pal)
-            });
+                    const ptn = Object.keys(cells).findIndex((h) => hash == h)
 
-            cbk(data, tiles.length, x / 8, y / 8);
-            tiles.push(data)
-        }
-    }
+                    // convert to ss fmt
+                    const page = x > 63 ? 1 : 0 + y > 63 ? 2 : 0;
+                    const addr = ptn * 64;
+                    const ptn_ss = ((addr + 0) >> 5);
 
-    return tiles;
-}
+                    pages[page].push(ptn_ss)
+                })
 
-function RGB8888To555(rgba: RGBA) {
-    return `COLOR_RGB1555(${rgba.a ? 1 : 0}, ${Math.floor(rgba.r / 8)}, ${Math.floor(rgba.g / 8)}, ${Math.floor(rgba.b / 8)})`
-}
+                pattern[key] = Object.values(pages).flatMap(x => x)
+            })
+    }))
 
-const argv = [...process.argv]
-const key = argv.pop()
-const output = argv.pop()
-const input = argv.pop()
+    // output stats
+    console.log(`number of global tiles: ${Object.values(cells).length}`)
+    console.log(`number of global pattern: ${Object.values(pattern).reduce((acc, pscreen) => acc + pscreen.length, 0)}`)
+    console.log(`number of global palettes: ${Object.values(pattern).reduce((acc, pscreen) => acc + pscreen.length, 0)}`)
 
-Jimp.read(input)
-    .then(image => {
-        const pal = buildPalette(image)
-        const img = buildImage(image, pal)
-        const pattern: number[] = []
-        const pages: Record<number, number[]> = { 0: [], 1: [], 2: [], 3: [] }
-        const cells: Record<string, number[]> = {}
-        let i = 0;
-        tileImage(image, pal, (cellData, tilen, x, y) => {
-            const d = createHash('sha256').update(Buffer.from(cellData)).digest('hex');
-            cells[d] = cellData;
-            const ptn = Object.keys(cells).findIndex((h) => d == h)
-
-            // convert to ss fmt
-            const page = x > 63 ? 1 : 0 + y > 63 ? 2 : 0;
-            const addr = ptn * 64;
-            const ptn_ss = ((addr + 0) >> 5);
-            //pattern.push(ptn_ss)
-            pages[page].push(ptn_ss)
-
-            i++
-        })
-
-        pattern.push(...Object.values(pages).flatMap(x => x))
-
-        let k = key;
-
-        let patternstr = `
-static const unsigned long ${k}_pattern_sz = ${pattern.length}*sizeof(unsigned short);
-static const unsigned short ${k}_pattern[] = {
-    ${pattern.join(',')}
-};`
-        let cellstr = `
-static const unsigned long ${k}_cell_sz = ${Object.values(cells).length * 8 * 8}*sizeof(unsigned char);
-static const unsigned char ${k}_cell[] = {
-    ${Object.values(cells).flatMap(x => x).join(',')}
-};`
-
-        let palstr = `
-static const unsigned long ${k}_pal_sz = ${Object.values(pal).length}*sizeof(color_rgb1555_t);
-static const color_rgb1555_t ${k}_pal[] = {
-    ${Object.values(pal).map(c => RGB8888To555(c)).join(',')}
-};`
-        //console.log(tilesstr)
-        writeFile(output, `// Auto generated\n\n` + palstr + patternstr + cellstr, () => { })
+    config.images.map(({ key, file }) => {
+        console.log('\n')
+        console.log(`file: ${file}`)
+        console.log(`\tnumber of ${key} tiles: ${cellsPerScreen[key]}`)
+        console.log(`\tnumber of ${key} pattern: ${pattern[key].length}`)
+        console.log(`\tnumber of ${key} palettes: ${palettes[key].length}`)
     })
-    .catch(err => {
-        console.error(err);
-    });
+
+    // output..
+    let cellstr = `
+    // ${Object.values(cells).length} cells
+    static const size_t shared_cell_sz = ${Object.values(cells).length * 8 * 8}*sizeof(unsigned char);
+    static const uint8_t shared_cell[] = {
+        ${Object.values(cells).flatMap(x => x).join(',')}
+    };`
+    let patternStr = '';
+    let palStr = '';
+    config.images.map(({ key, file }) => {
+        patternStr += `
+static const unsigned long ${key}_pattern_sz = ${pattern[key].length}*sizeof(unsigned short);
+static const unsigned short ${key}_pattern[] = {
+    ${pattern[key].join(',')}
+};`
+
+        palStr += `
+static const unsigned long ${key}_pal_sz = ${Object.values(palettes[key]).length}*sizeof(color_rgb1555_t);
+static const color_rgb1555_t ${key}_pal[] = {
+    ${Object.values(palettes[key]).map(c => RGB8888To555(c)).join(',')}
+};`
+    })
+
+    // write to file    
+    writeFile(config.output, `// Auto generated\n//${config.images.map(({ key, file }) => file).join('\n//')}\n` + palStr + patternStr + cellstr, () => { })
+}
+
+main();
