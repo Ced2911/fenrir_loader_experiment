@@ -7,6 +7,8 @@
 #include "ui.config.h"
 #include "noise.h"
 
+#define COVER_TEXTURE_ADDR (browser.texture_base + (FONT_CACHE_SIZE * 2))
+
 #define _CPU_IN_SPINLOCK(x)         \
     do                              \
     {                               \
@@ -93,15 +95,14 @@ static void browser_input_callback(browser_t *browser)
     }
 }
 
-static int browser_selected __uncached = -1;
+static int cover_selected __uncached = -1;
 
 static void _slave_entry(void)
 {
+    const uintptr_t addr = COVER_TEXTURE_ADDR;
     int selected = 0;
 
-    _CPU_IN_SPINLOCK({ selected = browser_selected; })
-
-    uintptr_t addr = browser.texture_base + FONT_CACHE_SIZE;
+    _CPU_IN_SPINLOCK({ selected = cover_selected; })
 
     fenrir_get_cover(selected, (uint8_t *)addr);
 }
@@ -121,16 +122,17 @@ static void gamelist_update()
     gamelist_ctx.bg_x += gamelist_ctx.bg_v_x;
     gamelist_ctx.bg_y += gamelist_ctx.bg_v_y;
 
-    noise_update(&noise_cfg);
+    if (ui_config.screens.gamelist.cover.enabled)
+        noise_update(&noise_cfg);
 
     // render browser
     browser_update(&browser);
 
     // if entry changed, load the cover
-    if (browser.selected != gamelist_ctx.last_selected_item)
+    if (ui_config.screens.gamelist.cover.enabled && browser.selected != gamelist_ctx.last_selected_item)
     {
         gamelist_ctx.last_selected_item = browser.selected;
-        browser_selected = sd_dir_entries[browser.selected].id;
+        cover_selected = sd_dir_entries[browser.selected].id;
         cpu_dual_slave_notify();
     }
 }
@@ -202,7 +204,8 @@ static void gamelist_init()
     /*****************************************************
      *
      ****************************************************/
-    noise_init(&noise_cfg);
+    if (ui_config.screens.gamelist.cover.enabled)
+        noise_init(&noise_cfg);
 
     // init browser
     browser_init(&browser);
@@ -217,41 +220,49 @@ static void gamelist_init()
     /*****************************************************
      * add preview area
      ****************************************************/
-    vdp1_cmdt_t *cmdt = &cmdt_list->cmdts[ORDER_BUFFER_SKIP];
-    // build and enqueue the polygon
-    const vdp1_cmdt_draw_mode_t draw_mode = {
-        .raw = 0x0000,
-        .bits.cc_mode = 0,
-        .bits.color_mode = CMDT_PMOD_CM_RGB_32768_COLORS,
-        .bits.trans_pixel_disable = false,
-        .bits.pre_clipping_disable = true,
-        .bits.end_code_disable = true};
+    if (ui_config.screens.gamelist.cover.enabled)
+    {
+        vdp1_cmdt_t *cmdt = &cmdt_list->cmdts[ORDER_BUFFER_SKIP];
+        // build and enqueue the polygon
+        const vdp1_cmdt_draw_mode_t draw_mode = {
+            .raw = 0x0000,
+            .bits.cc_mode = 0,
+            .bits.color_mode = CMDT_PMOD_CM_RGB_32768_COLORS,
+            .bits.trans_pixel_disable = false,
+            .bits.pre_clipping_disable = true,
+            .bits.end_code_disable = true};
 
-    const int tex_w = 128;
-    const int tex_h = 96;
+        const int tex_w = 128;
+        const int tex_h = 96;
 
-    const vdp1_cmdt_color_bank_t color_bank = {
-        .type_0.data.dc = 0};
+        const vdp1_cmdt_color_bank_t color_bank = {
+            .type_0.data.dc = 0};
 
-    cmdt->cmd_xa = ui_config.screens.gamelist.cover.x;
-    cmdt->cmd_ya = ui_config.screens.gamelist.cover.y;
+        cmdt->cmd_xa = ui_config.screens.gamelist.cover.x;
+        cmdt->cmd_ya = ui_config.screens.gamelist.cover.y;
 
-    cmdt->cmd_xb = ui_config.screens.gamelist.cover.x + tex_w;
-    cmdt->cmd_yb = ui_config.screens.gamelist.cover.y;
+        cmdt->cmd_xb = ui_config.screens.gamelist.cover.x + tex_w;
+        cmdt->cmd_yb = ui_config.screens.gamelist.cover.y;
 
-    cmdt->cmd_xc = ui_config.screens.gamelist.cover.x + tex_w;
-    cmdt->cmd_yc = ui_config.screens.gamelist.cover.y + tex_h;
+        cmdt->cmd_xc = ui_config.screens.gamelist.cover.x + tex_w;
+        cmdt->cmd_yc = ui_config.screens.gamelist.cover.y + tex_h;
 
-    cmdt->cmd_xd = ui_config.screens.gamelist.cover.x;
-    cmdt->cmd_yd = ui_config.screens.gamelist.cover.y + tex_h;
+        cmdt->cmd_xd = ui_config.screens.gamelist.cover.x;
+        cmdt->cmd_yd = ui_config.screens.gamelist.cover.y + tex_h;
 
-    vdp1_cmdt_scaled_sprite_set(cmdt);
-    vdp1_cmdt_param_color_mode1_set(cmdt, 0);
-    vdp1_cmdt_param_gouraud_base_set(cmdt, 0);
-    vdp1_cmdt_param_draw_mode_set(cmdt, draw_mode);
-    vdp1_cmdt_param_size_set(cmdt, tex_w, tex_h);
+        vdp1_cmdt_scaled_sprite_set(cmdt);
+        vdp1_cmdt_param_color_mode1_set(cmdt, 0);
+        vdp1_cmdt_param_gouraud_base_set(cmdt, 0);
+        vdp1_cmdt_param_draw_mode_set(cmdt, draw_mode);
+        vdp1_cmdt_param_size_set(cmdt, tex_w, tex_h);
 
-    vdp1_cmdt_param_char_base_set(cmdt, browser.texture_base + FONT_CACHE_SIZE);
+        vdp1_cmdt_param_char_base_set(cmdt, COVER_TEXTURE_ADDR);
+    }
+
+    if (!ui_config.screens.gamelist.cover.enabled)
+    {
+        vdp2_scrn_display_unset(VDP2_SCRN_NBG1_DISP);
+    }
 }
 
 static void gamelist_destroy()
@@ -265,7 +276,8 @@ static void gamelist_destroy()
     // free ressources
     free((void *)gamelist_ctx.game_cover);
     free((void *)browser.texture_buffer);
-    noise_destroy(&noise_cfg);
+    if (ui_config.screens.gamelist.cover.enabled)
+        noise_destroy(&noise_cfg);
 }
 
 screen_t gamelist_screen = {

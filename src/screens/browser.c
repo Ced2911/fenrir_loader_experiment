@@ -13,7 +13,7 @@
 #define BROWSER_OFFSET_X (browser->browser_ui_config.x)
 #define BROWSER_LINE_HEIGHT (browser->browser_ui_config.line_height)
 
-#define BROWSER_CMDT_ITEM(i) (ORDER_BUFFER_STARTING_INDEX + 1 + (i * 2))
+#define BROWSER_CMDT_ITEM(i) (ORDER_BUFFER_STARTING_INDEX + 1 + (i * 1))
 #define BROWSER_CMDT_SHADOW(i) (BROWSER_CMDT_ITEM(i) + 1)
 
 #define ELEMENT_COUNT(n) (sizeof((n)) / sizeof(*(n)))
@@ -123,10 +123,10 @@ static void browser_draw_items(browser_t *browser)
 
         vdp1_cmdt_param_char_base_set(cmdt, vdp_texture_base);
         vdp1_cmdt_param_gouraud_base_set(cmdt, gouraud);
-        */
 
         vdp1_cmdt_jump_skip_next(cmdt);
         cmdt++;
+        */
 
         // add front
         cmdt->cmd_xa = menux;
@@ -166,8 +166,7 @@ static void browser_set_item_color(browser_t *browser, int item, int is_focused)
         .type_0.data.dc = is_focused ? (VDP2_CRAM_LUT + 0x20) >> 1 : (VDP2_CRAM_LUT) >> 1};
     const uint32_t pal = (uint32_t)browser->pal_base;
 
-    vdp1_cmdt_t *item_shadow_cmd = &cmdt_list->cmdts[BROWSER_CMDT_ITEM(item)];
-    vdp1_cmdt_t *item_cmd = &cmdt_list->cmdts[BROWSER_CMDT_ITEM(item) + 1];
+    vdp1_cmdt_t *item_cmd = &cmdt_list->cmdts[BROWSER_CMDT_ITEM(item)];
     uint32_t pal_offset = 0;
     uint32_t gouraud_offset = 0;
     if (is_focused)
@@ -177,8 +176,6 @@ static void browser_set_item_color(browser_t *browser, int item, int is_focused)
     }
     vdp1_cmdt_param_color_mode1_set(item_cmd, pal + pal_offset);
     vdp1_cmdt_param_gouraud_base_set(item_cmd, browser->gouraud_base + gouraud_offset);
-
-    vdp1_cmdt_param_color_mode0_set(item_shadow_cmd, color_bank);
 }
 
 void browser_update(browser_t *browser)

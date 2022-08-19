@@ -1,7 +1,6 @@
 {
     "images": [
-        {"key": "bg", "file":"../../assets/mvsc_bg.png"},
-        {"key": "fg", "file":"../../assets/marvel_fenrir.png"}
+        {"key": "bg", "file":"../../assets/mvsc_bg.png"}
     ],
     "output": "../../assets/vdp2.h"
 }

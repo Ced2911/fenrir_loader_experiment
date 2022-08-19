@@ -61,6 +61,7 @@ typedef struct
                 uint16_t w;
                 uint16_t h;
                 color_rgb1555_t noise_palettes[NOISE_PALETTE_SIZE];
+                uint8_t enabled;
             } cover;
             ui_config_background_t fg;
             ui_config_background_t background;

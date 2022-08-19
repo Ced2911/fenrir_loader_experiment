@@ -33,7 +33,7 @@ static void vdp2_ngb0_init()
         .cc_count = VDP2_SCRN_CCC_PALETTE_256,
         .character_size = 1 * 1,
         .pnd_size = 1,
-        .auxiliary_mode = 1,
+        .auxiliary_mode = 0,
         .plane_size = 1 * 1,
         .cp_table = NBG0_CELL_ADDR,
         .color_palette = VDP2_CRAM_ADDR(0x200),
@@ -106,18 +106,18 @@ void vdp2_init()
     vdp2_vram_cycp_t vram_cycp;
 
     vram_cycp.pt[0].t0 = VDP2_VRAM_CYCP_PNDR_NBG0;
-    vram_cycp.pt[0].t1 = VDP2_VRAM_CYCP_PNDR_NBG0;
-    vram_cycp.pt[0].t2 = VDP2_VRAM_CYCP_PNDR_NBG1;
-    vram_cycp.pt[0].t3 = VDP2_VRAM_CYCP_PNDR_NBG1;
-    vram_cycp.pt[0].t4 = VDP2_VRAM_CYCP_CHPNDR_NBG1;
-    vram_cycp.pt[0].t5 = VDP2_VRAM_CYCP_CHPNDR_NBG1;
+    vram_cycp.pt[0].t1 = VDP2_VRAM_CYCP_PNDR_NBG1;
+    vram_cycp.pt[0].t2 = VDP2_VRAM_CYCP_CHPNDR_NBG1;
+    vram_cycp.pt[0].t3 = VDP2_VRAM_CYCP_NO_ACCESS;
+    vram_cycp.pt[0].t4 = VDP2_VRAM_CYCP_NO_ACCESS;
+    vram_cycp.pt[0].t5 = VDP2_VRAM_CYCP_NO_ACCESS;
     vram_cycp.pt[0].t6 = VDP2_VRAM_CYCP_NO_ACCESS;
     vram_cycp.pt[0].t7 = VDP2_VRAM_CYCP_NO_ACCESS;
 
     vram_cycp.pt[1].t0 = VDP2_VRAM_CYCP_CHPNDR_NBG0;
     vram_cycp.pt[1].t1 = VDP2_VRAM_CYCP_CHPNDR_NBG0;
-    vram_cycp.pt[1].t2 = VDP2_VRAM_CYCP_NO_ACCESS;
-    vram_cycp.pt[1].t3 = VDP2_VRAM_CYCP_NO_ACCESS;
+    vram_cycp.pt[1].t2 = VDP2_VRAM_CYCP_CHPNDR_NBG2;
+    vram_cycp.pt[1].t3 = VDP2_VRAM_CYCP_CHPNDR_NBG2;
     vram_cycp.pt[1].t4 = VDP2_VRAM_CYCP_NO_ACCESS;
     vram_cycp.pt[1].t5 = VDP2_VRAM_CYCP_NO_ACCESS;
     vram_cycp.pt[1].t6 = VDP2_VRAM_CYCP_NO_ACCESS;
@@ -132,8 +132,8 @@ void vdp2_init()
     vram_cycp.pt[2].t6 = VDP2_VRAM_CYCP_NO_ACCESS;
     vram_cycp.pt[2].t7 = VDP2_VRAM_CYCP_NO_ACCESS;
 
-    vram_cycp.pt[3].t0 = VDP2_VRAM_CYCP_CHPNDR_NBG2;
-    vram_cycp.pt[3].t1 = VDP2_VRAM_CYCP_CHPNDR_NBG2;
+    vram_cycp.pt[3].t0 = VDP2_VRAM_CYCP_NO_ACCESS;
+    vram_cycp.pt[3].t1 = VDP2_VRAM_CYCP_NO_ACCESS;
     vram_cycp.pt[3].t2 = VDP2_VRAM_CYCP_NO_ACCESS;
     vram_cycp.pt[3].t3 = VDP2_VRAM_CYCP_NO_ACCESS;
     vram_cycp.pt[3].t4 = VDP2_VRAM_CYCP_NO_ACCESS;
@@ -147,5 +147,5 @@ void vdp2_init()
     vdp2_ngb0_init();
     vdp2_ngb1_init();
 
-    vdp2_scrn_display_set(VDP2_SCRN_NBG0_DISP | VDP2_SCRN_NBG1_DISP | VDP2_SCRN_NBG2_DISP);
+    vdp2_scrn_display_set(VDP2_SCRN_NBG0_DISP/* | VDP2_SCRN_NBG1_DISP | VDP2_SCRN_NBG2_DISP*/);
 }
