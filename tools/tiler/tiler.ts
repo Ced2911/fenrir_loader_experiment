@@ -45,7 +45,7 @@ export function tileImage(image: Jimp, paletteArray: RGBA[], cbk: Function) {
                 const alpha = this.bitmap.data[idx + 3];
 
                 const pixel = Jimp.rgbaToInt(red, green, blue, alpha);
-                const pal = pixel == 0 ? 0 : paletteArray.findIndex((t) => { return pixel === Jimp.rgbaToInt(t.r, t.g, t.b, t.a) })
+                const pal = alpha == 0 ? 0 : paletteArray.findIndex((t) => { return pixel === Jimp.rgbaToInt(t.r, t.g, t.b, t.a) })
 
                 data.push(pal)
             });

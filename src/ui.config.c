@@ -49,6 +49,7 @@ ui_config_t ui_config = {
     },
     .screens = {
         .gamelist = {
+#if 0
             .background = {
                 .velocity_x = FIX16(0.7),
                 .velocity_y = FIX16(-0.7),
@@ -70,6 +71,30 @@ ui_config_t ui_config = {
                 .pattern_addr = (uintptr_t)marvel_fenrir_pattern,
                 .pattern_sz = mvsc_bg_pattern_sz,
             },
+#else
+
+            .background = {
+                .velocity_x = FIX16(0.7),
+                .velocity_y = FIX16(-0.7),
+                .cell_addr = (uintptr_t)shared_cell,
+                .cell_sz = shared_cell_sz,
+                .pal_addr = (uintptr_t)bg_pal,
+                .pal_sz = bg_pal_sz,
+                .pattern_addr = (uintptr_t)bg_pattern,
+                .pattern_sz = bg_pattern_sz,
+            },
+
+            .fg = {
+                .velocity_x = 0,
+                .velocity_y = 0,
+                .cell_addr = 0,
+                .cell_sz = 0,
+                .pal_addr = (uintptr_t)fg_pal,
+                .pal_sz = fg_pal_sz,
+                .pattern_addr = (uintptr_t)fg_pattern,
+                .pattern_sz = fg_pattern_sz,
+            },
+#endif
             .cover = {
                 .noise_palettes = NOISE_PALETTES,
                 .x = 80,
@@ -80,7 +105,7 @@ ui_config_t ui_config = {
             .browser = {
                 /** */
                 .x = 20,
-                .y = 24,
+                .y = 56,
                 .w = 200,
                 .h = 200,
                 .line_height = 12,

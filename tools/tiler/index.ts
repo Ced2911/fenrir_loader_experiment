@@ -11,6 +11,10 @@ interface CONFIG {
     images: CONFIG_IMAGE[],
     output: string
 }
+interface CELL {
+    data: number[],
+    id: number
+}
 
 const config = require('./config.json') as CONFIG;
 
@@ -18,7 +22,7 @@ const config = require('./config.json') as CONFIG;
 
 async function main() {
     // contain all tiles for all screens
-    const cells: Record<string, number[]> = {}
+    const cells: Map<string, CELL[]> = new Map()
     const cellsPerScreen: Record<string, number> = {}
 
     // pattern for each file/screen
@@ -26,6 +30,13 @@ async function main() {
 
     // palette for each file/screen
     const palettes: Record<string, RGBA[]> = {}
+
+    // always add a transparent tile
+    {
+        const cellData = (new Array(8 * 8)).map(v => 0)
+        const hash = createHash('sha256').update(Buffer.from(cellData)).digest('hex');
+        cells[hash] = { data: cellData, id: 0 };
+    }
 
     await Promise.all(config.images.map(async ({ key, file }) => {
         // 1st step build palettes
@@ -40,7 +51,7 @@ async function main() {
                 const screenHash = {}
                 tileImage(image, palettes[key], (cellData) => {
                     const hash = createHash('sha256').update(Buffer.from(cellData)).digest('hex');
-                    cells[hash] = cellData;
+                    cells[hash] = { data: cellData, id: cells.size };
                     screenHash[hash] = hash;
                 })
                 cellsPerScreen[key] = Object.values(screenHash).length;
@@ -56,7 +67,7 @@ async function main() {
 
                     const ptn = Object.keys(cells).findIndex((h) => hash == h)
 
-                    // convert to ss fmt
+                    // convert to ss fmt - cfg 1
                     const page = x > 63 ? 1 : 0 + y > 63 ? 2 : 0;
                     const addr = ptn * 64;
                     const ptn_ss = ((addr + 0) >> 5);
@@ -84,21 +95,21 @@ async function main() {
     // output..
     let cellstr = `
     // ${Object.values(cells).length} cells
-    static const size_t shared_cell_sz = ${Object.values(cells).length * 8 * 8}*sizeof(unsigned char);
+    static const size_t shared_cell_sz = ${Object.values(cells).map(cell => cell.data).length * 8 * 8}*sizeof(uint8_t);
     static const uint8_t shared_cell[] = {
-        ${Object.values(cells).flatMap(x => x).join(',')}
+        ${Object.values(cells).map(cell => cell.data).flatMap(x => x).join(',')}
     };`
     let patternStr = '';
     let palStr = '';
     config.images.map(({ key, file }) => {
         patternStr += `
-static const unsigned long ${key}_pattern_sz = ${pattern[key].length}*sizeof(unsigned short);
-static const unsigned short ${key}_pattern[] = {
+static const size_t ${key}_pattern_sz = ${pattern[key].length}*sizeof(uint16_t);
+static const uint16_t ${key}_pattern[] = {
     ${pattern[key].join(',')}
 };`
 
         palStr += `
-static const unsigned long ${key}_pal_sz = ${Object.values(palettes[key]).length}*sizeof(color_rgb1555_t);
+static const size_t ${key}_pal_sz = ${Object.values(palettes[key]).length}*sizeof(color_rgb1555_t);
 static const color_rgb1555_t ${key}_pal[] = {
     ${Object.values(palettes[key]).map(c => RGB8888To555(c)).join(',')}
 };`
