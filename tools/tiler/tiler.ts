@@ -6,35 +6,46 @@ export interface RGBA {
     g: number;
     b: number;
     a: number;
+    id: number;
+    pixel: number;
 }
 export interface TILE {
     hash: string;
     data: number[];
 }
+export enum TileSize {
+    x1 = 8,
+    x2 = 16
+}
+
+type tileImageCallback = (cellData: number[], tilesId: number, tileX: number, tileY: number) => void;
 
 export function buildPalette(image: Jimp) {
-    const palette: Record<number, RGBA> = {}
-    palette[0] = { r: 0, g: 0, b: 0, a: 1 };
+    const palette: Map<number, RGBA> = new Map
+    // always transparent first
+    palette.set(0, { r: 0, g: 0, b: 0, a: 0, id: 0, pixel: 0 });
+
     image.scan(0, 0, image.bitmap.width, image.bitmap.height, function (x, y, idx) {
         var red = this.bitmap.data[idx + 0];
         var green = this.bitmap.data[idx + 1];
         var blue = this.bitmap.data[idx + 2];
         var alpha = this.bitmap.data[idx + 3];
 
-        var pixel = Jimp.rgbaToInt(red, green, blue, alpha);
+        var pixel = (alpha == 0) ? 0 : Jimp.rgbaToInt(red, green, blue, alpha);
 
-        if (palette[pixel] === undefined) {
-            palette[pixel] = { r: red, g: green, b: blue, a: alpha }
+        if (palette.get(pixel) === undefined) {
+            palette.set(pixel, { r: red, g: green, b: blue, a: alpha, id: palette.size, pixel: pixel })
         }
     });
-    return Object.values(palette)
+
+    return Array.from(palette.values())
 }
 
-export function tileImage(image: Jimp, paletteArray: RGBA[], cbk: Function) {
+export function tileImage(image: Jimp, tileSize: TileSize, paletteArray: RGBA[], cbk: tileImageCallback) {
     const tiles: number[][] = [];
 
-    for (let y = 0; y < image.bitmap.height; y += 8) {
-        for (let x = 0; x < image.bitmap.width; x += 8) {
+    for (let y = 0; y < image.bitmap.height; y += tileSize) {
+        for (let x = 0; x < image.bitmap.width; x += tileSize) {
 
             const data: number[] = [];
 
@@ -45,12 +56,14 @@ export function tileImage(image: Jimp, paletteArray: RGBA[], cbk: Function) {
                 const alpha = this.bitmap.data[idx + 3];
 
                 const pixel = Jimp.rgbaToInt(red, green, blue, alpha);
-                const pal = alpha == 0 ? 0 : paletteArray.findIndex((t) => { return pixel === Jimp.rgbaToInt(t.r, t.g, t.b, t.a) })
-
-                data.push(pal)
+                const pal = alpha == 0 ? 0 : paletteArray.find((t) => { return pixel === t.pixel })
+                if (!pal) {
+                    throw `palette not found ${pixel}`
+                }
+                data.push(pal.id)
             });
 
-            cbk(data, tiles.length, x / 8, y / 8);
+            cbk(data, tiles.length, x / tileSize, y / tileSize);
             tiles.push(data)
         }
     }

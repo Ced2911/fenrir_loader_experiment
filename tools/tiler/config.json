@@ -1,6 +1,6 @@
 {
     "images": [
-        {"key": "bg", "file":"../../assets/mvsc_bg.png"}
+        {"key": "bg", "file":"../../assets/mvsc_bg.png", "size":2}
     ],
     "output": "../../assets/vdp2.h"
 }

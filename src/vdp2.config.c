@@ -33,7 +33,7 @@ static void vdp2_ngb0_init()
         .cc_count = VDP2_SCRN_CCC_PALETTE_256,
         .character_size = 1 * 1,
         .pnd_size = 1,
-        .auxiliary_mode = 0,
+        .auxiliary_mode = 1,
         .plane_size = 1 * 1,
         .cp_table = NBG0_CELL_ADDR,
         .color_palette = VDP2_CRAM_ADDR(0x200),
@@ -82,7 +82,7 @@ static void vdp2_ngb2_init()
         .cc_count = VDP2_SCRN_CCC_PALETTE_256,
         .character_size = 1 * 1,
         .pnd_size = 1,
-        .auxiliary_mode = 0,
+        .auxiliary_mode = 1,
         .plane_size = 1 * 1,
         .cp_table = NBG2_CELL_ADDR,
         .color_palette = NBG2_COLOR_ADDR,
@@ -147,5 +147,8 @@ void vdp2_init()
     vdp2_ngb0_init();
     vdp2_ngb1_init();
 
-    vdp2_scrn_display_set(VDP2_SCRN_NBG0_DISP/* | VDP2_SCRN_NBG1_DISP | VDP2_SCRN_NBG2_DISP*/);
+    //vdp2_registers_t * r = vdp2_regs_get();
+    // r->pncn0 = r->pncn0 & 0xFFFB;
+
+    vdp2_scrn_display_set(VDP2_SCRN_NBG0_DISP /* | VDP2_SCRN_NBG1_DISP | VDP2_SCRN_NBG2_DISP*/);
 }

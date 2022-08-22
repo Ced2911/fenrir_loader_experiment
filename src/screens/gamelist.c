@@ -24,19 +24,13 @@ extern sd_dir_entry_t *sd_dir_entries;
 // @todo theme ?
 typedef struct
 {
-    fix16_t bg_x;
-    fix16_t bg_y;
-    fix16_t bg_v_x;
-    fix16_t bg_v_y;
     int last_selected_item;
     uintptr_t game_cover;
 } gamelist_ctx_t;
 
 static gamelist_ctx_t gamelist_ctx = {
-    .bg_x = FIX16(512),
-    .bg_y = FIX16(0),
-    .bg_v_x = FIX16(0.7),
-    .bg_v_y = FIX16(-0.7)};
+ .last_selected_item = -1   
+};
 
 static void browser_input_callback(browser_t *browser);
 static void browser_change_dir(browser_t *browser, int16_t id);
@@ -114,13 +108,9 @@ static void gamelist_vbk()
 }
 
 static void gamelist_update()
-{
-    // animate bg
-    vdp2_scrn_scroll_x_set(VDP2_SCRN_NBG0, gamelist_ctx.bg_x);
-    vdp2_scrn_scroll_y_set(VDP2_SCRN_NBG0, gamelist_ctx.bg_y);
-
-    gamelist_ctx.bg_x += gamelist_ctx.bg_v_x;
-    gamelist_ctx.bg_y += gamelist_ctx.bg_v_y;
+{   // animate bg
+    vdp2_scrn_scroll_x_update(VDP2_SCRN_NBG0, ui_config.screens.gamelist.background.velocity_x);
+    vdp2_scrn_scroll_y_update(VDP2_SCRN_NBG0, ui_config.screens.gamelist.background.velocity_y);
 
     if (ui_config.screens.gamelist.cover.enabled)
         noise_update(&noise_cfg);

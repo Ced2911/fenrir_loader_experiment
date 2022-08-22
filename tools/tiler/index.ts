@@ -1,28 +1,92 @@
 import Jimp from 'jimp';
 import { writeFile } from 'fs';
 import { createHash } from 'crypto';
-import { buildPalette, tileImage, RGBA, RGB8888To555 } from './tiler'
+import { buildPalette, tileImage, RGBA, RGB8888To555, TileSize } from './tiler'
 
-interface CONFIG_IMAGE {
+interface ConfigImage {
     key: string,
     file: string
 }
-interface CONFIG {
-    images: CONFIG_IMAGE[],
+interface Config {
+    images: ConfigImage[],
     output: string
 }
-interface CELL {
+interface Cell {
     data: number[],
-    id: number
+    id: any,
+    hash: string[]
 }
 
-const config = require('./config.json') as CONFIG;
+enum CellMirror {
+    N = 'n',
+    Vertical = 'v',
+    Horizontal = 'h',
+    Both = 'vh'
+}
+
+const config = require('./config.json') as Config;
 
 // console.log(config)
 
+function encodeCell(cell: Cell) {
+    const b = cell.data
+    let str = ''
+    for (let y = 0; y < 8; y++) {
+        str += b.splice(0, 8).map(d => d).join(',') + ',\n'
+    }
+    return str;
+}
+
+function flipCellData(data: number[], mirror: number): number[] {
+    switch (mirror) {
+        case 1: //h
+            {
+                const mirrorData: number[] = new Array(data.length)
+                for (let x = 0; x < 8; x++) {
+                    for (let y = 0; y < 8; y++) {
+                        mirrorData[x + (y * 8)] = data[7 - x + (y * 8)];
+                    }
+                }
+                return mirrorData;
+            }
+        case 2: // v
+            {
+                const mirrorData: number[] = new Array(data.length)
+                for (let x = 0; x < 8; x++) {
+                    for (let y = 0; y < 8; y++) {
+                        mirrorData[x + (y * 8)] = data[x + ((7 - y) * 8)];
+                    }
+                }
+                return mirrorData;
+            }
+        case 3: // hv
+            return Array.from(data).reverse();
+        default:
+            return data;
+    }
+}
+
+function hashCell(cell: Cell) {
+    for (let i = 0; i < 4; i++) {
+        const flippedCell = flipCellData(cell.data, i)
+        const hash = createHash('sha256').update(Buffer.from(flippedCell)).digest('hex');
+        cell.hash[i] = hash
+    }
+}
+
+
 async function main() {
+
+    const cellSize: TileSize = TileSize.x1
+
     // contain all tiles for all screens
-    const cells: Map<string, CELL[]> = new Map()
+    const cells: Record<string, Cell> = {}
+    const cellsLut: Record<string, Record<string, { id: number }>> = {
+        'n': {},
+        'v': {},
+        'h': {},
+        'vh': {}
+    }
     const cellsPerScreen: Record<string, number> = {}
 
     // pattern for each file/screen
@@ -31,14 +95,52 @@ async function main() {
     // palette for each file/screen
     const palettes: Record<string, RGBA[]> = {}
 
+    function addCell(cell: Cell) {
+        const hash = createHash('sha256').update(Buffer.from(cell.data)).digest('hex');
+
+        // try to find a cell, 
+        // if not found compute hash of all mirros and luts
+        if (!findCell(hash)) {
+            hashCell(cell)
+            cells[hash] = cell;
+
+            // add luts...
+            if (0)
+                for (let i = 0; i < 4; i++) {
+                    const m = [CellMirror.N, CellMirror.Vertical, CellMirror.Horizontal, CellMirror.Both][i]
+                    const cell_m = { id: cell.id }
+                    cellsLut[m][cell.hash[i]] = cell_m
+                }
+        }
+    }
+
+    function findCell(hash: string) {
+        if (cells[hash]) {
+            return { id: cells[hash].id, mirror: 0 }
+        }
+        if (0)
+            // check mirrored
+            for (let i = 0; i < 4; i++) {
+                const m = [CellMirror.N, CellMirror.Vertical, CellMirror.Horizontal, CellMirror.Both][i]
+                const cell = cellsLut[m][hash]
+                if (cell) {
+                    //console.log('found mirrored !', cell.id, i)
+                    return { id: cell.id, mirror: i }
+                }
+            }
+
+        return undefined
+    }
+
     // always add a transparent tile
     {
-        const cellData = (new Array(8 * 8)).map(v => 0)
+        const cellData = new Array(8 * 8).fill(0)
         const hash = createHash('sha256').update(Buffer.from(cellData)).digest('hex');
-        cells[hash] = { data: cellData, id: 0 };
+        cells[hash] = { data: cellData, id: 0, hash: [hash, hash, hash, hash] };
     }
 
     await Promise.all(config.images.map(async ({ key, file }) => {
+
         // 1st step build palettes
         await Jimp.read(file)
             .then(image => {
@@ -49,10 +151,13 @@ async function main() {
         await Jimp.read(file)
             .then(image => {
                 const screenHash = {}
-                tileImage(image, palettes[key], (cellData) => {
-                    const hash = createHash('sha256').update(Buffer.from(cellData)).digest('hex');
-                    cells[hash] = { data: cellData, id: cells.size };
-                    screenHash[hash] = hash;
+                tileImage(image, cellSize, palettes[key], (cellData) => {
+                    const cell: Cell = {
+                        data: cellData,
+                        id: Object.values(cells).length,
+                        hash: []
+                    }
+                    addCell(cell)
                 })
                 cellsPerScreen[key] = Object.values(screenHash).length;
             })
@@ -62,15 +167,24 @@ async function main() {
             .then(image => {
                 const pages: Record<number, number[]> = { 0: [], 1: [], 2: [], 3: [] }
 
-                tileImage(image, palettes[key], (cellData, tilen, x, y) => {
+                tileImage(image, cellSize, palettes[key], (cellData, tilen, x, y) => {
                     const hash = createHash('sha256').update(Buffer.from(cellData)).digest('hex');
 
-                    const ptn = Object.keys(cells).findIndex((h) => hash == h)
+                    const cell = findCell(hash)
+                    if (!cell)
+                        throw (`cell for hash: ${hash} not`)
+                    const ptn = cell.id
+
+                    const vf = cell.mirror & 1;
+                    const hf = (cell.mirror >> 1) & 1;
 
                     // convert to ss fmt - cfg 1
-                    const page = x > 63 ? 1 : 0 + y > 63 ? 2 : 0;
-                    const addr = ptn * 64;
-                    const ptn_ss = ((addr + 0) >> 5);
+                    const page_sz = 63
+                    const cell_sz = (cellSize * cellSize)
+
+                    const page = x > page_sz ? 1 : 0 + y > page_sz ? 2 : 0;
+                    const addr = ptn * 8 * 8;
+                    const ptn_ss = (addr >> 5);// | vf << 11 | hf << 10;
 
                     pages[page].push(ptn_ss)
                 })
@@ -80,7 +194,7 @@ async function main() {
     }))
 
     // output stats
-    console.log(`number of global tiles: ${Object.values(cells).length}`)
+    console.log(`number of global tiles: ${Object.values(cells).length} 0x${Object.values(cells).length.toString(16)}`)
     console.log(`number of global pattern: ${Object.values(pattern).reduce((acc, pscreen) => acc + pscreen.length, 0)}`)
     console.log(`number of global palettes: ${Object.values(pattern).reduce((acc, pscreen) => acc + pscreen.length, 0)}`)
 
@@ -93,25 +207,34 @@ async function main() {
     })
 
     // output..
+    let __cellstr = `
+// ${Object.values(cells).length} cells
+static const uint8_t shared_cell[] = {
+    ${Object.values(cells).map(cell => cell.data).flatMap(x => x).join(',')}
+};
+static const size_t shared_cell_sz = sizeof(shared_cell);
+`
     let cellstr = `
-    // ${Object.values(cells).length} cells
-    static const size_t shared_cell_sz = ${Object.values(cells).map(cell => cell.data).length * 8 * 8}*sizeof(uint8_t);
-    static const uint8_t shared_cell[] = {
-        ${Object.values(cells).map(cell => cell.data).flatMap(x => x).join(',')}
-    };`
+// ${Object.values(cells).length} cells
+static const uint8_t shared_cell[] = {
+    ${Object.values(cells).map(cell => `// ${cell.id} ${cell.hash}\n`+encodeCell(cell)).join('')}
+};
+static const size_t shared_cell_sz = sizeof(shared_cell);
+`
+
     let patternStr = '';
     let palStr = '';
     config.images.map(({ key, file }) => {
         patternStr += `
 static const size_t ${key}_pattern_sz = ${pattern[key].length}*sizeof(uint16_t);
 static const uint16_t ${key}_pattern[] = {
-    ${pattern[key].join(',')}
+    ${pattern[key].map(v => `0x` + v.toString(16)).join(',')}
 };`
 
         palStr += `
 static const size_t ${key}_pal_sz = ${Object.values(palettes[key]).length}*sizeof(color_rgb1555_t);
 static const color_rgb1555_t ${key}_pal[] = {
-    ${Object.values(palettes[key]).map(c => RGB8888To555(c)).join(',')}
+    ${Object.values(palettes[key]).map(c => RGB8888To555(c)).join(',\n\t')}
 };`
     })
 
