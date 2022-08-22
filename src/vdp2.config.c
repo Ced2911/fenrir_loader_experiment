@@ -33,7 +33,7 @@ static void vdp2_ngb0_init()
         .cc_count = VDP2_SCRN_CCC_PALETTE_256,
         .character_size = 1 * 1,
         .pnd_size = 1,
-        .auxiliary_mode = 1,
+        .auxiliary_mode = 0,
         .plane_size = 1 * 1,
         .cp_table = NBG0_CELL_ADDR,
         .color_palette = VDP2_CRAM_ADDR(0x200),

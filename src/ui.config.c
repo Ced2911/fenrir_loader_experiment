@@ -74,8 +74,8 @@ ui_config_t ui_config = {
 #else
 
             .background = {
-                .velocity_x = FIX16(0.7),
-                .velocity_y = FIX16(-0.7),
+                .velocity_x = 0,//FIX16(0.7),
+                .velocity_y = 0,//FIX16(-0.7),
                 .cell_addr = (uintptr_t)shared_cell,
                 .cell_sz = shared_cell_sz,
                 .pal_addr = (uintptr_t)bg_pal,

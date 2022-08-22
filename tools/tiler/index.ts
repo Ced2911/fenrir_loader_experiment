@@ -39,7 +39,7 @@ function encodeCell(cell: Cell) {
 
 function flipCellData(data: number[], mirror: number): number[] {
     switch (mirror) {
-        case 1: //h
+        case 2: //h
             {
                 const mirrorData: number[] = new Array(data.length)
                 for (let x = 0; x < 8; x++) {
@@ -49,7 +49,7 @@ function flipCellData(data: number[], mirror: number): number[] {
                 }
                 return mirrorData;
             }
-        case 2: // v
+        case 1: // v
             {
                 const mirrorData: number[] = new Array(data.length)
                 for (let x = 0; x < 8; x++) {
@@ -105,7 +105,7 @@ async function main() {
             cells[hash] = cell;
 
             // add luts...
-            if (0)
+            if (1)
                 for (let i = 0; i < 4; i++) {
                     const m = [CellMirror.N, CellMirror.Vertical, CellMirror.Horizontal, CellMirror.Both][i]
                     const cell_m = { id: cell.id }
@@ -118,7 +118,7 @@ async function main() {
         if (cells[hash]) {
             return { id: cells[hash].id, mirror: 0 }
         }
-        if (0)
+        if (1)
             // check mirrored
             for (let i = 0; i < 4; i++) {
                 const m = [CellMirror.N, CellMirror.Vertical, CellMirror.Horizontal, CellMirror.Both][i]
@@ -184,7 +184,7 @@ async function main() {
 
                     const page = x > page_sz ? 1 : 0 + y > page_sz ? 2 : 0;
                     const addr = ptn * 8 * 8;
-                    const ptn_ss = (addr >> 5);// | vf << 11 | hf << 10;
+                    const ptn_ss = (addr >> 5) | vf << 11 | hf << 10;
 
                     pages[page].push(ptn_ss)
                 })
