@@ -28,6 +28,7 @@
         "noise.h": "c",
         "test.h": "c",
         "bitmap.h": "c",
-        "mvsc_bg.h": "c"
+        "mvsc_bg.h": "c",
+        "cd-block.h": "c"
     }
 }

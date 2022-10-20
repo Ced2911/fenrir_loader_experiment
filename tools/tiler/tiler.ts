@@ -56,8 +56,8 @@ export function tileImage(image: Jimp, tileSize: TileSize, paletteArray: RGBA[],
                 const alpha = this.bitmap.data[idx + 3];
 
                 const pixel = Jimp.rgbaToInt(red, green, blue, alpha);
-                const pal = alpha == 0 ? 0 : paletteArray.find((t) => { return pixel === t.pixel })
-                if (!pal) {
+                const pal = alpha == 0 ? paletteArray[0] : paletteArray.find((t) => { return pixel === t.pixel })
+                if (pal == undefined) {
                     throw `palette not found ${pixel}`
                 }
                 data.push(pal.id)

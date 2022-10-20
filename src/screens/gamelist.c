@@ -79,7 +79,7 @@ static void browser_input_callback(browser_t *browser)
         }
         else
         {
-            fenrir_launch_game(sd_dir_entries[browser->selected].id, fenrir_boot_cd_player);
+            fenrir_launch_game(sd_dir_entries[browser->selected].id, fenrir_boot_direct);
         }
     }
     // btn b, go to parent directory

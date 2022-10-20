@@ -1,6 +1,7 @@
 {
     "images": [
-        {"key": "bg", "file":"../../assets/mvsc_bg.png", "size":2}
+        {"key": "bg", "file":"../../assets/megamix.png", "size":2},        
+        {"key": "fg", "file":"../../assets/layer_1.png", "size":2}
     ],
     "output": "../../assets/vdp2.h"
-}
+}                   

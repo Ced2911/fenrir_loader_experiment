@@ -39,22 +39,22 @@ function encodeCell(cell: Cell) {
 
 function flipCellData(data: number[], mirror: number): number[] {
     switch (mirror) {
-        case 2: //h
-            {
-                const mirrorData: number[] = new Array(data.length)
-                for (let x = 0; x < 8; x++) {
-                    for (let y = 0; y < 8; y++) {
-                        mirrorData[x + (y * 8)] = data[7 - x + (y * 8)];
-                    }
-                }
-                return mirrorData;
-            }
         case 1: // v
             {
                 const mirrorData: number[] = new Array(data.length)
                 for (let x = 0; x < 8; x++) {
                     for (let y = 0; y < 8; y++) {
                         mirrorData[x + (y * 8)] = data[x + ((7 - y) * 8)];
+                    }
+                }
+                return mirrorData;
+            }
+        case 2: //h
+            {
+                const mirrorData: number[] = new Array(data.length)
+                for (let x = 0; x < 8; x++) {
+                    for (let y = 0; y < 8; y++) {
+                        mirrorData[x + (y * 8)] = data[7 - x + (y * 8)];
                     }
                 }
                 return mirrorData;
@@ -105,20 +105,24 @@ async function main() {
             cells[hash] = cell;
 
             // add luts...
-            if (1)
+            if (0)
                 for (let i = 0; i < 4; i++) {
                     const m = [CellMirror.N, CellMirror.Vertical, CellMirror.Horizontal, CellMirror.Both][i]
                     const cell_m = { id: cell.id }
                     cellsLut[m][cell.hash[i]] = cell_m
                 }
+
+
+            return 1;
         }
+        return 0;
     }
 
     function findCell(hash: string) {
         if (cells[hash]) {
             return { id: cells[hash].id, mirror: 0 }
         }
-        if (1)
+        if (0)
             // check mirrored
             for (let i = 0; i < 4; i++) {
                 const m = [CellMirror.N, CellMirror.Vertical, CellMirror.Horizontal, CellMirror.Both][i]
@@ -150,16 +154,16 @@ async function main() {
         // 2nd unik tiles
         await Jimp.read(file)
             .then(image => {
-                const screenHash = {}
+                let unikcell = 0;
                 tileImage(image, cellSize, palettes[key], (cellData) => {
                     const cell: Cell = {
                         data: cellData,
                         id: Object.values(cells).length,
                         hash: []
                     }
-                    addCell(cell)
+                    unikcell += addCell(cell)
                 })
-                cellsPerScreen[key] = Object.values(screenHash).length;
+                cellsPerScreen[key] = unikcell;
             })
 
         // 3rd pattern
@@ -198,10 +202,15 @@ async function main() {
     console.log(`number of global pattern: ${Object.values(pattern).reduce((acc, pscreen) => acc + pscreen.length, 0)}`)
     console.log(`number of global palettes: ${Object.values(pattern).reduce((acc, pscreen) => acc + pscreen.length, 0)}`)
 
+
+
     config.images.map(({ key, file }) => {
         console.log('\n')
         console.log(`file: ${file}`)
-        console.log(`\tnumber of ${key} tiles: ${cellsPerScreen[key]}`)
+        if (cellsPerScreen[key] > 0x0200) {
+            console.warn("\tcells are bigger than 0x200 expect some errors")
+        }
+        console.log(`\tnumber of ${key} cells: ${cellsPerScreen[key]}`)
         console.log(`\tnumber of ${key} pattern: ${pattern[key].length}`)
         console.log(`\tnumber of ${key} palettes: ${palettes[key].length}`)
     })
@@ -217,7 +226,7 @@ static const size_t shared_cell_sz = sizeof(shared_cell);
     let cellstr = `
 // ${Object.values(cells).length} cells
 static const uint8_t shared_cell[] = {
-    ${Object.values(cells).map(cell => `// ${cell.id} ${cell.hash}\n`+encodeCell(cell)).join('')}
+    ${Object.values(cells).map(cell => `// ${cell.id} ${cell.hash}\n` + encodeCell(cell)).join('')}
 };
 static const size_t shared_cell_sz = sizeof(shared_cell);
 `
