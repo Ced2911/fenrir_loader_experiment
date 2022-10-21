@@ -29,8 +29,7 @@ typedef struct
 } gamelist_ctx_t;
 
 static gamelist_ctx_t gamelist_ctx = {
- .last_selected_item = -1   
-};
+    .last_selected_item = -1};
 
 static void browser_input_callback(browser_t *browser);
 static void browser_change_dir(browser_t *browser, int16_t id);
@@ -107,53 +106,51 @@ static void gamelist_vbk()
     smpc_peripheral_intback_issue();
 }
 
-static void gamelist_update()
-{   // animate bg
-    vdp2_scrn_scroll_x_update(VDP2_SCRN_NBG0, ui_config.screens.gamelist.background.velocity_x);
-    vdp2_scrn_scroll_y_update(VDP2_SCRN_NBG0, ui_config.screens.gamelist.background.velocity_y);
+static void gamelist_theme_update()
+{
+    static fix16_t __cx2 = 0;
+    static fix16_t __cy2 = 0;
 
+    __cx2 += ui_config.screens.gamelist.fg.velocity_x;
+    __cy2 += ui_config.screens.gamelist.fg.velocity_y;
+
+    // animate bg
+    if (ui_config.screens.gamelist.background.velocity_x)
+        vdp2_scrn_scroll_x_update(VDP2_SCRN_NBG0, ui_config.screens.gamelist.background.velocity_x);
+    if (ui_config.screens.gamelist.background.velocity_y)
+        vdp2_scrn_scroll_y_update(VDP2_SCRN_NBG0, ui_config.screens.gamelist.background.velocity_y);
+    /**
+        // animate fg
+        if (ui_config.screens.gamelist.fg.velocity_x)
+            vdp2_scrn_scroll_x_update(VDP2_SCRN_NBG2, ui_config.screens.gamelist.fg.velocity_x);
+        if (ui_config.screens.gamelist.fg.velocity_y)
+            vdp2_scrn_scroll_y_update(VDP2_SCRN_NBG2, ui_config.screens.gamelist.fg.velocity_y);
+            */
+    vdp2_scrn_scroll_x_set(VDP2_SCRN_NBG2, __cx2);
+    vdp2_scrn_scroll_y_set(VDP2_SCRN_NBG2, __cy2);
     if (ui_config.screens.gamelist.cover.enabled)
         noise_update(&noise_cfg);
+}
+
+static void gamelist_update()
+{
 
     // render browser
     browser_update(&browser);
+
+    gamelist_theme_update();
 
     // if entry changed, load the cover
     if (ui_config.screens.gamelist.cover.enabled && browser.selected != gamelist_ctx.last_selected_item)
     {
         gamelist_ctx.last_selected_item = browser.selected;
         cover_selected = sd_dir_entries[browser.selected].id;
-        cpu_dual_slave_notify();
+        // cpu_dual_slave_notify();
     }
 }
 
-static void gamelist_init()
+static void gamelist_apply_theme()
 {
-    gamelist_ctx.last_selected_item = -1;
-
-    /*****************************************************
-     * Alloc ressources
-     ****************************************************/
-    gamelist_ctx.game_cover = (uintptr_t)malloc(FENRIR_COVER_SIZE);
-    browser.texture_buffer = (uintptr_t)malloc(FONT_CACHE_SIZE);
-
-    /*****************************************************
-     * Setup browser textures
-     ****************************************************/
-    vdp1_vram_partitions_t vdp1_vram_partitions;
-    vdp1_vram_partitions_get(&vdp1_vram_partitions);
-    browser.texture_base = (uintptr_t)vdp1_vram_partitions.texture_base;
-    browser.pal_base = (uintptr_t)vdp1_vram_partitions.clut_base;
-    browser.gouraud_base = (uintptr_t)vdp1_vram_partitions.gouraud_base;
-
-    /*****************************************************
-     * Read gamelist
-     ****************************************************/
-    fenrir_read_status_sector(status_sector);
-    fenrir_refresh_entries(sd_dir, sd_dir_entries);
-
-    browser.count = sd_dir->hdr.count;
-
     /*****************************************************
      * Apply theme configuration
      ****************************************************/
@@ -196,6 +193,39 @@ static void gamelist_init()
      ****************************************************/
     if (ui_config.screens.gamelist.cover.enabled)
         noise_init(&noise_cfg);
+}
+
+static void gamelist_init()
+{
+    gamelist_ctx.last_selected_item = -1;
+
+    /*****************************************************
+     * Alloc ressources
+     ****************************************************/
+    gamelist_ctx.game_cover = (uintptr_t)malloc(FENRIR_COVER_SIZE);
+    browser.texture_buffer = (uintptr_t)malloc(FONT_CACHE_SIZE);
+
+    /*****************************************************
+     * Setup browser textures
+     ****************************************************/
+    vdp1_vram_partitions_t vdp1_vram_partitions;
+    vdp1_vram_partitions_get(&vdp1_vram_partitions);
+    browser.texture_base = (uintptr_t)vdp1_vram_partitions.texture_base;
+    browser.pal_base = (uintptr_t)vdp1_vram_partitions.clut_base;
+    browser.gouraud_base = (uintptr_t)vdp1_vram_partitions.gouraud_base;
+
+    /*****************************************************
+     * Read gamelist
+     ****************************************************/
+    fenrir_read_status_sector(status_sector);
+    fenrir_refresh_entries(sd_dir, sd_dir_entries);
+
+    browser.count = sd_dir->hdr.count;
+
+    /*****************************************************
+     * themes
+     ****************************************************/
+    gamelist_apply_theme();
 
     // init browser
     browser_init(&browser);

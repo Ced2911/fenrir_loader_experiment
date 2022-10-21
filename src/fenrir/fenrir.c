@@ -3,110 +3,9 @@
 #include <yaul.h>
 #include "fenrir.h"
 #include "bios_ex.h"
-#include <stdlib.h>
+#include "cd-miss.h"
 
-#include <cpu/divu.h>
-#include <cpu/dmac.h>
-#include <cpu/frt.h>
-#include <cpu/intc.h>
-
-#include <smpc/smc.h>
-
-#include <scu/ic.h>
-
-#include <vdp.h>
-
-#include <sys/dma-queue.h>
-// #include "cd-block-internal.h"
-
-#define CMOK (0x0001) /* Command dispatch possible */
-#define DRDY (0x0002) /* Data transfer preparations complete */
-#define CSCT (0x0004) /* Finished reading 1 sector */
-#define BFUL (0x0008) /* CD buffer full */
-#define PEND (0x0010) /* CD playback completed */
-#define DCHG (0x0020) /* Disc change or tray open */
-#define ESEL (0x0040) /* Selector settings processing complete */
-#define EHST (0x0080) /* Host I/O processing complete */
-#define ECPY (0x0100) /* Duplication/move processing complete */
-#define EFLS (0x0200) /* File system processing complete */
-#define SCDQ (0x0400) /* Subcode Q update completed */
-#define MPED (0x0800) /* MPEG-related processing complete */
-#define MPCM (0x1000) /* MPEG action uncertain */
-#define MPST (0x2000) /* MPEG interrupt status report */
-
-/* CD-block */
-#define DTR 0x0000UL
-#define HIRQ 0x0008UL
-#define HIRQ_MASK 0x000CUL
-#define CR1 0x0018UL
-#define CR2 0x001CUL
-#define CR3 0x0020UL
-#define CR4 0x0024UL
-
-
-void sys_reset(void)
-{
-    cpu_intc_mask_set(15);
-
-    scu_ic_mask_set(SCU_IC_MASK_ALL);
-
-    scu_dma_stop();
-
-    scu_dsp_program_stop();
-
-    cpu_dmac_stop();
-    cpu_dmac_disable();
-
-    // smpc_smc_cdoff_call();
-    smpc_smc_sshoff_call();
-
-    vdp2_tvmd_display_res_set(VDP2_TVMD_INTERLACE_NONE, VDP2_TVMD_HORZ_NORMAL_A,
-                              VDP2_TVMD_VERT_224);
-    vdp2_scrn_back_color_set(VDP2_VRAM_ADDR(0, 0x01FFFE),
-                             COLOR_RGB1555(1, 0, 7, 0));
-
-    vdp1_env_stop();
-
-    vdp2_scrn_display_clear();
-
-    vdp2_sprite_priority_set(0, 0);
-    vdp2_sprite_priority_set(1, 0);
-    vdp2_sprite_priority_set(2, 0);
-    vdp2_sprite_priority_set(3, 0);
-    vdp2_sprite_priority_set(4, 0);
-    vdp2_sprite_priority_set(5, 0);
-    vdp2_sprite_priority_set(6, 0);
-    vdp2_sprite_priority_set(7, 0);
-
-    vdp_sync_vblank_in_clear();
-    vdp_sync_vblank_out_clear();
-
-    scu_ic_ihr_clear(SCU_IC_INTERRUPT_VBLANK_IN);
-    scu_ic_ihr_clear(SCU_IC_INTERRUPT_VBLANK_OUT);
-    scu_ic_ihr_clear(SCU_IC_INTERRUPT_HBLANK_IN);
-    scu_ic_ihr_clear(SCU_IC_INTERRUPT_TIMER_0);
-    scu_ic_ihr_clear(SCU_IC_INTERRUPT_TIMER_1);
-    scu_ic_ihr_clear(SCU_IC_INTERRUPT_DSP_END);
-    scu_ic_ihr_clear(SCU_IC_INTERRUPT_SOUND_REQUEST);
-    scu_ic_ihr_clear(SCU_IC_INTERRUPT_SYSTEM_MANAGER);
-    scu_ic_ihr_clear(SCU_IC_INTERRUPT_PAD_INTERRUPT);
-    scu_ic_ihr_clear(SCU_IC_INTERRUPT_LEVEL_2_DMA_END);
-    scu_ic_ihr_clear(SCU_IC_INTERRUPT_LEVEL_1_DMA_END);
-    scu_ic_ihr_clear(SCU_IC_INTERRUPT_LEVEL_0_DMA_END);
-    scu_ic_ihr_clear(SCU_IC_INTERRUPT_DMA_ILLEGAL);
-    scu_ic_ihr_clear(SCU_IC_INTERRUPT_SPRITE_END);
-
-    cpu_dual_master_clear();
-    cpu_dual_slave_clear();
-
-    cpu_divu_ovfi_clear();
-
-    cpu_frt_oca_clear();
-    cpu_frt_ocb_clear();
-    cpu_frt_ovi_clear();
-
-    vdp2_tvmd_display_set();
-}
+extern void sys_reset(void);
 
 static int strcicmp(char const *a, char const *b)
 {
@@ -123,6 +22,76 @@ static int sd_compare(const void *s1, const void *s2)
     sd_dir_entry_t *e1 = (sd_dir_entry_t *)s1;
     sd_dir_entry_t *e2 = (sd_dir_entry_t *)s2;
     return strcicmp(e1->filename, e2->filename);
+}
+
+static void __noreturn fenrir_direct_boot()
+{
+    cd_block_status_t cd;
+
+    // wait 2 frames
+    for (int i = 0; i < 2; i++)
+    {
+
+        vdp1_sync_render();
+        vdp1_sync();
+        vdp2_sync();
+        vdp1_sync_wait();
+    }
+    int s = 0;
+
+    for (;;)
+    {
+        switch (s)
+        {
+        // wait until disc is mounted
+        case 0:
+        {
+            cd_block_cmd_status_get(&cd);
+            if (cd.cd_status == CD_STATUS_NO_DISC)
+            {
+                vdp1_sync_render();
+                vdp1_sync();
+                vdp2_sync();
+                vdp1_sync_wait();
+            }
+            else
+            {
+                s = 1;
+            }
+            break;
+        }
+
+        // wait auth
+        case 1:
+        {
+            uint16_t check;
+            cd_block_cmd_disk_auth();
+            // Wait till operation is finished
+            while ((MEMORY_READ(16, CD_BLOCK(HIRQ)) & EFLS) == 0)
+                ;
+            cd_block_cmd_auth_check(&check);
+
+            // check finished
+            s = 0x10 + check;
+            break;
+        }
+
+        // launch disc
+        case 0x14:
+        {
+            sys_reset();
+            bios_cd_init();
+            bios_cd_read();
+            while (1)
+                bios_cd_boot();
+            break;
+        }
+        // launch cd player (unknown cd, audio or video)
+        default:
+            bios_cd_player_execute();
+            break;
+        }
+    }
 }
 
 void fenrir_read_status_sector(status_sector_t *status_sector)
@@ -173,10 +142,7 @@ void fenrir_refresh_entries(sd_dir_t *sd_dir, sd_dir_entry_t *sd_dir_entries)
     //     qsort(sd_dir_entries, sd_dir->hdr.count, sizeof(sd_dir_entry_t), sd_compare);
 }
 
-extern void
-__reset(void);
-
-__attribute__((noreturn)) void fenrir_launch_game(uint32_t id, int boot_method)
+void __noreturn fenrir_launch_game(uint32_t id, int boot_method)
 {
     // stop interrupts and slave cpu
     cpu_intc_mask_set(15);
@@ -192,9 +158,6 @@ __attribute__((noreturn)) void fenrir_launch_game(uint32_t id, int boot_method)
     // launch game
     fenrir_call(FENRIR_EVENT_LAUNCH_ID_START_FAD + id);
 
-    // todo
-    // return;
-
     while (1)
     {
         switch (boot_method)
@@ -203,78 +166,13 @@ __attribute__((noreturn)) void fenrir_launch_game(uint32_t id, int boot_method)
         case fenrir_boot_dev:
             break;
         case fenrir_boot_direct:
-        {
-            cd_block_status_t cd;
-
-            // wait 2 frames
-            for (int i = 0; i < 2; i++)
-            {
-
-                vdp1_sync_render();
-                vdp1_sync();
-                vdp2_sync();
-                vdp1_sync_wait();
-            }
-            int s = 0;
-
-            for (;;)
-            {
-                switch (s)
-                {
-                // wait for mounted disc
-                case 0:
-                {
-                    cd_block_cmd_status_get(&cd);
-                    if (cd.cd_status == CD_STATUS_NO_DISC)
-                    {
-                        vdp1_sync_render();
-                        vdp1_sync();
-                        vdp2_sync();
-                        vdp1_sync_wait();
-                    }
-                    else
-                    {
-                        s++;
-                    }
-                    break;
-                }
-
-                    // wait auth
-                case 1:
-                {
-                    cd_block_cmd_disk_auth();
-                    /* Wait till operation is finished */
-                    while ((MEMORY_READ(16, CD_BLOCK(HIRQ)) & EFLS) == 0)
-                        ;
-                    uint16_t check;
-                    cd_block_cmd_auth_check(&check);
-
-                    s = 0x10 + check;
-                    break;
-                }
-
-                    // launch
-                case 0x14:
-                {
-                    sys_reset();
-                    bios_cd_init();
-                    bios_cd_read();
-                    while (1)
-                        bios_cd_boot();
-                    break;
-                }
-                default:
-                    bios_cd_player_execute();
-                    break;
-                }
-            }
-        }
-        /** todo **/
+            fenrir_direct_boot();
+            break;
         case fenrir_boot_cd_player:
             bios_cd_player_execute();
             break;
-        case fenrir_boot_card:
         /** todo **/
+        case fenrir_boot_card:
         case fenrir_boot_reset:
             smpc_smc_nmireq_call();
             break;

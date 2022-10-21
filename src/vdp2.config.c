@@ -121,6 +121,10 @@ static void vdp2_ngb2_init()
     vdp2_scrn_cell_format_set(&format_nbg2);
     vdp2_scrn_priority_set(VDP2_SCRN_NBG2, 4);
     vdp2_cram_offset_set(VDP2_SCRN_NBG2, 0);
+
+    
+    vdp2_scrn_scroll_x_set(VDP2_SCRN_NBG2, FIX16(12));
+    vdp2_scrn_scroll_y_set(VDP2_SCRN_NBG2, FIX16(0.0f));
 }
 
 static void vdp2_setup_vram()

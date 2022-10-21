@@ -11,6 +11,7 @@ SH_SRCS:= \
 	assets/bitmap.c \
 	src/main.c \
 	src/noise.c \
+	src/reset.c \
 	src/vdp1.config.c \
 	src/vdp2.config.c \
 	src/ui.config.c \
