@@ -74,8 +74,8 @@ ui_config_t ui_config = {
 #else
 
             .background = {
-                .velocity_x = 0,//FIX16(-0.7),
-                .velocity_y = 0,//FIX16(-0.7),
+                .velocity_x = 0, // FIX16(-0.7),
+                .velocity_y = 0, // FIX16(-0.7),
                 .cell_addr = (uintptr_t)shared_cell,
                 .cell_sz = shared_cell_sz,
                 .pal_addr = (uintptr_t)bg_pal,
@@ -91,23 +91,24 @@ ui_config_t ui_config = {
                 .cell_sz = 0,
                 .pal_addr = (uintptr_t)fg_pal,
                 .pal_sz = fg_pal_sz,
-                .pattern_addr =(uintptr_t)fg_pattern,
+                .pattern_addr = (uintptr_t)fg_pattern,
                 .pattern_sz = fg_pattern_sz,
             },
 #endif
+            // use vdp2 so coord need to be aligned to 8
             .cover = {
                 .noise_palettes = NOISE_PALETTES,
-                .x = 80,
-                .y = 120,
+                .x = 8,
+                .y = 56,
                 .w = 128,
                 .h = 96,
                 .enabled = 1,
             },
             .browser = {
                 /** */
-                .x = 20,
+                .x = 148,
                 .y = 56,
-                .w = 200,
+                .w = 100,
                 .h = 200,
                 .line_height = 12,
                 /** */

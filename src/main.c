@@ -6,6 +6,10 @@
 #include "vdp2.config.h"
 #include "font/font.h"
 #include "screens/gamelist.h"
+#include "sound_driver/pcmsys.h"
+#include "sound_driver/sdrv.h"
+#include "../assets/hav_flag.h"
+#include "../assets/hado.h"
 
 #define RESOLUTION_WIDTH (352)
 #define RESOLUTION_HEIGHT (224)
@@ -13,6 +17,8 @@
 sd_dir_t *sd_dir;
 status_sector_t *status_sector;
 sd_dir_entry_t *sd_dir_entries;
+
+int16_t hadoken_snd;
 
 void *zalloc(size_t l)
 {
@@ -39,9 +45,21 @@ int main(void)
     screen_t *screen = &gamelist_screen;
     screen->init();
 
+    load_drv(sdrv_bin, sdrv_bin_len, 11520);
+    hadoken_snd = load_16bit_pcm(hado_pcm, hado_pcm_len, 11520);
+    //pcm8snd = load_8bit_pcm(hav_flag_PCM, hav_flag_PCM_len, 11520);
+    
+int i = 0;
     while (1)
     {
         screen->update();
+
+        if (i > 200) {
+            pcm_play(hadoken_snd,PCM_PROTECTED, 6);
+            i = 0;
+        }
+
+        i++;
 
         vdp1_sync_render();
         vdp1_sync();
@@ -55,6 +73,10 @@ int main(void)
 static void _vblank_out_handler(void *work __unused)
 {
     smpc_peripheral_intback_issue();
+}
+static void _vblank_in_handler(void *work __unused)
+{
+    sdrv_vblank_rq();
 }
 
 void user_init(void)
@@ -83,6 +105,7 @@ void user_init(void)
     vdp1_sync_interval_set(0);
 
     vdp_sync_vblank_out_set(_vblank_out_handler, NULL);
+    vdp_sync_vblank_in_set(_vblank_in_handler, NULL);
 
     cpu_intc_mask_set(0);
     vdp2_tvmd_display_set();

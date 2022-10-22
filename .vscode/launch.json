@@ -26,6 +26,32 @@
             ],
             "preLaunchTask": "C/C++: gcc build font tools",
             "miDebuggerPath": "/usr/bin/gdb"
+        },
+        {
+            "name": "C/C++: vgm",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/workspaces/loader_yaul/tools/vgmplay/build/vgmtest",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "/workspaces/loader_yaul/tools/vgmplay/build/",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Activer l'impression en mode Pretty pour gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Définir la version désassemblage sur Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+          //  "preLaunchTask": "build_vgm",
+            "miDebuggerPath": "/usr/bin/gdb"
         }
     ]
 }

@@ -21,7 +21,9 @@ SH_SRCS:= \
 	src/fenrir/fenrir.asserts.c \
 	src/fenrir/region.c \
 	src/screens/gamelist.c \
-	src/screens/browser.c 
+	src/screens/gamelist_theme.c \
+	src/screens/browser.c \
+	src/sound_driver/pcmsys_y.c
 	
 SH_LIBRARIES:=
 SH_CFLAGS+= -O2 -I. -save-temps=obj 

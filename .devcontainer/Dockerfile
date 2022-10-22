@@ -21,7 +21,7 @@ ENV CDB_CPP=/usr/bin/g++
 # install required tools
 RUN echo -e "[yaul-linux]\nSigLevel = Optional TrustAll\nServer = http://packages.yaul.org/linux/x86_64\n" | sudo tee -a /etc/pacman.conf && \
     pacman -Syy && \
-    pacman -S --noconfirm git yaul-tool-chain-git yaul-git yaul-examples-git
+    pacman -S --noconfirm git yaul-tool-chain-git yaul-git yaul-examples-git vim cmake
 # yaul-examples-git 
 
 

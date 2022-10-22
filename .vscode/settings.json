@@ -29,6 +29,8 @@
         "test.h": "c",
         "bitmap.h": "c",
         "mvsc_bg.h": "c",
-        "cd-block.h": "c"
+        "cd-block.h": "c",
+        "pcmsys.h": "c",
+        "hav_flag.h": "c"
     }
 }
