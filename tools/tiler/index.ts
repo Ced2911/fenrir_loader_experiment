@@ -189,7 +189,15 @@ async function main() {
                     const page = x > page_sz ? 1 : 0 + y > page_sz ? 2 : 0;
                     const addr = ptn * 8 * 8;
                     const ptn_ss = (addr >> 5) | vf << 11 | hf << 10;
+                    /*
+// convert to ss fmt - cfg 2
+const page_sz = 63
+const cell_sz = (cellSize * cellSize)
 
+const page = x > page_sz ? 1 : 0 + y > page_sz ? 2 : 0;
+const addr = ptn * 8 * 8;
+const ptn_ss = (addr >> 5) | vf << 31 | hf << 30;
+*/
                     pages[page].push(ptn_ss)
                 })
 
