@@ -1,7 +1,8 @@
 import Jimp from 'jimp';
 import { writeFile } from 'fs';
 import { createHash } from 'crypto';
-import { buildPalette, tileImage, RGBA, RGB8888To555, TileSize } from './tiler'
+import { buildPalette, tileImage, RGBA, TileSize, Cell } from './tiler'
+import { exportBufferToC, exportPaletteToBin, exportCellsToBin, exporPtnToBin } from './encode'
 
 interface ConfigImage {
     key: string,
@@ -10,11 +11,6 @@ interface ConfigImage {
 interface Config {
     images: ConfigImage[],
     output: string
-}
-interface Cell {
-    data: number[],
-    id: any,
-    hash: string[]
 }
 
 enum CellMirror {
@@ -105,7 +101,7 @@ async function main() {
             cells[hash] = cell;
 
             // add luts...
-            if (0)
+            if (1)
                 for (let i = 0; i < 4; i++) {
                     const m = [CellMirror.N, CellMirror.Vertical, CellMirror.Horizontal, CellMirror.Both][i]
                     const cell_m = { id: cell.id }
@@ -122,7 +118,7 @@ async function main() {
         if (cells[hash]) {
             return { id: cells[hash].id, mirror: 0 }
         }
-        if (0)
+        if (1)
             // check mirrored
             for (let i = 0; i < 4; i++) {
                 const m = [CellMirror.N, CellMirror.Vertical, CellMirror.Horizontal, CellMirror.Both][i]
@@ -224,35 +220,15 @@ const ptn_ss = (addr >> 5) | vf << 31 | hf << 30;
     })
 
     // output..
-    let __cellstr = `
-// ${Object.values(cells).length} cells
-static const uint8_t shared_cell[] = {
-    ${Object.values(cells).map(cell => cell.data).flatMap(x => x).join(',')}
-};
-static const size_t shared_cell_sz = sizeof(shared_cell);
-`
-    let cellstr = `
-// ${Object.values(cells).length} cells
-static const uint8_t shared_cell[] = {
-    ${Object.values(cells).map(cell => `// ${cell.id} ${cell.hash}\n` + encodeCell(cell)).join('')}
-};
-static const size_t shared_cell_sz = sizeof(shared_cell);
-`
+    let cellstr = '';
+    cellstr += exportBufferToC(`shared_cell`, exportCellsToBin(Object.values(cells)))
 
     let patternStr = '';
     let palStr = '';
     config.images.map(({ key, file }) => {
-        patternStr += `
-static const size_t ${key}_pattern_sz = ${pattern[key].length}*sizeof(uint16_t);
-static const uint16_t ${key}_pattern[] = {
-    ${pattern[key].map(v => `0x` + v.toString(16)).join(',')}
-};`
+        patternStr += exportBufferToC(`${key}_pattern`, exporPtnToBin(pattern[key]));
+        palStr += exportBufferToC(`${key}_pal`, exportPaletteToBin({ palettes: Object.values(palettes[key]) }));
 
-        palStr += `
-static const size_t ${key}_pal_sz = ${Object.values(palettes[key]).length}*sizeof(color_rgb1555_t);
-static const color_rgb1555_t ${key}_pal[] = {
-    ${Object.values(palettes[key]).map(c => RGB8888To555(c)).join(',\n\t')}
-};`
     })
 
     // write to file    

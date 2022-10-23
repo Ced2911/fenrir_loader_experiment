@@ -18,6 +18,12 @@ export enum TileSize {
     x2 = 16
 }
 
+export interface Cell {
+    data: number[],
+    id: any,
+    hash: string[]
+}
+
 type tileImageCallback = (cellData: number[], tilesId: number, tileX: number, tileY: number) => void;
 
 export function buildPalette(image: Jimp) {
@@ -73,4 +79,18 @@ export function tileImage(image: Jimp, tileSize: TileSize, paletteArray: RGBA[],
 
 export function RGB8888To555(rgba: RGBA) {
     return `COLOR_RGB1555(${rgba.a ? 1 : 0}, ${Math.floor(rgba.r / 8)}, ${Math.floor(rgba.g / 8)}, ${Math.floor(rgba.b / 8)})`
+}
+export function RGB8888To555Number(rgba: RGBA) {
+    /*
+    const c = rgba.a << 15 | 
+    ((Math.floor(rgba.b / 8)) << 10) | 
+    ((Math.floor(rgba.g / 8)) << 5) | 
+    ((Math.floor(rgba.r / 8)) );
+    */
+
+    const c = rgba.a << 15 |
+        ((rgba.b >> 3) << 10) |
+        ((rgba.g >> 3) << 5) |
+        ((rgba.r >> 3));
+    return c
 }
