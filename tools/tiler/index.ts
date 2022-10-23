@@ -2,7 +2,7 @@ import Jimp from 'jimp';
 import { writeFile } from 'fs';
 import { createHash } from 'crypto';
 import { buildPalette, tileImage, RGBA, TileSize, Cell } from './tiler'
-import { exportBufferToC, exportPaletteToBin, exportCellsToBin, exporPtnToBin } from './encode'
+import { exportBufferToC, exportPaletteToBin, exportCellsToBin, exporPtnToBin, cellPattern, patternGetPage } from './encode'
 
 interface ConfigImage {
     key: string,
@@ -173,28 +173,9 @@ async function main() {
                     const cell = findCell(hash)
                     if (!cell)
                         throw (`cell for hash: ${hash} not`)
-                    const ptn = cell.id
 
-                    const vf = cell.mirror & 1;
-                    const hf = (cell.mirror >> 1) & 1;
-
-                    // convert to ss fmt - cfg 1
-                    const page_sz = 63
-                    const cell_sz = (cellSize * cellSize)
-
-                    const page = x > page_sz ? 1 : 0 + y > page_sz ? 2 : 0;
-                    const addr = ptn * 8 * 8;
-                    const ptn_ss = (addr >> 5) | vf << 11 | hf << 10;
-                    /*
-// convert to ss fmt - cfg 2
-const page_sz = 63
-const cell_sz = (cellSize * cellSize)
-
-const page = x > page_sz ? 1 : 0 + y > page_sz ? 2 : 0;
-const addr = ptn * 8 * 8;
-const ptn_ss = (addr >> 5) | vf << 31 | hf << 30;
-*/
-                    pages[page].push(ptn_ss)
+                    const p = cellPattern(cell)
+                    pages[patternGetPage(x, y)].push(p)
                 })
 
                 pattern[key] = Object.values(pages).flatMap(x => x)
