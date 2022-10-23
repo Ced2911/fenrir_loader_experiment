@@ -7,15 +7,14 @@
 #include "ui.config.h"
 #include "noise.h"
 
-
 #define COVER_TEXTURE_ADDR (browser->texture_base + (FONT_CACHE_SIZE * 2))
 
 static noise_cfg_t noise_cfg = {
     .cell_addr = NBG1_CELL_ADDR,
     .pattern_addr = NGB1_PATTERN_ADDR,
-    .pal_addr = VDP2_CRAM_ADDR(0x100)};
+    .pal_addr = NBG1_COLOR_ADDR};
 
-void gamelist_theme_update(browser_t * browser)
+void gamelist_theme_update(browser_t *browser)
 {
     static fix16_t __cx2 = 0;
     static fix16_t __cy2 = 0;
@@ -41,7 +40,7 @@ void gamelist_theme_update(browser_t * browser)
         noise_update(&noise_cfg);
 }
 
-void gamelist_theme_apply(browser_t * browser)
+void gamelist_theme_apply(browser_t *browser)
 {
     /*****************************************************
      * Apply theme configuration
@@ -128,7 +127,7 @@ void gamelist_theme_apply(browser_t * browser)
     }
 }
 
-void gamelist_theme_destroy(browser_t * browser)
+void gamelist_theme_destroy(browser_t *browser)
 {
     if (ui_config.screens.gamelist.cover.enabled)
         noise_destroy(&noise_cfg);

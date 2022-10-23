@@ -4,7 +4,7 @@ interface Palettes {
     palettes: RGBA[]
 };
 
-const b16 = 1;
+const b16 = 0;
 // see /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn_macros.h
 
 /*
@@ -14,7 +14,7 @@ const b16 = 1;
          (((hf) & 0x01) << 10) |                                               \
          (VDP2_SCRN_PND_CP_NUM(cpd_addr) & 0x0FFF))
          */
-function encodePatternU16(addr: number, vf: boolean, hf: boolean) {
+function encodePatternU16(addr: number, vf: number, hf: number) {
     return (addr >> 5) | (vf ? 1 : 0) << 11 | (hf ? 1 : 0) << 10;
 }
 
@@ -27,7 +27,7 @@ function encodePatternU16(addr: number, vf: boolean, hf: boolean) {
          ((VDP2_SCRN_PND_PAL_NUM(cram_mode, pal_addr) & 0x007F) << 16) |       \
          (VDP2_SCRN_PND_CP_NUM(cpd_addr) & 0x7FFF))
          */
-function encodePatternU32(addr: number, vf: boolean, hf: boolean) {
+function encodePatternU32(addr: number, vf: number, hf: number) {
     return (addr >> 5) | (vf ? 1 : 0) << 31 | (hf ? 1 : 0) << 30;
 }
 
@@ -47,8 +47,7 @@ export function cellPattern(cell: any) {
     const hf = (cell.mirror >> 1) & 1;
 
     const addr = ptn * 8 * 8;
-    const ptn_ss = encodePattern(addr, vf, hf);
-    return ptn_ss;
+    return encodePattern(addr, vf, hf);;
 }
 
 export function exportPaletteToBin(pal: Palettes): Buffer {
@@ -73,7 +72,7 @@ export function exporPtnToBin(pattern: number[]): Buffer {
         const bin = Buffer.alloc(pattern.length * 4);
         const u32 = Uint16Array.from(pattern);
         u32.forEach((v, k) => {
-            bin.writeUInt32BE(v, k << 1)
+            bin.writeUInt32BE(v, k << 2)
         })
         return bin;
     }

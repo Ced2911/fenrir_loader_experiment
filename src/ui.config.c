@@ -137,7 +137,7 @@ ui_config_t ui_config = {
                     },
                 },
                 .position_bar = {
-                    .enabled = 1,
+                    .enabled = 0,
                     .color = COLOR_RGB1555(1, 0x00, 0x11, 0x11),
                     .gouraud = {
                         COLOR_RGB1555(1, 0x00, 0x1F, 0x1F),

@@ -8,11 +8,21 @@ static vdp2_scrn_cell_format_t format_nbg0 = {
     .scroll_screen = VDP2_SCRN_NBG0,
     .cc_count = VDP2_SCRN_CCC_PALETTE_256,
     .character_size = 1 * 1,
-    .pnd_size = 1,
+    .pnd_size = 2,
     .auxiliary_mode = 0,
     .plane_size = 1 * 1,
     .cp_table = NBG0_CELL_ADDR,
-    .color_palette = VDP2_CRAM_ADDR(0x200)};
+    .color_palette = NBG0_COLOR_ADDR};
+
+static vdp2_scrn_cell_format_t format_nbg2 = {
+    .scroll_screen = VDP2_SCRN_NBG2,
+    .cc_count = VDP2_SCRN_CCC_PALETTE_256,
+    .character_size = 1 * 1,
+    .pnd_size = 2,
+    .auxiliary_mode = 1,
+    .plane_size = 1 * 1,
+    .cp_table = NBG2_CELL_ADDR,
+    .color_palette = NBG2_COLOR_ADDR};
 
 static vdp2_scrn_cell_format_t format_nbg1 = {
     .scroll_screen = VDP2_SCRN_NBG1,
@@ -22,7 +32,7 @@ static vdp2_scrn_cell_format_t format_nbg1 = {
     .auxiliary_mode = 0,
     .plane_size = 1 * 1,
     .cp_table = NBG1_CELL_ADDR,
-    .color_palette = 0,
+    .color_palette = NBG1_COLOR_ADDR,
     .map_bases = {
         .planes = {
             NGB1_PATTERN_ADDR,
@@ -30,16 +40,6 @@ static vdp2_scrn_cell_format_t format_nbg1 = {
             NGB1_PATTERN_ADDR,
             NGB1_PATTERN_ADDR,
         }}};
-
-static vdp2_scrn_cell_format_t format_nbg2 = {
-    .scroll_screen = VDP2_SCRN_NBG2,
-    .cc_count = VDP2_SCRN_CCC_PALETTE_256,
-    .character_size = 1 * 1,
-    .pnd_size = 1,
-    .auxiliary_mode = 1,
-    .plane_size = 1 * 1,
-    .cp_table = NBG2_CELL_ADDR,
-    .color_palette = NBG2_COLOR_ADDR};
 
 static void upload_cells(ui_config_background_t *bg, const vdp2_scrn_cell_format_t *format)
 {
@@ -57,9 +57,17 @@ static void upload_cells(ui_config_background_t *bg, const vdp2_scrn_cell_format
     }
     if (bg->pattern_addr)
     {
+#if 1
         vdp_dma_enqueue((void *)format->map_bases.planes[0],
                         (void *)bg->pattern_addr,
                         bg->pattern_sz);
+#else
+        uint32_t *t = (uint32_t *)format->map_bases.planes[0];
+        for (int i = 0; i < bg->pattern_sz / 4; i++)
+        {
+            *t++ = VDP2_SCRN_PND_CONFIG_8(0, 128, 0, 0, 0, 0, 0);
+        }
+#endif
     }
 }
 
@@ -67,18 +75,20 @@ static void set_plane_addr(vdp2_vram_t *planes, uintptr_t plan_a_addr, size_t pa
 {
     switch (pattern_sz)
     {
-    case (64 * 64) * sizeof(short):
+    case 16384:
         planes[0] = plan_a_addr;
         planes[1] = plan_a_addr;
         planes[2] = plan_a_addr;
         planes[3] = plan_a_addr;
         break;
-    case (128 * 64) * sizeof(short):
+        /*
+    case 16384*2:
         planes[0] = plan_a_addr + 0x00000;
         planes[1] = plan_a_addr + 0x02000;
         planes[2] = plan_a_addr + 0x00000;
         planes[3] = plan_a_addr + 0x02000;
         break;
+        */
     default:
         planes[0] = plan_a_addr;
         planes[1] = plan_a_addr;
@@ -99,14 +109,14 @@ static void vdp2_ngb0_init()
 
     vdp2_scrn_cell_format_set(&format_nbg0);
     vdp2_scrn_priority_set(VDP2_SCRN_NBG0, 2);
-    vdp2_cram_offset_set(VDP2_SCRN_NBG0, VDP2_CRAM_ADDR(0x200));
+    vdp2_cram_offset_set(VDP2_SCRN_NBG0, format_nbg0.color_palette);
 }
 
 static void vdp2_ngb1_init()
 {
     vdp2_scrn_cell_format_set(&format_nbg1);
     vdp2_scrn_priority_set(VDP2_SCRN_NBG1, 3);
-    vdp2_cram_offset_set(VDP2_SCRN_NBG1, VDP2_CRAM_ADDR(0x100));
+    vdp2_cram_offset_set(VDP2_SCRN_NBG1, format_nbg1.color_palette);
 }
 
 static void vdp2_ngb2_init()
@@ -121,10 +131,7 @@ static void vdp2_ngb2_init()
     vdp2_scrn_cell_format_set(&format_nbg2);
     vdp2_scrn_priority_set(VDP2_SCRN_NBG2, 4);
     vdp2_cram_offset_set(VDP2_SCRN_NBG2, 0);
-
-    
-    vdp2_scrn_scroll_x_set(VDP2_SCRN_NBG2, FIX16(12));
-    vdp2_scrn_scroll_y_set(VDP2_SCRN_NBG2, FIX16(0.0f));
+    vdp2_cram_offset_set(VDP2_SCRN_NBG2, format_nbg2.color_palette);
 }
 
 static void vdp2_setup_vram()
@@ -174,12 +181,9 @@ void vdp2_init()
 {
     vdp2_setup_vram();
 
-    vdp2_ngb2_init();
     vdp2_ngb0_init();
     vdp2_ngb1_init();
-
-    // vdp2_registers_t * r = vdp2_regs_get();
-    //  r->pncn0 = r->pncn0 & 0xFFFB;
+    vdp2_ngb2_init();
 
     vdp2_scrn_display_set(VDP2_SCRN_NBG0_DISP | VDP2_SCRN_NBG1_DISP | VDP2_SCRN_NBG2_DISP);
 }
