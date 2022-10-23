@@ -133,7 +133,7 @@ static void vdp2_setup_vram()
 
     vram_cycp.pt[0].t0 = VDP2_VRAM_CYCP_PNDR_NBG0;
     vram_cycp.pt[0].t1 = VDP2_VRAM_CYCP_PNDR_NBG1;
-    vram_cycp.pt[0].t2 = VDP2_VRAM_CYCP_CHPNDR_NBG1;
+    vram_cycp.pt[0].t2 = VDP2_VRAM_CYCP_PNDR_NBG2;
     vram_cycp.pt[0].t3 = VDP2_VRAM_CYCP_NO_ACCESS;
     vram_cycp.pt[0].t4 = VDP2_VRAM_CYCP_NO_ACCESS;
     vram_cycp.pt[0].t5 = VDP2_VRAM_CYCP_NO_ACCESS;
@@ -142,17 +142,17 @@ static void vdp2_setup_vram()
 
     vram_cycp.pt[1].t0 = VDP2_VRAM_CYCP_CHPNDR_NBG0;
     vram_cycp.pt[1].t1 = VDP2_VRAM_CYCP_CHPNDR_NBG0;
-    vram_cycp.pt[1].t2 = VDP2_VRAM_CYCP_CHPNDR_NBG2;
-    vram_cycp.pt[1].t3 = VDP2_VRAM_CYCP_CHPNDR_NBG2;
-    vram_cycp.pt[1].t4 = VDP2_VRAM_CYCP_NO_ACCESS;
-    vram_cycp.pt[1].t5 = VDP2_VRAM_CYCP_NO_ACCESS;
+    vram_cycp.pt[1].t2 = VDP2_VRAM_CYCP_CHPNDR_NBG1;
+    vram_cycp.pt[1].t3 = VDP2_VRAM_CYCP_CHPNDR_NBG1;
+    vram_cycp.pt[1].t4 = VDP2_VRAM_CYCP_CHPNDR_NBG2;
+    vram_cycp.pt[1].t5 = VDP2_VRAM_CYCP_CHPNDR_NBG2;
     vram_cycp.pt[1].t6 = VDP2_VRAM_CYCP_NO_ACCESS;
     vram_cycp.pt[1].t7 = VDP2_VRAM_CYCP_NO_ACCESS;
 
-    vram_cycp.pt[2].t0 = VDP2_VRAM_CYCP_PNDR_NBG2;
-    vram_cycp.pt[2].t1 = VDP2_VRAM_CYCP_PNDR_NBG2;
-    vram_cycp.pt[2].t2 = VDP2_VRAM_CYCP_CPU_RW;
-    vram_cycp.pt[2].t3 = VDP2_VRAM_CYCP_CPU_RW;
+    vram_cycp.pt[2].t0 = VDP2_VRAM_CYCP_NO_ACCESS;
+    vram_cycp.pt[2].t1 = VDP2_VRAM_CYCP_NO_ACCESS;
+    vram_cycp.pt[2].t2 = VDP2_VRAM_CYCP_NO_ACCESS;
+    vram_cycp.pt[2].t3 = VDP2_VRAM_CYCP_NO_ACCESS;
     vram_cycp.pt[2].t4 = VDP2_VRAM_CYCP_NO_ACCESS;
     vram_cycp.pt[2].t5 = VDP2_VRAM_CYCP_NO_ACCESS;
     vram_cycp.pt[2].t6 = VDP2_VRAM_CYCP_NO_ACCESS;
