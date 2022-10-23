@@ -32,6 +32,7 @@ typedef struct
         uint16_t h;
         color_rgb1555_t color;
         color_rgb1555_t gouraud[4];
+        uint8_t enabled;
     } position_bar;
 
     struct

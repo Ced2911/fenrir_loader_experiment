@@ -244,7 +244,8 @@ void browser_update(browser_t *browser)
 
     cmdt = &cmdt_list->cmdts[ORDER_BUFFER_STARTING_INDEX];
 
-    draw_selector(browser, browser->selected);
+    if (browser->browser_ui_config.position_bar.enabled)
+        draw_selector(browser, browser->selected);
 
     // Only draw items if page changed
     if (browser->old_page != browser->page)
