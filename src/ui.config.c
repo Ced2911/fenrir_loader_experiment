@@ -87,14 +87,12 @@ ui_config_t ui_config = {
             .fg = {
                 .velocity_x = FIX16(-3),
                 .velocity_y = 0,
-                .cell_addr = 0,
-                .cell_sz = 0,
-                /*
+                .cell_addr = (uintptr_t)shared_cell,
+                .cell_sz = shared_cell_sz,
                 .pal_addr = (uintptr_t)fg_pal,
                 .pal_sz = fg_pal_sz,
                 .pattern_addr = (uintptr_t)fg_pattern,
                 .pattern_sz = fg_pattern_sz,
-                */
             },
 #endif
             // use vdp2 so coord need to be aligned to 8
