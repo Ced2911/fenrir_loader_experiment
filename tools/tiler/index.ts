@@ -2,11 +2,12 @@ import Jimp from 'jimp';
 import { writeFile } from 'fs';
 import { createHash } from 'crypto';
 import { buildPalette, tileImage, RGBA, TileSize, Cell } from './tiler'
-import { exportBufferToC, exportPaletteToBin, exportCellsToBin, exporPtnToBin, cellPattern, patternGetPage } from './encode'
+import { exportBufferToC, exportPaletteToBin, exportCellsToBin, exporPtnToBin, cellPattern, patternGetPage, vdpNextPatternAddrBoundary, createVdpConfig } from './encode'
 
 interface ConfigImage {
     key: string,
-    file: string
+    file: string,
+    screen: 'nbg0' | 'nbg2'
 }
 interface Config {
     images: ConfigImage[],
@@ -23,15 +24,6 @@ enum CellMirror {
 const config = require('./config.json') as Config;
 
 // console.log(config)
-
-function encodeCell(cell: Cell) {
-    const b = cell.data
-    let str = ''
-    for (let y = 0; y < 8; y++) {
-        str += b.splice(0, 8).map(d => d).join(',') + ',\n'
-    }
-    return str;
-}
 
 function flipCellData(data: number[], mirror: number): number[] {
     switch (mirror) {
@@ -72,7 +64,6 @@ function hashCell(cell: Cell) {
 
 
 async function main() {
-
     const cellSize: TileSize = TileSize.x1
 
     // contain all tiles for all screens
@@ -188,7 +179,6 @@ async function main() {
     console.log(`number of global palettes: ${Object.values(pattern).reduce((acc, pscreen) => acc + pscreen.length, 0)}`)
 
 
-
     config.images.map(({ key, file }) => {
         console.log('\n')
         console.log(`file: ${file}`)
@@ -201,19 +191,41 @@ async function main() {
     })
 
     // output..
+    const screenConfig: any = {
+        screens: []
+    }
+
+
     let cellstr = '';
-    cellstr += exportBufferToC(`shared_cell`, exportCellsToBin(Object.values(cells)))
+    const cellbin = exportCellsToBin(Object.values(cells));
+    //console.log('cell', vdpNextPatternAddrBoundary(cellbin.length))
+    cellstr += exportBufferToC(`shared_cell`, cellbin)
+
+    screenConfig.cell = cellbin.length
 
     let patternStr = '';
     let palStr = '';
-    config.images.map(({ key, file }) => {
-        patternStr += exportBufferToC(`${key}_pattern`, exporPtnToBin(pattern[key]));
-        palStr += exportBufferToC(`${key}_pal`, exportPaletteToBin({ palettes: Object.values(palettes[key]) }));
+    config.images.map(({ key, file, screen }) => {
+        const patternbin = exporPtnToBin(pattern[key])
+        const palbin = exportPaletteToBin({ palettes: Object.values(palettes[key]) })
+
+        //console.log('patternbin', vdpNextPatternAddrBoundary(patternbin.length))
+        //console.log('palbin', vdpNextPatternAddrBoundary(palbin.length))
+
+        patternStr += exportBufferToC(`${key}_pattern`, patternbin);
+        palStr += exportBufferToC(`${key}_pal`, palbin);
+
+        screenConfig.screens[screen] = screenConfig.screens[screen] || {}
+
+        screenConfig.screens[screen].pattern = patternbin.length
+        screenConfig.screens[screen].pal = palbin.length
 
     })
 
+    const vdp2config = createVdpConfig(screenConfig)
+
     // write to file    
-    writeFile(config.output, `// Auto generated\n//${config.images.map(({ key, file }) => file).join('\n//')}\n` + palStr + patternStr + cellstr, () => { })
+    writeFile(config.output, `// Auto generated\n//${config.images.map(({ key, file }) => file).join('\n//')}\n` + palStr + patternStr + cellstr + vdp2config, () => { })
 }
 
 main();

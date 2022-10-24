@@ -3,6 +3,7 @@
 #include "assets/vdp2.h"
 #include "ui.config.h"
 #include "vdp2.config.h"
+#include "vdp2.h"
 
 static vdp2_scrn_cell_format_t format_nbg0 = {
     .scroll_screen = VDP2_SCRN_NBG0,

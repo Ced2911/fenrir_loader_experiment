@@ -4,6 +4,16 @@ interface Palettes {
     palettes: RGBA[]
 };
 
+function nextPowerOf2(x: number) {
+    return Math.pow(2, Math.ceil(Math.log(x) / Math.log(2)));
+}
+
+export function vdpNextPatternAddrBoundary(addr: number) {
+    let nextAddr = nextPowerOf2(addr);
+    return (nextAddr >> 12) << 12;
+}
+
+
 const b16 = 0;
 // see /opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/scu/bus/b/vdp/vdp2/scrn_macros.h
 
@@ -93,4 +103,64 @@ static const uint8_t ${key}[] = {
 };`
         ;
     return str;
+}
+
+
+function vdpConfigToC(config:any) {
+    const str = `
+// noize
+#define NGB1_PATTERN_ADDR   (0x25E00000UL + 0x${config.nbg1.pattern.toString(16)})
+#define NBG1_CELL_ADDR      (0x25E00000UL + 0x${config.nbg1.cell.toString(16)})
+#define NBG1_COLOR_ADDR     VDP2_CRAM_ADDR(0x${config.nbg1.color.toString(16)})
+
+// bg
+#define NGB0_PATTERN_ADDR   (0x25E00000UL + 0x${config.nbg0.pattern.toString(16)})
+#define NBG0_CELL_ADDR      (0x25E00000UL + 0x${config.cell.toString(16)})
+#define NBG0_COLOR_ADDR     VDP2_CRAM_ADDR(0x${config.nbg0.color.toString(16)})
+
+// fg
+#define NGB2_PATTERN_ADDR   (0x25E00000UL + 0x${config.nbg2.pattern.toString(16)})
+#define NBG2_CELL_ADDR      (0x25E00000UL + 0x${config.cell.toString(16)})
+#define NBG2_COLOR_ADDR     VDP2_CRAM_ADDR(0x${config.nbg2.color.toString(16)})
+    
+    `;
+    return str;
+}
+
+export function createVdpConfig(param: any) {
+    let palAddr = 0x100;
+    let currAddr = vdpNextPatternAddrBoundary(param.cell);
+    const vdp2config: any = {
+        cell: 0,
+        nbg0: {
+            pattern: 0,
+            color: 0,
+        },
+
+        nbg1: {
+            pattern: 0,
+            cell: 0,
+            color: 0,
+        },
+
+        nbg2: {
+            pattern: 0,
+            color: 0,
+        },
+
+    }
+
+    for (let s in param.screens) {
+        vdp2config[s].pattern = currAddr
+        vdp2config[s].color = palAddr
+        palAddr += 0x100;
+        currAddr += vdpNextPatternAddrBoundary(param.screens[s].pattern);
+    }
+
+    // if ngb1 not used
+    vdp2config.nbg1.cell = currAddr + 0x02000
+    vdp2config.nbg1.pattern = currAddr;
+    vdp2config.nbg1.color = palAddr;
+
+    return vdpConfigToC(vdp2config)
 }

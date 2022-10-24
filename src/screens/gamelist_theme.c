@@ -4,6 +4,7 @@
 #include "fenrir/fenrir.h"
 #include "vdp1.config.h"
 #include "vdp2.config.h"
+#include "../assets/vdp2.h"
 #include "ui.config.h"
 #include "noise.h"
 

@@ -1,7 +1,7 @@
 {
     "images": [
-        {"key": "fg", "file":"../../assets/game_select.png", "size":1, "pal":16},
-        {"key": "bg", "file":"../../assets/map.png", "size":1, "pal":16}
+        {"key": "fg", "screen": "nbg2", "file":"../../assets/game_select.png", "size":1, "pal":16},
+        {"key": "bg", "screen": "nbg0", "file":"../../assets/map.png", "size":1, "pal":16}
     ],
 
     "output": "../../assets/vdp2.h"
