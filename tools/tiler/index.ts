@@ -205,7 +205,7 @@ async function main() {
 
     const vdpb = vdp2.exportToBin()
     writeFile('vd2p.bin', vdpb, ()=>{})
-    const vdp2c = vdp2.exportToC() + vdp2.exportConfig()
+    const vdp2c = vdp2.exportToC() + vdp2.exportConfig() + vdp2.exportCyclePattern()
 
     // write to file    
     writeFile(config.output, `// Auto generated\n//${config.images.map(({ key, file }) => file).join('\n//')}\n` + vdp2c, () => { })

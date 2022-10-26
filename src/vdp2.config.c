@@ -91,44 +91,45 @@ static void vdp2_ngb2_init()
 static void vdp2_setup_vram()
 {
     vdp2_vram_cycp_t vram_cycp;
+    /*
+        vram_cycp.pt[0].t0 = VDP2_VRAM_CYCP_PNDR_NBG0;
+        vram_cycp.pt[0].t1 = VDP2_VRAM_CYCP_PNDR_NBG1;
+        vram_cycp.pt[0].t2 = VDP2_VRAM_CYCP_PNDR_NBG2;
+        vram_cycp.pt[0].t3 = VDP2_VRAM_CYCP_NO_ACCESS;
+        vram_cycp.pt[0].t4 = VDP2_VRAM_CYCP_NO_ACCESS;
+        vram_cycp.pt[0].t5 = VDP2_VRAM_CYCP_NO_ACCESS;
+        vram_cycp.pt[0].t6 = VDP2_VRAM_CYCP_NO_ACCESS;
+        vram_cycp.pt[0].t7 = VDP2_VRAM_CYCP_NO_ACCESS;
 
-    vram_cycp.pt[0].t0 = VDP2_VRAM_CYCP_PNDR_NBG0;
-    vram_cycp.pt[0].t1 = VDP2_VRAM_CYCP_PNDR_NBG1;
-    vram_cycp.pt[0].t2 = VDP2_VRAM_CYCP_PNDR_NBG2;
-    vram_cycp.pt[0].t3 = VDP2_VRAM_CYCP_NO_ACCESS;
-    vram_cycp.pt[0].t4 = VDP2_VRAM_CYCP_NO_ACCESS;
-    vram_cycp.pt[0].t5 = VDP2_VRAM_CYCP_NO_ACCESS;
-    vram_cycp.pt[0].t6 = VDP2_VRAM_CYCP_NO_ACCESS;
-    vram_cycp.pt[0].t7 = VDP2_VRAM_CYCP_NO_ACCESS;
+        vram_cycp.pt[1].t0 = VDP2_VRAM_CYCP_CHPNDR_NBG0;
+        vram_cycp.pt[1].t1 = VDP2_VRAM_CYCP_CHPNDR_NBG0;
+        vram_cycp.pt[1].t2 = VDP2_VRAM_CYCP_CHPNDR_NBG1;
+        vram_cycp.pt[1].t3 = VDP2_VRAM_CYCP_CHPNDR_NBG1;
+        vram_cycp.pt[1].t4 = VDP2_VRAM_CYCP_CHPNDR_NBG2;
+        vram_cycp.pt[1].t5 = VDP2_VRAM_CYCP_CHPNDR_NBG2;
+        vram_cycp.pt[1].t6 = VDP2_VRAM_CYCP_NO_ACCESS;
+        vram_cycp.pt[1].t7 = VDP2_VRAM_CYCP_NO_ACCESS;
 
-    vram_cycp.pt[1].t0 = VDP2_VRAM_CYCP_CHPNDR_NBG0;
-    vram_cycp.pt[1].t1 = VDP2_VRAM_CYCP_CHPNDR_NBG0;
-    vram_cycp.pt[1].t2 = VDP2_VRAM_CYCP_CHPNDR_NBG1;
-    vram_cycp.pt[1].t3 = VDP2_VRAM_CYCP_CHPNDR_NBG1;
-    vram_cycp.pt[1].t4 = VDP2_VRAM_CYCP_CHPNDR_NBG2;
-    vram_cycp.pt[1].t5 = VDP2_VRAM_CYCP_CHPNDR_NBG2;
-    vram_cycp.pt[1].t6 = VDP2_VRAM_CYCP_NO_ACCESS;
-    vram_cycp.pt[1].t7 = VDP2_VRAM_CYCP_NO_ACCESS;
+        vram_cycp.pt[2].t0 = VDP2_VRAM_CYCP_NO_ACCESS;
+        vram_cycp.pt[2].t1 = VDP2_VRAM_CYCP_NO_ACCESS;
+        vram_cycp.pt[2].t2 = VDP2_VRAM_CYCP_NO_ACCESS;
+        vram_cycp.pt[2].t3 = VDP2_VRAM_CYCP_NO_ACCESS;
+        vram_cycp.pt[2].t4 = VDP2_VRAM_CYCP_NO_ACCESS;
+        vram_cycp.pt[2].t5 = VDP2_VRAM_CYCP_NO_ACCESS;
+        vram_cycp.pt[2].t6 = VDP2_VRAM_CYCP_NO_ACCESS;
+        vram_cycp.pt[2].t7 = VDP2_VRAM_CYCP_NO_ACCESS;
 
-    vram_cycp.pt[2].t0 = VDP2_VRAM_CYCP_NO_ACCESS;
-    vram_cycp.pt[2].t1 = VDP2_VRAM_CYCP_NO_ACCESS;
-    vram_cycp.pt[2].t2 = VDP2_VRAM_CYCP_NO_ACCESS;
-    vram_cycp.pt[2].t3 = VDP2_VRAM_CYCP_NO_ACCESS;
-    vram_cycp.pt[2].t4 = VDP2_VRAM_CYCP_NO_ACCESS;
-    vram_cycp.pt[2].t5 = VDP2_VRAM_CYCP_NO_ACCESS;
-    vram_cycp.pt[2].t6 = VDP2_VRAM_CYCP_NO_ACCESS;
-    vram_cycp.pt[2].t7 = VDP2_VRAM_CYCP_NO_ACCESS;
-
-    vram_cycp.pt[3].t0 = VDP2_VRAM_CYCP_NO_ACCESS;
-    vram_cycp.pt[3].t1 = VDP2_VRAM_CYCP_NO_ACCESS;
-    vram_cycp.pt[3].t2 = VDP2_VRAM_CYCP_NO_ACCESS;
-    vram_cycp.pt[3].t3 = VDP2_VRAM_CYCP_NO_ACCESS;
-    vram_cycp.pt[3].t4 = VDP2_VRAM_CYCP_NO_ACCESS;
-    vram_cycp.pt[3].t5 = VDP2_VRAM_CYCP_NO_ACCESS;
-    vram_cycp.pt[3].t6 = VDP2_VRAM_CYCP_NO_ACCESS;
-    vram_cycp.pt[3].t7 = VDP2_VRAM_CYCP_NO_ACCESS;
-
-    vdp2_vram_cycp_set(&vram_cycp);
+        vram_cycp.pt[3].t0 = VDP2_VRAM_CYCP_NO_ACCESS;
+        vram_cycp.pt[3].t1 = VDP2_VRAM_CYCP_NO_ACCESS;
+        vram_cycp.pt[3].t2 = VDP2_VRAM_CYCP_NO_ACCESS;
+        vram_cycp.pt[3].t3 = VDP2_VRAM_CYCP_NO_ACCESS;
+        vram_cycp.pt[3].t4 = VDP2_VRAM_CYCP_NO_ACCESS;
+        vram_cycp.pt[3].t5 = VDP2_VRAM_CYCP_NO_ACCESS;
+        vram_cycp.pt[3].t6 = VDP2_VRAM_CYCP_NO_ACCESS;
+        vram_cycp.pt[3].t7 = VDP2_VRAM_CYCP_NO_ACCESS;
+        vdp2_vram_cycp_set(&vram_cycp);
+        */
+    __setup_vdp2_cycles();
 }
 
 void vdp2_init()
@@ -139,7 +140,7 @@ void vdp2_init()
     vdp2_ngb1_init();
     vdp2_ngb2_init();
 
-    vdp_dma_enqueue((void*)0x25E00000UL, vmem, vmem_sz);
+    vdp_dma_enqueue((void *)0x25E00000UL, vmem, vmem_sz);
     vdp_dma_enqueue(VDP2_CRAM_ADDR(0), cmem, cmem_sz);
 
     vdp2_scrn_display_set(VDP2_SCRN_NBG0_DISP | VDP2_SCRN_NBG1_DISP | VDP2_SCRN_NBG2_DISP);

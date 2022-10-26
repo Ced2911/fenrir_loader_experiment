@@ -105,7 +105,10 @@ static const uint8_t ${key}[] = {
     return str;
 }
 
-
+interface VdpCycpTiming {
+    cell: Vdp2Screen[],
+    pattern: Vdp2Screen[]
+}
 
 export class VDP2Memory {
     vmem: Buffer
@@ -116,6 +119,8 @@ export class VDP2Memory {
     cells: Partial<Record<Vdp2Screen, { mem?: Buffer, addr: number }>>
     patterns: Partial<Record<Vdp2Screen, { mem?: Buffer, addr: number }>>
     palettes: Partial<Record<Vdp2Screen, { mem?: Buffer, addr: number }>>
+
+    vdp2_cycp: VdpCycpTiming[]
 
     constructor() {
         this.size = 0;
@@ -131,6 +136,20 @@ export class VDP2Memory {
             this.patterns[scr] = { addr: 0 }
             this.palettes[scr] = { addr: 0 }
         })
+
+        this.vdp2_cycp = [{
+            cell: [],
+            pattern: []
+        }, {
+            cell: [],
+            pattern: []
+        }, {
+            cell: [],
+            pattern: []
+        }, {
+            cell: [],
+            pattern: []
+        }]
     }
 
     addSharedCells(cells: Cell[]) {
@@ -156,6 +175,38 @@ export class VDP2Memory {
         return exp;
     }
 
+    exportCyclePattern(): string {
+        let str = `
+static inline void __setup_vdp2_cycles() {
+    vdp2_vram_cycp_t vram_cycp;`;
+        this.vdp2_cycp.forEach((c, idx) => {
+            const access = new Array(8).fill('VDP2_VRAM_CYCP_NO_ACCESS')
+            let n = 0;    
+            c.cell.forEach(scr => {
+                access[n++] = `VDP2_VRAM_CYCP_CHPNDR_${scr.toLocaleUpperCase()}`
+                access[n++] = `VDP2_VRAM_CYCP_CHPNDR_${scr.toLocaleUpperCase()}`
+            })
+            c.pattern.forEach(scr => {
+                access[n++] = `VDP2_VRAM_CYCP_PNDR_${scr.toLocaleUpperCase()}`
+            })
+            str += `
+    vram_cycp.pt[${idx}].t0 = ${access[0]};
+    vram_cycp.pt[${idx}].t1 = ${access[1]};
+    vram_cycp.pt[${idx}].t2 = ${access[2]};
+    vram_cycp.pt[${idx}].t3 = ${access[3]};
+    vram_cycp.pt[${idx}].t4 = ${access[4]};
+    vram_cycp.pt[${idx}].t5 = ${access[5]};
+    vram_cycp.pt[${idx}].t6 = ${access[6]};
+    vram_cycp.pt[${idx}].t7 = ${access[7]};         
+            `
+        })
+
+        str+=`    
+    vdp2_vram_cycp_set(&vram_cycp);
+}`
+        return str;
+    }
+
     exportConfig(): string {
         function __(screen, cellAddr, ptnAddr, palAddr) {
             const vdp2_addr = 0x25E00000;
@@ -169,13 +220,7 @@ export class VDP2Memory {
 #define ${screen.toUpperCase()}_COLOR_ADDR     (0x${pal.toString(16)}UL)
             `
         }
-        function ___(screen, cellAddr, ptnAddr, palAddr) {
-            return `
-#define ${screen.toUpperCase()}_PATTERN_ADDR   (0x25E00000UL + 0x${ptnAddr.toString(16)})
-#define ${screen.toUpperCase()}_CELL_ADDR      (0x25E00000UL + 0x${cellAddr.toString(16)})
-#define ${screen.toUpperCase()}_COLOR_ADDR     VDP2_CRAM_ADDR(0x${palAddr.toString(16)})
-            `
-        }
+        console.log(this.vdp2_cycp)
         const str = Object.keys(Vdp2Screen).map(scr => {
             return __(scr, this.cells[scr].addr, this.patterns[scr].addr, this.palettes[scr].addr)
         }).join('\n');
@@ -190,13 +235,17 @@ export class VDP2Memory {
         if (this.sharedCells.mem) {
             this.sharedCells.mem.copy(this.vmem);
             currAddr = vdpNextPatternAddrBoundary(this.sharedCells.mem.length);
+            // fill pattern cycles
+            this.vdp2_cycp[currAddr >> 17].cell = [Vdp2Screen.nbg0, Vdp2Screen.nbg2]
         }
 
-        Object.values(this.patterns).forEach((pat) => {
+        Object.entries(this.patterns).forEach(([scr, pat]) => {
             if (pat.mem) {
                 pat.addr = currAddr;
                 pat.mem.copy(this.vmem, currAddr);
 
+                // fill pattern cycles
+                this.vdp2_cycp[currAddr >> 17].pattern.push(scr as Vdp2Screen)
 
                 currAddr += vdpNextPatternAddrBoundary(pat.mem.length);
             }
@@ -215,8 +264,11 @@ export class VDP2Memory {
         this.size = currAddr
 
         // hardcoded values for ngb1 
-        this.cells['nbg1'].addr = currAddr + 0x02000;
-        this.patterns['nbg1'].addr = currAddr;
-        this.palettes['nbg1'].addr = palAddr;
+        this.vdp2_cycp[currAddr >> 17].pattern.push(Vdp2Screen.nbg1)
+        this.vdp2_cycp[(currAddr + 0x02000) >> 17].cell.push(Vdp2Screen.nbg1)
+
+        this.cells[Vdp2Screen.nbg1].addr = currAddr + 0x02000;
+        this.patterns[Vdp2Screen.nbg1].addr = currAddr;
+        this.palettes[Vdp2Screen.nbg1].addr = palAddr;
     }
 }
