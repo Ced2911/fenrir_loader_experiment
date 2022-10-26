@@ -1,13 +1,13 @@
-
 import { RGBA, Cell, RGB8888To555Number } from './tiler'
 interface Palettes {
     palettes: RGBA[]
 };
 
+export enum Vdp2Screen { nbg0 = 'nbg0', nbg2 = 'nbg2', nbg3 = 'nbg3', nbg1 = 'nbg1', }
+
 function nextPowerOf2(x: number) {
     return Math.pow(2, Math.ceil(Math.log(x) / Math.log(2)));
 }
-
 export function vdpNextPatternAddrBoundary(addr: number) {
     let nextAddr = nextPowerOf2(addr);
     return (nextAddr >> 12) << 12;
@@ -106,61 +106,117 @@ static const uint8_t ${key}[] = {
 }
 
 
-function vdpConfigToC(config:any) {
-    const str = `
-// noize
-#define NGB1_PATTERN_ADDR   (0x25E00000UL + 0x${config.nbg1.pattern.toString(16)})
-#define NBG1_CELL_ADDR      (0x25E00000UL + 0x${config.nbg1.cell.toString(16)})
-#define NBG1_COLOR_ADDR     VDP2_CRAM_ADDR(0x${config.nbg1.color.toString(16)})
 
-// bg
-#define NGB0_PATTERN_ADDR   (0x25E00000UL + 0x${config.nbg0.pattern.toString(16)})
-#define NBG0_CELL_ADDR      (0x25E00000UL + 0x${config.cell.toString(16)})
-#define NBG0_COLOR_ADDR     VDP2_CRAM_ADDR(0x${config.nbg0.color.toString(16)})
+export class VDP2Memory {
+    vmem: Buffer
+    cmem: Buffer
+    size: number
 
-// fg
-#define NGB2_PATTERN_ADDR   (0x25E00000UL + 0x${config.nbg2.pattern.toString(16)})
-#define NBG2_CELL_ADDR      (0x25E00000UL + 0x${config.cell.toString(16)})
-#define NBG2_COLOR_ADDR     VDP2_CRAM_ADDR(0x${config.nbg2.color.toString(16)})
-    
-    `;
-    return str;
-}
+    sharedCells: { mem?: Buffer }
+    cells: Partial<Record<Vdp2Screen, { mem?: Buffer, addr: number }>>
+    patterns: Partial<Record<Vdp2Screen, { mem?: Buffer, addr: number }>>
+    palettes: Partial<Record<Vdp2Screen, { mem?: Buffer, addr: number }>>
 
-export function createVdpConfig(param: any) {
-    let palAddr = 0x100;
-    let currAddr = vdpNextPatternAddrBoundary(param.cell);
-    const vdp2config: any = {
-        cell: 0,
-        nbg0: {
-            pattern: 0,
-            color: 0,
-        },
+    constructor() {
+        this.size = 0;
+        this.vmem = Buffer.alloc(512 * 1024)
+        this.cmem = Buffer.alloc(4 * 1024)
+        this.sharedCells = {}
+        this.cells = {}
+        this.patterns = {}
+        this.palettes = {}
 
-        nbg1: {
-            pattern: 0,
-            cell: 0,
-            color: 0,
-        },
-
-        nbg2: {
-            pattern: 0,
-            color: 0,
-        },
-
+        Object.values(Vdp2Screen).forEach(scr => {
+            this.cells[scr] = { addr: 0 }
+            this.patterns[scr] = { addr: 0 }
+            this.palettes[scr] = { addr: 0 }
+        })
     }
 
-    for (let s in param.screens) {
-        vdp2config[s].pattern = currAddr
-        vdp2config[s].color = palAddr
-        palAddr += 0x100;
-        currAddr += vdpNextPatternAddrBoundary(param.screens[s].pattern);
+    addSharedCells(cells: Cell[]) {
+        const bin = exportCellsToBin(cells);
+        this.sharedCells.mem = bin
+    }
+    addCharPattern(screen: Vdp2Screen, pattern: number[]) {
+        const bin = exporPtnToBin(pattern)
+        this.patterns[screen].mem = bin
+    }
+    addPalette(screen: Vdp2Screen, pal: Palettes) {
+        const bin = exportPaletteToBin(pal)
+        this.palettes[screen].mem = bin
     }
 
-    // if ngb1 not used
-    vdp2config.nbg1.cell = currAddr + 0x02000
-    vdp2config.nbg1.pattern = currAddr;
-    vdp2config.nbg1.color = palAddr;
+    exportToBin(): Buffer { return this.vmem }
+    exportToC(): string {
+        this.fillmem()
+        let exp = ''
 
-    return vdpConfigToC(vdp2config)
+        exp += exportBufferToC("vmem", this.vmem.slice(0, this.size));
+        exp += exportBufferToC("cmem", this.cmem);
+        return exp;
+    }
+
+    exportConfig(): string {
+        function __(screen, cellAddr, ptnAddr, palAddr) {
+            const vdp2_addr = 0x25E00000;
+            const cram_addr = 0x25F00000;
+            const cell = vdp2_addr + cellAddr
+            const ptn = vdp2_addr + ptnAddr
+            const pal = cram_addr + palAddr * 2
+            return `
+#define ${screen.toUpperCase()}_PATTERN_ADDR   (0x${ptn.toString(16)}UL)
+#define ${screen.toUpperCase()}_CELL_ADDR      (0x${cell.toString(16)}UL)
+#define ${screen.toUpperCase()}_COLOR_ADDR     (0x${pal.toString(16)}UL)
+            `
+        }
+        function ___(screen, cellAddr, ptnAddr, palAddr) {
+            return `
+#define ${screen.toUpperCase()}_PATTERN_ADDR   (0x25E00000UL + 0x${ptnAddr.toString(16)})
+#define ${screen.toUpperCase()}_CELL_ADDR      (0x25E00000UL + 0x${cellAddr.toString(16)})
+#define ${screen.toUpperCase()}_COLOR_ADDR     VDP2_CRAM_ADDR(0x${palAddr.toString(16)})
+            `
+        }
+        const str = Object.keys(Vdp2Screen).map(scr => {
+            return __(scr, this.cells[scr].addr, this.patterns[scr].addr, this.palettes[scr].addr)
+        }).join('\n');
+        return str;
+    }
+
+    private fillmem() {
+        const pall_pank_sz = 0x100;
+        let palAddr = pall_pank_sz;
+        let currAddr = 0;
+
+        if (this.sharedCells.mem) {
+            this.sharedCells.mem.copy(this.vmem);
+            currAddr = vdpNextPatternAddrBoundary(this.sharedCells.mem.length);
+        }
+
+        Object.values(this.patterns).forEach((pat) => {
+            if (pat.mem) {
+                pat.addr = currAddr;
+                pat.mem.copy(this.vmem, currAddr);
+
+
+                currAddr += vdpNextPatternAddrBoundary(pat.mem.length);
+            }
+        })
+
+        Object.values(this.palettes).forEach((pal) => {
+            if (pal.mem) {
+                pal.addr = palAddr;
+                pal.mem.copy(this.cmem, palAddr * 2);
+
+                console.log(pal.mem.length)
+                palAddr += pall_pank_sz;
+            }
+        })
+
+        this.size = currAddr
+
+        // hardcoded values for ngb1 
+        this.cells['nbg1'].addr = currAddr + 0x02000;
+        this.patterns['nbg1'].addr = currAddr;
+        this.palettes['nbg1'].addr = palAddr;
+    }
 }

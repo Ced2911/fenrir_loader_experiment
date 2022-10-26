@@ -36,60 +36,17 @@ static vdp2_scrn_cell_format_t format_nbg1 = {
     .color_palette = NBG1_COLOR_ADDR,
     .map_bases = {
         .planes = {
-            NGB1_PATTERN_ADDR,
-            NGB1_PATTERN_ADDR,
-            NGB1_PATTERN_ADDR,
-            NGB1_PATTERN_ADDR,
+            NBG1_PATTERN_ADDR,
+            NBG1_PATTERN_ADDR,
+            NBG1_PATTERN_ADDR,
+            NBG1_PATTERN_ADDR,
         }}};
-
-static void upload_cells(ui_config_background_t *bg, const vdp2_scrn_cell_format_t *format)
-{
-    if (bg->cell_addr)
-    {
-        vdp_dma_enqueue((void *)format->cp_table,
-                        (void *)bg->cell_addr,
-                        bg->cell_sz);
-    }
-    if (bg->pal_addr)
-    {
-        vdp_dma_enqueue((void *)format->color_palette,
-                        (void *)bg->pal_addr,
-                        bg->pal_sz);
-    }
-    if (bg->pattern_addr)
-    {
-#if 1
-        vdp_dma_enqueue((void *)format->map_bases.planes[0],
-                        (void *)bg->pattern_addr,
-                        bg->pattern_sz);
-#else
-        uint32_t *t = (uint32_t *)format->map_bases.planes[0];
-        for (int i = 0; i < bg->pattern_sz / 4; i++)
-        {
-            *t++ = VDP2_SCRN_PND_CONFIG_8(0, 128, 0, 0, 0, 0, 0);
-        }
-#endif
-    }
-}
 
 static void set_plane_addr(vdp2_vram_t *planes, uintptr_t plan_a_addr, size_t pattern_sz)
 {
     switch (pattern_sz)
     {
     case 16384:
-        planes[0] = plan_a_addr;
-        planes[1] = plan_a_addr;
-        planes[2] = plan_a_addr;
-        planes[3] = plan_a_addr;
-        break;
-        /*
-    case 16384*2:
-        planes[0] = plan_a_addr + 0x00000;
-        planes[1] = plan_a_addr + 0x02000;
-        planes[2] = plan_a_addr + 0x00000;
-        planes[3] = plan_a_addr + 0x02000;
-        break;
-        */
     default:
         planes[0] = plan_a_addr;
         planes[1] = plan_a_addr;
@@ -103,10 +60,8 @@ static void vdp2_ngb0_init()
 {
 
     set_plane_addr(format_nbg0.map_bases.planes,
-                   NGB0_PATTERN_ADDR,
+                   NBG0_PATTERN_ADDR,
                    ui_config.screens.gamelist.background.pattern_sz);
-
-    upload_cells(&ui_config.screens.gamelist.background, &format_nbg0);
 
     vdp2_scrn_cell_format_set(&format_nbg0);
     vdp2_scrn_priority_set(VDP2_SCRN_NBG0, 2);
@@ -124,10 +79,8 @@ static void vdp2_ngb2_init()
 {
 
     set_plane_addr(format_nbg2.map_bases.planes,
-                   NGB2_PATTERN_ADDR,
+                   NBG2_PATTERN_ADDR,
                    ui_config.screens.gamelist.fg.pattern_sz);
-
-    upload_cells(&ui_config.screens.gamelist.fg, &format_nbg2);
 
     vdp2_scrn_cell_format_set(&format_nbg2);
     vdp2_scrn_priority_set(VDP2_SCRN_NBG2, 4);
@@ -185,6 +138,9 @@ void vdp2_init()
     vdp2_ngb0_init();
     vdp2_ngb1_init();
     vdp2_ngb2_init();
+
+    vdp_dma_enqueue((void*)0x25E00000UL, vmem, vmem_sz);
+    vdp_dma_enqueue(VDP2_CRAM_ADDR(0), cmem, cmem_sz);
 
     vdp2_scrn_display_set(VDP2_SCRN_NBG0_DISP | VDP2_SCRN_NBG1_DISP | VDP2_SCRN_NBG2_DISP);
 }

@@ -12,7 +12,7 @@
 
 static noise_cfg_t noise_cfg = {
     .cell_addr = NBG1_CELL_ADDR,
-    .pattern_addr = NGB1_PATTERN_ADDR,
+    .pattern_addr = NBG1_PATTERN_ADDR,
     .pal_addr = NBG1_COLOR_ADDR};
 
 void gamelist_theme_update(browser_t *browser)

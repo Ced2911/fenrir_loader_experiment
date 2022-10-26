@@ -2,12 +2,12 @@ import Jimp from 'jimp';
 import { writeFile } from 'fs';
 import { createHash } from 'crypto';
 import { buildPalette, tileImage, RGBA, TileSize, Cell } from './tiler'
-import { exportBufferToC, exportPaletteToBin, exportCellsToBin, exporPtnToBin, cellPattern, patternGetPage, vdpNextPatternAddrBoundary, createVdpConfig } from './encode'
+import { cellPattern, patternGetPage, VDP2Memory, Vdp2Screen } from './encode'
 
 interface ConfigImage {
     key: string,
     file: string,
-    screen: 'nbg0' | 'nbg2'
+    screen: Vdp2Screen
 }
 interface Config {
     images: ConfigImage[],
@@ -195,37 +195,20 @@ async function main() {
         screens: []
     }
 
+    const vdp2 = new VDP2Memory()
 
-    let cellstr = '';
-    const cellbin = exportCellsToBin(Object.values(cells));
-    //console.log('cell', vdpNextPatternAddrBoundary(cellbin.length))
-    cellstr += exportBufferToC(`shared_cell`, cellbin)
-
-    screenConfig.cell = cellbin.length
-
-    let patternStr = '';
-    let palStr = '';
+    vdp2.addSharedCells(Object.values(cells))
     config.images.map(({ key, file, screen }) => {
-        const patternbin = exporPtnToBin(pattern[key])
-        const palbin = exportPaletteToBin({ palettes: Object.values(palettes[key]) })
-
-        //console.log('patternbin', vdpNextPatternAddrBoundary(patternbin.length))
-        //console.log('palbin', vdpNextPatternAddrBoundary(palbin.length))
-
-        patternStr += exportBufferToC(`${key}_pattern`, patternbin);
-        palStr += exportBufferToC(`${key}_pal`, palbin);
-
-        screenConfig.screens[screen] = screenConfig.screens[screen] || {}
-
-        screenConfig.screens[screen].pattern = patternbin.length
-        screenConfig.screens[screen].pal = palbin.length
-
+        vdp2.addCharPattern(screen, pattern[key])
+        vdp2.addPalette(screen, { palettes: Object.values(palettes[key]) })
     })
 
-    const vdp2config = createVdpConfig(screenConfig)
+    const vdpb = vdp2.exportToBin()
+    writeFile('vd2p.bin', vdpb, ()=>{})
+    const vdp2c = vdp2.exportToC() + vdp2.exportConfig()
 
     // write to file    
-    writeFile(config.output, `// Auto generated\n//${config.images.map(({ key, file }) => file).join('\n//')}\n` + palStr + patternStr + cellstr + vdp2config, () => { })
+    writeFile(config.output, `// Auto generated\n//${config.images.map(({ key, file }) => file).join('\n//')}\n` + vdp2c, () => { })
 }
 
 main();
