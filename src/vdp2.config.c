@@ -4,10 +4,12 @@
 #include "ui.config.h"
 #include "vdp2.config.h"
 #include "vdp2.h"
+#include "lz4/lz4.h"
 
 static vdp2_scrn_cell_format_t format_nbg0 = {
     .scroll_screen = VDP2_SCRN_NBG0,
-    .cc_count = VDP2_SCRN_CCC_PALETTE_256,
+    .cc_count = VDP2_SCRN_CCC_PALETTE_16,
+    //.cc_count = VDP2_SCRN_CCC_PALETTE_256,
     .character_size = 1 * 1,
     .pnd_size = 2,
     .auxiliary_mode = 0,
@@ -24,7 +26,8 @@ static vdp2_scrn_cell_format_t format_nbg0 = {
 
 static vdp2_scrn_cell_format_t format_nbg2 = {
     .scroll_screen = VDP2_SCRN_NBG2,
-    .cc_count = VDP2_SCRN_CCC_PALETTE_256,
+    .cc_count = VDP2_SCRN_CCC_PALETTE_16,
+    //.cc_count = VDP2_SCRN_CCC_PALETTE_256,
     .character_size = 1 * 1,
     .pnd_size = 2,
     .auxiliary_mode = 1,
@@ -104,7 +107,7 @@ void vdp2_init()
 {
     // vdp2_vram_ctl_t vdp2_vram_ctl = {.vram_mode = VDP2_VRAM_CTL_MODE_NO_PART_BANK_A | VDP2_VRAM_CTL_MODE_PART_BANK_B};
     // vdp2_vram_control_set(&vdp2_vram_ctl);
-     MEMORY_WRITE(16, VDP2(RAMCTL), 0x1301);
+    MEMORY_WRITE(16, VDP2(RAMCTL), 0x1301);
     /*
     const vdp2_vram_usage_t vram_usage = {
                 .a0 = VDP2_VRAM_USAGE_TYPE_CPD,
@@ -120,9 +123,9 @@ void vdp2_init()
     vdp2_ngb0_init();
     vdp2_ngb1_init();
     vdp2_ngb2_init();
-
-    memcpy((void *)0x25E00000UL, vmem, vmem_sz);
-    memcpy((void *)VDP2_CRAM_ADDR(0), cmem, cmem_sz);
+    
+    LZ4_decompress_safe((char *)vmemz, (char *)0x25E00000UL, vmemz_sz, 512 * 1024);
+    LZ4_decompress_safe((char *)cmemz, (char *)VDP2_CRAM_ADDR(0), cmemz_sz, 4 * 1024);
 
     vdp2_scrn_display_set(VDP2_SCRN_NBG0_DISP | VDP2_SCRN_NBG1_DISP | VDP2_SCRN_NBG2_DISP);
 }

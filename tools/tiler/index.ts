@@ -1,8 +1,8 @@
 import Jimp from 'jimp';
 import { writeFile } from 'fs';
 import { createHash } from 'crypto';
-import { buildPalette, tileImage, RGBA, TileSize, Cell } from './tiler'
-import { cellPattern, patternGetPage, VDP2Memory, Vdp2Screen } from './encode'
+import { buildPalette, tileImage, RGBA, TileSize, Cell, Cell8bppTo4bpp } from './tiler'
+import { cell4pbbPattern, cellPattern, patternGetPage, Vdp2ColorCnt, VDP2Memory, Vdp2Screen } from './encode'
 
 interface ConfigImage {
     key: string,
@@ -130,6 +130,8 @@ async function main() {
         cells[hash] = { data: cellData, id: 0, hash: [hash, hash, hash, hash] };
     }
 
+    let bpp = Vdp2ColorCnt.color8bpp
+
     await Promise.all(config.images.map(async ({ key, file }) => {
 
         // 1st step build palettes
@@ -137,6 +139,10 @@ async function main() {
             .then(image => {
                 palettes[key] = buildPalette(image)
             })
+
+        const all4bpp = (Object.values(palettes)).every(c => c.length < 16)
+        bpp = all4bpp ? Vdp2ColorCnt.color4bpp : Vdp2ColorCnt.color8bpp
+
 
         // 2nd unik tiles
         await Jimp.read(file)
@@ -165,7 +171,7 @@ async function main() {
                     if (!cell)
                         throw (`cell for hash: ${hash} not`)
 
-                    const p = cellPattern(cell)
+                    const p = palettes[key].length < 16 ? cell4pbbPattern(cell) : cellPattern(cell)
                     pages[patternGetPage(x, y)].push(p)
                 })
 
@@ -191,21 +197,19 @@ async function main() {
     })
 
     // output..
-    const screenConfig: any = {
-        screens: []
-    }
-
     const vdp2 = new VDP2Memory()
 
-    vdp2.addSharedCells(Object.values(cells))
+    const sharedCell = Object.values(cells).flatMap(cell => cell.data)
+    vdp2.addSharedCells(sharedCell, bpp)
     config.images.map(({ key, file, screen }) => {
         vdp2.addCharPattern(screen, pattern[key])
         vdp2.addPalette(screen, { palettes: Object.values(palettes[key]) })
     })
 
     const vdpb = vdp2.exportToBin()
-    writeFile('vd2p.bin', vdpb, ()=>{})
-    const vdp2c = vdp2.exportToC() + vdp2.exportConfig() + vdp2.exportCyclePattern()
+    // dbg
+    writeFile('vd2p.bin', vdpb, () => { })
+    const vdp2c = vdp2.exportToCompressed() + vdp2.exportConfig() + vdp2.exportCyclePattern()
 
     // write to file    
     writeFile(config.output, `// Auto generated\n//${config.images.map(({ key, file }) => file).join('\n//')}\n` + vdp2c, () => { })

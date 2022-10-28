@@ -77,17 +77,19 @@ export function tileImage(image: Jimp, tileSize: TileSize, paletteArray: RGBA[],
     return tiles;
 }
 
+export function Cell8bppTo4bpp(cells: number[]) {
+    const cells8bpp = cells
+    const cells4bpp: number[] = []
+    for (let i = 0; i < cells8bpp.length; i += 2) {
+        cells4bpp.push((cells8bpp[i + 1]) | (cells8bpp[i + 0] << 4))
+    }
+    return cells4bpp
+}
+
 export function RGB8888To555(rgba: RGBA) {
     return `COLOR_RGB1555(${rgba.a ? 1 : 0}, ${Math.floor(rgba.r / 8)}, ${Math.floor(rgba.g / 8)}, ${Math.floor(rgba.b / 8)})`
 }
 export function RGB8888To555Number(rgba: RGBA) {
-    /*
-    const c = rgba.a << 15 | 
-    ((Math.floor(rgba.b / 8)) << 10) | 
-    ((Math.floor(rgba.g / 8)) << 5) | 
-    ((Math.floor(rgba.r / 8)) );
-    */
-
     const c = rgba.a << 15 |
         ((rgba.b >> 3) << 10) |
         ((rgba.g >> 3) << 5) |

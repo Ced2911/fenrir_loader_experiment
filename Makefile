@@ -23,7 +23,8 @@ SH_SRCS:= \
 	src/screens/gamelist.c \
 	src/screens/gamelist_theme.c \
 	src/screens/browser.c \
-	src/sound_driver/pcmsys_y.c
+	src/sound_driver/pcmsys_y.c \
+	src/lz4/lz4.c
 	
 SH_LIBRARIES:=
 SH_CFLAGS+= -O2 -I. -save-temps=obj 
@@ -39,7 +40,7 @@ IP_1ST_READ_ADDR:= 0x06004000
 
 M68K_PROGRAM:=
 M68K_OBJECTS:=
-SH_CFLAGS+=-Isrc -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable 
+SH_CFLAGS+=-Isrc -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable  
 
 
 

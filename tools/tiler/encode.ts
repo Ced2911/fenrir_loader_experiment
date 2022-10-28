@@ -1,4 +1,8 @@
-import { RGBA, Cell, RGB8888To555Number } from './tiler'
+import { RGBA, Cell, RGB8888To555Number, Cell8bppTo4bpp } from './tiler'
+
+var LZ4 = require('lz4')
+
+
 interface Palettes {
     palettes: RGBA[]
 };
@@ -61,6 +65,19 @@ export function cellPattern(cell: any) {
     return encodePattern(addr, vf, hf);;
 }
 
+export function cell4pbbPattern(cell: any) {
+    const encodePattern = b16 ? encodePatternU16 : encodePatternU32
+
+    const ptn = cell.id
+
+    const vf = cell.mirror & 1;
+    const hf = (cell.mirror >> 1) & 1;
+
+    const addr = ptn * 4 * 8;
+    return encodePattern(addr, vf, hf);;
+}
+
+
 export function exportPaletteToBin(pal: Palettes): Buffer {
     const bin = Buffer.alloc(pal.palettes.length * 2);
     const u16 = Uint16Array.from(pal.palettes.map(c => RGB8888To555Number(c)));
@@ -89,8 +106,8 @@ export function exporPtnToBin(pattern: number[]): Buffer {
     }
 }
 
-export function exportCellsToBin(cells: Cell[]): Buffer {
-    const d = Uint8Array.from(cells.flatMap(cell => cell.data))
+export function exportCellsToBin(cells: number[]): Buffer {
+    const d = Uint8Array.from(cells)
     //console.log(cells)
     return Buffer.from(d.buffer);
 }
@@ -123,6 +140,8 @@ export class VDP2Memory {
 
     vdp2_cycp: VdpCycpTiming[]
 
+    palSz: number
+
     constructor() {
         this.size = 0;
         this.vmem = Buffer.alloc(512 * 1024)
@@ -132,8 +151,9 @@ export class VDP2Memory {
         this.patterns = {}
         this.palettes = {}
 
+        this.palSz = Vdp2ColorCnt.color4bpp
         Object.values(Vdp2Screen).forEach(scr => {
-            this.cells[scr] = { addr: 0, color: Vdp2ColorCnt.color8bpp }
+            this.cells[scr] = { addr: 0, color: this.palSz }
             this.patterns[scr] = { addr: 0 }
             this.palettes[scr] = { addr: 0 }
         })
@@ -151,11 +171,17 @@ export class VDP2Memory {
             cell: [],
             pattern: []
         }]
+
     }
 
-    addSharedCells(cells: Cell[]) {
-        const bin = exportCellsToBin(cells);
+    addSharedCells(cells: number[], colorcnt: Vdp2ColorCnt) {
+        const cellbpp = colorcnt == Vdp2ColorCnt.color4bpp ? Cell8bppTo4bpp(cells) : cells
+        const bin = exportCellsToBin(cellbpp);
         this.sharedCells.mem = bin
+        this.sharedCells.color = colorcnt
+
+        this.cells[Vdp2Screen.nbg0].color = colorcnt
+        this.cells[Vdp2Screen.nbg2].color = colorcnt
     }
     addCharPattern(screen: Vdp2Screen, pattern: number[]) {
         const bin = exporPtnToBin(pattern)
@@ -173,6 +199,30 @@ export class VDP2Memory {
 
         exp += exportBufferToC("vmem", this.vmem.slice(0, this.size));
         exp += exportBufferToC("cmem", this.cmem);
+        return exp;
+    }
+    exportToCompressed(): string {
+        this.fillmem()
+        let exp = ''
+
+        const vmemz = Buffer.alloc(LZ4.encodeBound(this.size))
+        const cmemz = Buffer.alloc(LZ4.encodeBound(this.cmem.length))
+        const vmem_sz = LZ4.encodeBlock(this.vmem.slice(0, this.size), vmemz)
+        const cmem_sz = LZ4.encodeBlock(this.cmem, cmemz)
+
+        /*
+         const vmemz = LZ4.encode(this.vmem.slice(0, this.size), { dict:true, highCompression: true, streamChecksum: false })
+         const cmemz = LZ4.encode(this.cmem, { dict:true, highCompression: true, streamChecksum: false })
+         const vmem_sz = vmemz.length
+         const cmem_sz = cmemz.length
+         */
+
+        console.log('vmemz', vmem_sz)
+        console.log('cmemz', cmem_sz)
+
+        exp += exportBufferToC("vmemz", vmemz.slice(0, vmem_sz));
+        exp += exportBufferToC("cmemz", cmemz.slice(0, cmem_sz));
+
         return exp;
     }
 
@@ -222,9 +272,15 @@ static inline void __setup_vdp2_cycles() {
         return str;
     }
 
+    memoryFiled = false
+
     private fillmem() {
         const pall_pank_sz = 0x100;
         let palAddr = pall_pank_sz;
+
+        if (this.memoryFiled)
+            return
+        this.memoryFiled = true
 
         // skip a0
         let currAddr = 0 << 17;
