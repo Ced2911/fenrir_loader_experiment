@@ -4,6 +4,7 @@ interface Palettes {
 };
 
 export enum Vdp2Screen { nbg0 = 'nbg0', nbg2 = 'nbg2', nbg3 = 'nbg3', nbg1 = 'nbg1', }
+export enum Vdp2ColorCnt { color4bpp, color8bpp }
 
 function nextPowerOf2(x: number) {
     return Math.pow(2, Math.ceil(Math.log(x) / Math.log(2)));
@@ -115,8 +116,8 @@ export class VDP2Memory {
     cmem: Buffer
     size: number
 
-    sharedCells: { mem?: Buffer }
-    cells: Partial<Record<Vdp2Screen, { mem?: Buffer, addr: number }>>
+    sharedCells: { mem?: Buffer, color: Vdp2ColorCnt }
+    cells: Partial<Record<Vdp2Screen, { mem?: Buffer, addr: number, color: Vdp2ColorCnt }>>
     patterns: Partial<Record<Vdp2Screen, { mem?: Buffer, addr: number }>>
     palettes: Partial<Record<Vdp2Screen, { mem?: Buffer, addr: number }>>
 
@@ -126,13 +127,13 @@ export class VDP2Memory {
         this.size = 0;
         this.vmem = Buffer.alloc(512 * 1024)
         this.cmem = Buffer.alloc(4 * 1024)
-        this.sharedCells = {}
+        this.sharedCells = { color: Vdp2ColorCnt.color8bpp }
         this.cells = {}
         this.patterns = {}
         this.palettes = {}
 
         Object.values(Vdp2Screen).forEach(scr => {
-            this.cells[scr] = { addr: 0 }
+            this.cells[scr] = { addr: 0, color: Vdp2ColorCnt.color8bpp }
             this.patterns[scr] = { addr: 0 }
             this.palettes[scr] = { addr: 0 }
         })
@@ -181,27 +182,22 @@ static inline void __setup_vdp2_cycles() {
     vdp2_vram_cycp_t vram_cycp;`;
         this.vdp2_cycp.forEach((c, idx) => {
             const access = new Array(8).fill('VDP2_VRAM_CYCP_NO_ACCESS')
-            let n = 0;    
+            let n = 0;
             c.cell.forEach(scr => {
-                access[n++] = `VDP2_VRAM_CYCP_CHPNDR_${scr.toLocaleUpperCase()}`
+                if (this.cells[scr].color == Vdp2ColorCnt.color8bpp)
+                    access[n++] = `VDP2_VRAM_CYCP_CHPNDR_${scr.toLocaleUpperCase()}`
                 access[n++] = `VDP2_VRAM_CYCP_CHPNDR_${scr.toLocaleUpperCase()}`
             })
             c.pattern.forEach(scr => {
                 access[n++] = `VDP2_VRAM_CYCP_PNDR_${scr.toLocaleUpperCase()}`
+                //access[n++] = `VDP2_VRAM_CYCP_PNDR_${scr.toLocaleUpperCase()}`
             })
-            str += `
-    vram_cycp.pt[${idx}].t0 = ${access[0]};
-    vram_cycp.pt[${idx}].t1 = ${access[1]};
-    vram_cycp.pt[${idx}].t2 = ${access[2]};
-    vram_cycp.pt[${idx}].t3 = ${access[3]};
-    vram_cycp.pt[${idx}].t4 = ${access[4]};
-    vram_cycp.pt[${idx}].t5 = ${access[5]};
-    vram_cycp.pt[${idx}].t6 = ${access[6]};
-    vram_cycp.pt[${idx}].t7 = ${access[7]};         
-            `
+            str += '\n\n' + access.map((acc, jdx) => {
+                return `\tvram_cycp.pt[${idx}].t${jdx} = ${acc};`
+            }).join('\n')
         })
 
-        str+=`    
+        str += `    
     vdp2_vram_cycp_set(&vram_cycp);
 }`
         return str;
@@ -220,7 +216,6 @@ static inline void __setup_vdp2_cycles() {
 #define ${screen.toUpperCase()}_COLOR_ADDR     (0x${pal.toString(16)}UL)
             `
         }
-        console.log(this.vdp2_cycp)
         const str = Object.keys(Vdp2Screen).map(scr => {
             return __(scr, this.cells[scr].addr, this.patterns[scr].addr, this.palettes[scr].addr)
         }).join('\n');
@@ -230,13 +225,19 @@ static inline void __setup_vdp2_cycles() {
     private fillmem() {
         const pall_pank_sz = 0x100;
         let palAddr = pall_pank_sz;
-        let currAddr = 0;
+
+        // skip a0
+        let currAddr = 0 << 17;
 
         if (this.sharedCells.mem) {
-            this.sharedCells.mem.copy(this.vmem);
-            currAddr = vdpNextPatternAddrBoundary(this.sharedCells.mem.length);
+            this.sharedCells.mem.copy(this.vmem, currAddr);
             // fill pattern cycles
             this.vdp2_cycp[currAddr >> 17].cell = [Vdp2Screen.nbg0, Vdp2Screen.nbg2]
+
+            currAddr = vdpNextPatternAddrBoundary(this.sharedCells.mem.length);
+            if (currAddr >> 17 == 0) {
+                //    currAddr = 1 << 17
+            }
         }
 
         Object.entries(this.patterns).forEach(([scr, pat]) => {
@@ -264,10 +265,22 @@ static inline void __setup_vdp2_cycles() {
         this.size = currAddr
 
         // hardcoded values for ngb1 
+        // if ng0, nbg1, nbg2 are on same bank, move nbg1 in next bank
+
+
+        const currBank = currAddr >> 17
+        if (
+            currBank == (this.patterns[Vdp2Screen.nbg0].addr >> 17) &&
+            currBank == (this.patterns[Vdp2Screen.nbg2].addr >> 17)) {
+        } {
+            //move to next bank
+            //currAddr = ((currAddr >> 17) + 1) << 17
+        }
         this.vdp2_cycp[currAddr >> 17].pattern.push(Vdp2Screen.nbg1)
         this.vdp2_cycp[(currAddr + 0x02000) >> 17].cell.push(Vdp2Screen.nbg1)
 
         this.cells[Vdp2Screen.nbg1].addr = currAddr + 0x02000;
+        this.cells[Vdp2Screen.nbg1].color = Vdp2ColorCnt.color4bpp
         this.patterns[Vdp2Screen.nbg1].addr = currAddr;
         this.palettes[Vdp2Screen.nbg1].addr = palAddr;
     }

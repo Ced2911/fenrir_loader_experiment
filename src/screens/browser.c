@@ -13,7 +13,7 @@
 #define BROWSER_OFFSET_X (browser->browser_ui_config.x)
 #define BROWSER_LINE_HEIGHT (browser->browser_ui_config.line_height)
 
-#define BROWSER_CMDT_ITEM(i) (ORDER_BUFFER_STARTING_INDEX + 1 + (i * 1))
+#define BROWSER_CMDT_ITEM(i) (ORDER_BUFFER_STARTING_INDEX + 0 + (i * 1))
 #define BROWSER_CMDT_SHADOW(i) (BROWSER_CMDT_ITEM(i) + 1)
 
 #define ELEMENT_COUNT(n) (sizeof((n)) / sizeof(*(n)))

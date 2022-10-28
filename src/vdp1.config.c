@@ -104,4 +104,7 @@ void vdp1_init()
     
     vdp_dma_enqueue(vdp1_vram_partitions.gouraud_base, (void *)color_, sizeof(color_) * sizeof(uint16_t));
     vdp_dma_enqueue(vdp1_vram_partitions.clut_base, (void *)palettes, sizeof(palettes) * sizeof(uint16_t));
+
+    
+        vdp2_sprite_priority_set(0, 2);
 }
