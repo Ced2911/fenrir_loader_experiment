@@ -10,6 +10,13 @@
 #define DIR_ENTRY_ROOT (-1)
 #define PARENT_DIRECTORY (3000)
 
+#define SP_CMD_CHUNK_SIZE 2048
+
+// cover
+#define FENRIR_COVER_W (128)
+#define FENRIR_COVER_H (128)
+#define FENRIR_COVER_SIZE (FENRIR_COVER_W * FENRIR_COVER_H * 2)
+
 enum fenrir_gamelist_source
 {
     fenrir_gamelist_source_sd = 0,
@@ -53,12 +60,6 @@ typedef struct __attribute__((__packed__))
     uint16_t count; // => -1 end or empty
     fenrir_dir_entry_t entries[33];
 } fenrir_dir_data_t;
-
-#define SP_CMD_CHUNK_SIZE 2048
-
-#define FENRIR_COVER_W (128)
-#define FENRIR_COVER_H (128)
-#define FENRIR_COVER_SIZE (FENRIR_COVER_W * FENRIR_COVER_H * 2)
 
 // subcmd
 enum

@@ -37,7 +37,7 @@ static vdp2_scrn_cell_format_t format_nbg2 = {
 
 static vdp2_scrn_cell_format_t format_nbg1 = {
     .scroll_screen = VDP2_SCRN_NBG1,
-    .cc_count = VDP2_SCRN_CCC_PALETTE_256,
+    .cc_count = VDP2_SCRN_CCC_PALETTE_16,
     .character_size = 1 * 1,
     .pnd_size = 1,
     .auxiliary_mode = 0,

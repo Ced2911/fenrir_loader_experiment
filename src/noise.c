@@ -23,8 +23,11 @@ void noise_init(noise_cfg_t *noise_cfg)
     int w = 256;
     int h = 256;
 
-    uint8_t *noise_texture = (uint8_t *)(noise_cfg->cell_addr + CELL_SIZE_W * CELL_SIZE_H);
+    uint8_t *noise_texture = (uint8_t *)(noise_cfg->cell_addr + CELL_SIZE_W * CELL_SIZE_H / 2);
     uint16_t *pnd = (uint16_t *)noise_cfg->pattern_addr;
+
+
+    noise_cfg->pal_addr = 0x25f00C00UL;
     color_rgb1555_t *pal = (color_rgb1555_t *)noise_cfg->pal_addr;
 
     // empty cell
@@ -37,11 +40,15 @@ void noise_init(noise_cfg_t *noise_cfg)
     }
 
     // noise cell
+    uint8_t *noise_texture_ptr = noise_texture;
     for (int x = 0; x < w; x++)
     {
         for (int y = 0; y < h; y++)
         {
-            noise_texture[(x * w) + y] = 1 | ((__rand() >> 16) & 0xF);
+            uint8_t a = 1 | ((__rand() >> 16) & 0xF);
+            uint8_t b = 1 | ((__rand() >> 16) & 0xF);
+
+            *noise_texture_ptr++ = (a << 4) | b;
         }
     }
 
@@ -50,7 +57,7 @@ void noise_init(noise_cfg_t *noise_cfg)
     {
         for (int x = noise_cfg->cell_x; x < (noise_cfg->cell_x + noise_cfg->cell_w); x++, n++)
         {
-            pnd[x + y * 64] = VDP2_SCRN_PND_CONFIG_0(0, noise_cfg->cell_addr + (1 + (n % (50))) * (CELL_SIZE_W * CELL_SIZE_H), 0, 0, 0);
+            pnd[x + y * 64] = VDP2_SCRN_PND_CONFIG_1(0, noise_cfg->cell_addr + (1 + (n % (50))) * (CELL_SIZE_W * CELL_SIZE_H / 2), 0);
         }
     }
 
