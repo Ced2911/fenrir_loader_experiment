@@ -1,7 +1,7 @@
 #pragma once
 
 // Check if running in yabause with hle enabled...
-#define EMU_BUILD (1 || (*(uint16_t *)0x800) == 0) // BTR
+#define EMU_BUILD (0 || (*(uint16_t *)0x800) == 0) // BTR
 
 // smpc value cached by bios
 #define bios_get_region_flag() (*(volatile uint32_t *)0x06000248)

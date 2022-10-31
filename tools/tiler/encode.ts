@@ -1,6 +1,6 @@
 import { RGBA, Cell, RGB8888To555Number, Cell8bppTo4bpp } from './tiler'
 
-var LZ4 = require('lz4')
+import LZ4 from 'lz4'; import cstruct, { Struct } from 'struct';
 
 
 interface Palettes {
@@ -43,7 +43,7 @@ function encodePatternU16(addr: number, vf: number, hf: number) {
          (VDP2_SCRN_PND_CP_NUM(cpd_addr) & 0x7FFF))
          */
 function encodePatternU32(addr: number, vf: number, hf: number) {
-    return (addr >> 5) | (vf ? 1 : 0) << 31 | (hf ? 1 : 0) << 30;
+    return (addr >> 5) | ((vf ? 1 : 0) << 31) | ((hf ? 1 : 0) << 30);
 }
 
 export function patternGetPage(x: number, y: number) {
@@ -142,6 +142,8 @@ export class VDP2Memory {
 
     palSz: number
 
+    struct: Struct
+
     constructor() {
         this.size = 0;
         this.vmem = Buffer.alloc(512 * 1024)
@@ -172,6 +174,14 @@ export class VDP2Memory {
             pattern: []
         }]
 
+        this.struct = cstruct()/*header start*/
+        .word8('version')
+        .word32Ube('vdp2mem_sz') 
+        .word32Ube('vdp2pal_sz')
+        .word32Ube('vdp2mem_off')
+        .word32Ube('vdp2pal_off')
+        
+        /*header end*/
     }
 
     addSharedCells(cells: number[], colorcnt: Vdp2ColorCnt) {

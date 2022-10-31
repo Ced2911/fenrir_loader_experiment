@@ -12,7 +12,7 @@ static vdp2_scrn_cell_format_t format_nbg0 = {
     //.cc_count = VDP2_SCRN_CCC_PALETTE_256,
     .character_size = 1 * 1,
     .pnd_size = 2,
-    .auxiliary_mode = 0,
+    .auxiliary_mode = 1,
     .plane_size = 1 * 1,
     .cp_table = NBG0_CELL_ADDR,
     /*

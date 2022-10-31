@@ -299,6 +299,11 @@
     "@babel/runtime" "^7.7.2"
     regenerator-runtime "^0.13.3"
 
+"@types/node@*":
+  version "18.11.7"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.7.tgz#8ccef136f240770c1379d50100796a6952f01f94"
+  integrity sha512-LhFTglglr63mNXUSRYD8A+ZAIu5sFqNJ4Y2fPuY7UlrySJH87rRRlhtVmMHplmfk5WkoJGmDjE9oiTfyX94CpQ==
+
 "@types/node@16.9.1":
   version "16.9.1"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-16.9.1.tgz#0611b37db4246c937feef529ddcc018cf8e35708"
@@ -308,6 +313,13 @@
   version "14.18.22"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.18.22.tgz#fd2a15dca290fc9ad565b672fde746191cd0c6e6"
   integrity sha512-qzaYbXVzin6EPjghf/hTdIbnVW1ErMx8rPzwRNJhlbyJhu2SyqlvjGOY/tbUt6VFyzg56lROcOeSQRInpt63Yw==
+
+"@types/struct@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@types/struct/-/struct-0.0.3.tgz#daf1b42239bbd6eff9f8cf2199a7e00c80577018"
+  integrity sha512-Sqs3Dv95exdr8R/DrcszIdR/BazkPHCyhYvZpQgiWv3l477kV5ghiubNpXysAIOBEmK41bMOjj7cStMQ+YGfyQ==
+  dependencies:
+    "@types/node" "*"
 
 any-base@^1.1.0:
   version "1.1.0"
@@ -561,6 +573,11 @@ source-map@^0.6.0:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
   integrity sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==
+
+struct@^0.0.12:
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/struct/-/struct-0.0.12.tgz#8330af872664e9a5bd678664524857c50908038a"
+  integrity sha512-PV2nfc79Od13idbDWQZcsBZlmeDTdPP67cOYTUWZfYE77MWGhEGgGIAFtpO1UdOvDzB3I//jbFaA09JXNRAO3A==
 
 timm@^1.6.1:
   version "1.7.1"

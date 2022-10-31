@@ -110,9 +110,9 @@ ui_config_t ui_config = {
             },
             .browser = {
                 /** */
-                .x = 30,
+                .x = 148,
                 .y = 56,
-                .w = 200,
+                .w = 100,
                 .h = 200,
                 .line_height = 12,
                 /** */

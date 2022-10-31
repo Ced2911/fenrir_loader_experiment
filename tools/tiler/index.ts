@@ -92,7 +92,7 @@ async function main() {
             cells[hash] = cell;
 
             // add luts...
-            if (1)
+            if (0)
                 for (let i = 0; i < 4; i++) {
                     const m = [CellMirror.N, CellMirror.Vertical, CellMirror.Horizontal, CellMirror.Both][i]
                     const cell_m = { id: cell.id }
@@ -109,7 +109,7 @@ async function main() {
         if (cells[hash]) {
             return { id: cells[hash].id, mirror: 0 }
         }
-        if (1)
+        if (0)
             // check mirrored
             for (let i = 0; i < 4; i++) {
                 const m = [CellMirror.N, CellMirror.Vertical, CellMirror.Horizontal, CellMirror.Both][i]
