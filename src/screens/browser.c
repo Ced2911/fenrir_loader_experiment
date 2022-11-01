@@ -38,7 +38,7 @@ static void draw_selector(browser_t *browser, int y)
         .raw = 0x0000,
         .bits.cc_mode = CMDT_PMOD_CC_GOURAUD};
 
-    const color_rgb1555_t color = browser->browser_ui_config.position_bar.color;
+    const rgb1555_t color = browser->browser_ui_config.position_bar.color;
 
     const int selected = browser->selected;
     const int count = browser->count;

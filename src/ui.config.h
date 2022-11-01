@@ -30,15 +30,15 @@ typedef struct
     {
         uint16_t w;
         uint16_t h;
-        color_rgb1555_t color;
-        color_rgb1555_t gouraud[4];
+        rgb1555_t color;
+        rgb1555_t gouraud[4];
         uint8_t enabled;
     } position_bar;
 
     struct
     {
-        color_rgb1555_t colors[2];
-        color_rgb1555_t gouraud[4];
+        rgb1555_t colors[2];
+        rgb1555_t gouraud[4];
     } item_colors, item_focused_colors;
 
     uint16_t x;
@@ -61,7 +61,7 @@ typedef struct
                 uint16_t y;
                 uint16_t w;
                 uint16_t h;
-                color_rgb1555_t noise_palettes[NOISE_PALETTE_SIZE];
+                rgb1555_t noise_palettes[NOISE_PALETTE_SIZE];
                 uint8_t enabled;
             } cover;
             ui_config_background_t fg;

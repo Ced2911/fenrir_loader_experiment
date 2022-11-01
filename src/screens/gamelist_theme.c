@@ -55,7 +55,7 @@ void gamelist_theme_apply(browser_t *browser)
     noise_cfg.cell_h = ui_config.screens.gamelist.cover.h / 8;
 
     // palette colors
-    color_rgb1555_t *pal = (color_rgb1555_t *)browser->pal_base;
+    rgb1555_t *pal = (rgb1555_t *)browser->pal_base;
     pal[BROWSER_ITEM_COLOR + 1] = ui_config.screens.gamelist.browser.item_colors.colors[0];
     pal[BROWSER_ITEM_COLOR + 2] = ui_config.screens.gamelist.browser.item_colors.colors[1];
 
@@ -65,7 +65,7 @@ void gamelist_theme_apply(browser_t *browser)
     pal[32 + 1] = ui_config.screens.gamelist.browser.position_bar.color;
 
     // gouraud colors
-    color_rgb1555_t *gouraud = (color_rgb1555_t *)browser->gouraud_base;
+    rgb1555_t *gouraud = (rgb1555_t *)browser->gouraud_base;
     for (int i = 0; i < 4; i++)
     {
         gouraud[i + 0] = ui_config.screens.gamelist.browser.item_colors.gouraud[i];
@@ -74,7 +74,7 @@ void gamelist_theme_apply(browser_t *browser)
     }
 
     // vdp2 color (each banks is 0x10)
-    color_rgb1555_t *cram = (color_rgb1555_t *)(VDP2_CRAM_MODE_0_OFFSET(0, 0, 0) + VDP2_CRAM_LUT);
+    rgb1555_t *cram = (rgb1555_t *)(VDP2_CRAM_MODE_0_OFFSET(0, 0, 0) + VDP2_CRAM_LUT);
     cram[1] = ui_config.screens.gamelist.browser.item_colors.colors[1];
     cram[16 + 1] = ui_config.screens.gamelist.browser.item_focused_colors.colors[1];
 
@@ -124,7 +124,7 @@ void gamelist_theme_apply(browser_t *browser)
 
     if (!ui_config.screens.gamelist.cover.enabled)
     {
-        vdp2_scrn_display_unset(VDP2_SCRN_NBG1_DISP);
+        //vdp2_scrn_display_unset(VDP2_SCRN_DISP_NBG0);
     }
 }
 

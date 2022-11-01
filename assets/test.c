@@ -575,5 +575,5 @@ const unsigned char map[] = {
 };
 const unsigned long palLength = 7;
 const unsigned short pal[] = {
-    COLOR_RGB1555(1, 0, 16, 24),COLOR_RGB1555(1, 4, 16, 24),COLOR_RGB1555(1, 8, 20, 24),COLOR_RGB1555(1, 12, 20, 24),COLOR_RGB1555(1, 20.75, 25.25, 30),COLOR_RGB1555(1, 31.875, 31.375, 30),COLOR_RGB1555(1, 31.875, 31.875, 31.875)
+    RGB1555(1, 0, 16, 24),RGB1555(1, 4, 16, 24),RGB1555(1, 8, 20, 24),RGB1555(1, 12, 20, 24),RGB1555(1, 20.75, 25.25, 30),RGB1555(1, 31.875, 31.375, 30),RGB1555(1, 31.875, 31.875, 31.875)
 };

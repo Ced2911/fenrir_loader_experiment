@@ -31,6 +31,7 @@
         "mvsc_bg.h": "c",
         "cd-block.h": "c",
         "pcmsys.h": "c",
-        "hav_flag.h": "c"
+        "hav_flag.h": "c",
+        "rgb1555.h": "c"
     }
 }

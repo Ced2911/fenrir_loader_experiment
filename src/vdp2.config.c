@@ -8,13 +8,13 @@
 
 static vdp2_scrn_cell_format_t format_nbg0 = {
     .scroll_screen = VDP2_SCRN_NBG0,
-    .cc_count = VDP2_SCRN_CCC_PALETTE_16,
-    //.cc_count = VDP2_SCRN_CCC_PALETTE_256,
-    .character_size = 1 * 1,
+    .ccc = VDP2_SCRN_CCC_PALETTE_16,
+    //.ccc = VDP2_SCRN_CCC_PALETTE_256,
+    .char_size = VDP2_SCRN_CHAR_SIZE_1X1,
     .pnd_size = 2,
-    .auxiliary_mode = 1,
-    .plane_size = 1 * 1,
-    .cp_table = NBG0_CELL_ADDR,
+    .aux_mode = 1,
+    .plane_size = VDP2_SCRN_PLANE_SIZE_1X1,
+    .cpd_base = NBG0_CELL_ADDR,
     /*
     .usage_banks = {
         .a0 = VDP2_VRAM_USAGE_TYPE_COEFF_TBL,
@@ -22,80 +22,80 @@ static vdp2_scrn_cell_format_t format_nbg0 = {
         .b0 = VDP2_VRAM_USAGE_TYPE_NONE,
         .b1 = VDP2_VRAM_USAGE_TYPE_NONE},
         */
-    .color_palette = NBG0_COLOR_ADDR};
+    .palette_base = NBG0_COLOR_ADDR};
 
 static vdp2_scrn_cell_format_t format_nbg2 = {
     .scroll_screen = VDP2_SCRN_NBG2,
-    .cc_count = VDP2_SCRN_CCC_PALETTE_16,
-    //.cc_count = VDP2_SCRN_CCC_PALETTE_256,
-    .character_size = 1 * 1,
+    .ccc = VDP2_SCRN_CCC_PALETTE_16,
+    //.ccc = VDP2_SCRN_CCC_PALETTE_256,
+    .char_size = VDP2_SCRN_CHAR_SIZE_1X1,
     .pnd_size = 2,
-    .auxiliary_mode = 1,
-    .plane_size = 1 * 1,
-    .cp_table = NBG2_CELL_ADDR,
-    .color_palette = NBG2_COLOR_ADDR};
+    .aux_mode = 1,
+    .plane_size = VDP2_SCRN_PLANE_SIZE_1X1,
+    .cpd_base = NBG2_CELL_ADDR,
+    .palette_base = NBG2_COLOR_ADDR};
 
 static vdp2_scrn_cell_format_t format_nbg1 = {
     .scroll_screen = VDP2_SCRN_NBG1,
-    .cc_count = VDP2_SCRN_CCC_PALETTE_16,
-    .character_size = 1 * 1,
+    .ccc = VDP2_SCRN_CCC_PALETTE_16,
+    .char_size = VDP2_SCRN_CHAR_SIZE_1X1,
     .pnd_size = 1,
-    .auxiliary_mode = 0,
-    .plane_size = 1 * 1,
-    .cp_table = NBG1_CELL_ADDR,
-    .color_palette = NBG1_COLOR_ADDR,
-    .map_bases = {
-        .planes = {
-            NBG1_PATTERN_ADDR,
-            NBG1_PATTERN_ADDR,
-            NBG1_PATTERN_ADDR,
-            NBG1_PATTERN_ADDR,
-        }}};
+    .aux_mode = 0,
+    .plane_size = VDP2_SCRN_PLANE_SIZE_1X1,
+    .cpd_base = NBG1_CELL_ADDR,
+    .palette_base = NBG1_COLOR_ADDR};
 
-static void set_plane_addr(vdp2_vram_t *planes, uintptr_t plan_a_addr, size_t pattern_sz)
+static void set_plane_addr(vdp2_scrn_normal_map_t *planes, uintptr_t plan_a_addr, size_t pattern_sz)
 {
+
     switch (pattern_sz)
     {
     case 16384:
     default:
-        planes[0] = plan_a_addr;
-        planes[1] = plan_a_addr;
-        planes[2] = plan_a_addr;
-        planes[3] = plan_a_addr;
+        planes->plane_a = plan_a_addr;
+        planes->plane_b = plan_a_addr;
+        planes->plane_c = plan_a_addr;
+        planes->plane_d = plan_a_addr;
         break;
     }
 }
 
 static void vdp2_ngb0_init()
 {
-
-    set_plane_addr(format_nbg0.map_bases.planes,
+    vdp2_scrn_normal_map_t nbg0_map;
+    set_plane_addr(&nbg0_map,
                    NBG0_PATTERN_ADDR,
                    ui_config.screens.gamelist.background.pattern_sz);
 
-    vdp2_scrn_cell_format_set(&format_nbg0);
+    vdp2_scrn_cell_format_set(&format_nbg0, &nbg0_map);
     vdp2_scrn_priority_set(VDP2_SCRN_NBG0, 2);
-    vdp2_cram_offset_set(VDP2_SCRN_NBG0, format_nbg0.color_palette);
+    vdp2_cram_offset_set(VDP2_SCRN_NBG0, format_nbg0.palette_base);
 }
 
 static void vdp2_ngb1_init()
 {
-    vdp2_scrn_cell_format_set(&format_nbg1);
+    const vdp2_scrn_normal_map_t nbg1_map = {
+        .plane_a = NBG1_PATTERN_ADDR,
+        .plane_b = NBG1_PATTERN_ADDR,
+        .plane_c = NBG1_PATTERN_ADDR,
+        .plane_d = NBG1_PATTERN_ADDR};
+    vdp2_scrn_cell_format_set(&format_nbg1, &nbg1_map);
     vdp2_scrn_priority_set(VDP2_SCRN_NBG1, 3);
-    vdp2_cram_offset_set(VDP2_SCRN_NBG1, format_nbg1.color_palette);
+    vdp2_cram_offset_set(VDP2_SCRN_NBG1, format_nbg1.palette_base);
 }
 
 static void vdp2_ngb2_init()
 {
 
-    set_plane_addr(format_nbg2.map_bases.planes,
+    vdp2_scrn_normal_map_t nbg2_map;
+    set_plane_addr(&nbg2_map,
                    NBG2_PATTERN_ADDR,
                    ui_config.screens.gamelist.fg.pattern_sz);
 
-    vdp2_scrn_cell_format_set(&format_nbg2);
+    vdp2_scrn_cell_format_set(&format_nbg2, &nbg2_map);
     vdp2_scrn_priority_set(VDP2_SCRN_NBG2, 4);
     vdp2_cram_offset_set(VDP2_SCRN_NBG2, 0);
-    vdp2_cram_offset_set(VDP2_SCRN_NBG2, format_nbg2.color_palette);
+    vdp2_cram_offset_set(VDP2_SCRN_NBG2, format_nbg2.palette_base);
 }
 
 static void vdp2_setup_vram()
@@ -123,9 +123,9 @@ void vdp2_init()
     vdp2_ngb0_init();
     vdp2_ngb1_init();
     vdp2_ngb2_init();
-    
+
     LZ4_decompress_safe((char *)vmemz, (char *)0x25E00000UL, vmemz_sz, 512 * 1024);
     LZ4_decompress_safe((char *)cmemz, (char *)VDP2_CRAM_ADDR(0), cmemz_sz, 4 * 1024);
 
-    vdp2_scrn_display_set(VDP2_SCRN_NBG0_DISP | VDP2_SCRN_NBG1_DISP | VDP2_SCRN_NBG2_DISP);
+    vdp2_scrn_display_set(VDP2_SCRN_DISPTP_NBG0 | VDP2_SCRN_DISPTP_NBG1 | VDP2_SCRN_DISPTP_NBG2);
 }

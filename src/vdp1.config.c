@@ -45,26 +45,26 @@ static const uint16_t color_[] = {
     C_RGB(31, 31, 31),
 };
 
-static const color_rgb1555_t palettes[] = {
-    COLOR_RGB1555(1, 0x0F, 0, 0x1F),
-    COLOR_RGB1555(1, 0x0F, 0, 0x1F),
-    COLOR_RGB1555(1, 0x0F, 0, 0x1F),
-    COLOR_RGB1555(1, 0x0F, 0, 0x1F),
+static const rgb1555_t palettes[] = {
+    RGB1555(1, 0x0F, 0, 0x1F),
+    RGB1555(1, 0x0F, 0, 0x1F),
+    RGB1555(1, 0x0F, 0, 0x1F),
+    RGB1555(1, 0x0F, 0, 0x1F),
 
-    COLOR_RGB1555(1, 0, 0x0F, 0x1F),
-    COLOR_RGB1555(1, 0, 0x0F, 0x1F),
-    COLOR_RGB1555(1, 0, 0x0F, 0x1F),
-    COLOR_RGB1555(1, 0, 0x0F, 0x1F),
+    RGB1555(1, 0, 0x0F, 0x1F),
+    RGB1555(1, 0, 0x0F, 0x1F),
+    RGB1555(1, 0, 0x0F, 0x1F),
+    RGB1555(1, 0, 0x0F, 0x1F),
 
-    COLOR_RGB1555(1, 0x1F, 0x0F, 0),
-    COLOR_RGB1555(1, 0x1F, 0x0F, 0),
-    COLOR_RGB1555(1, 0x1F, 0x0F, 0),
-    COLOR_RGB1555(1, 0x1F, 0x0F, 0),
+    RGB1555(1, 0x1F, 0x0F, 0),
+    RGB1555(1, 0x1F, 0x0F, 0),
+    RGB1555(1, 0x1F, 0x0F, 0),
+    RGB1555(1, 0x1F, 0x0F, 0),
 
-    COLOR_RGB1555(1, 0x0F, 0x1F, 0),
-    COLOR_RGB1555(1, 0x0F, 0x1F, 0),
-    COLOR_RGB1555(1, 0x0F, 0x1F, 0),
-    COLOR_RGB1555(1, 0x0F, 0x1F, 0),
+    RGB1555(1, 0x0F, 0x1F, 0),
+    RGB1555(1, 0x0F, 0x1F, 0),
+    RGB1555(1, 0x0F, 0x1F, 0),
+    RGB1555(1, 0x0F, 0x1F, 0),
 };
 
 #define SCREEN_WIDTH 320

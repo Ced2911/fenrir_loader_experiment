@@ -1,9 +1,9 @@
 // Auto generated
 
 
-static const unsigned long marvel_fenrir_pal_sz = 13*sizeof(color_rgb1555_t);
-static const color_rgb1555_t marvel_fenrir_pal[] = {
-    COLOR_RGB1555(1, 0, 0, 0),COLOR_RGB1555(1, 0, 12, 18),COLOR_RGB1555(1, 0, 16, 20),COLOR_RGB1555(1, 0, 20, 26),COLOR_RGB1555(1, 4, 0, 12),COLOR_RGB1555(1, 30, 16, 0),COLOR_RGB1555(1, 30, 18, 0),COLOR_RGB1555(1, 30, 20, 0),COLOR_RGB1555(1, 30, 22, 0),COLOR_RGB1555(1, 30, 24, 0),COLOR_RGB1555(1, 30, 26, 0),COLOR_RGB1555(1, 30, 28, 0),COLOR_RGB1555(1, 30, 30, 0)
+static const unsigned long marvel_fenrir_pal_sz = 13*sizeof(rgb1555_t);
+static const rgb1555_t marvel_fenrir_pal[] = {
+    RGB1555(1, 0, 0, 0),RGB1555(1, 0, 12, 18),RGB1555(1, 0, 16, 20),RGB1555(1, 0, 20, 26),RGB1555(1, 4, 0, 12),RGB1555(1, 30, 16, 0),RGB1555(1, 30, 18, 0),RGB1555(1, 30, 20, 0),RGB1555(1, 30, 22, 0),RGB1555(1, 30, 24, 0),RGB1555(1, 30, 26, 0),RGB1555(1, 30, 28, 0),RGB1555(1, 30, 30, 0)
 };
 static const unsigned long marvel_fenrir_pattern_sz = 4096*sizeof(unsigned short);
 static const unsigned short marvel_fenrir_pattern[] = {

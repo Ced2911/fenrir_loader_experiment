@@ -87,7 +87,7 @@ export function Cell8bppTo4bpp(cells: number[]) {
 }
 
 export function RGB8888To555(rgba: RGBA) {
-    return `COLOR_RGB1555(${rgba.a ? 1 : 0}, ${Math.floor(rgba.r / 8)}, ${Math.floor(rgba.g / 8)}, ${Math.floor(rgba.b / 8)})`
+    return `RGB1555(${rgba.a ? 1 : 0}, ${Math.floor(rgba.r / 8)}, ${Math.floor(rgba.g / 8)}, ${Math.floor(rgba.b / 8)})`
 }
 export function RGB8888To555Number(rgba: RGBA) {
     const c = rgba.a << 15 |

@@ -86,7 +86,7 @@ void user_init(void)
         .rotation = VDP1_ENV_ROTATION_0,
         .color_mode = VDP1_ENV_COLOR_MODE_RGB_PALETTE,
         .sprite_type = 0,
-        .erase_color = COLOR_RGB1555(0, 0, 0, 0),
+        .erase_color = RGB1555(0, 0, 0, 0),
         .erase_points = {
             {0, 0},
             {RESOLUTION_WIDTH, RESOLUTION_HEIGHT}}};
@@ -98,7 +98,7 @@ void user_init(void)
                               VDP2_TVMD_VERT_240);
 
     vdp2_scrn_back_color_set(VDP2_VRAM_ADDR(3, 0x01FFFE),
-                             COLOR_RGB1555(0, 0, 0, 0));
+                             RGB1555(0, 0, 0, 0));
 
     vdp2_sprite_priority_set(0, 6);
     vdp1_env_set(&env);
