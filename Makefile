@@ -24,7 +24,7 @@ SH_SRCS:= \
 	src/screens/gamelist.c \
 	src/screens/gamelist_theme.c \
 	src/screens/browser.c \
-	src/sound_driver/pcmsys_y.c \
+	src/sound_driver/pcm.c \
 	src/lz4/lz4.c
 	
 SH_LIBRARIES:=

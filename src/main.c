@@ -6,10 +6,7 @@
 #include "vdp2.config.h"
 #include "font/font.h"
 #include "screens/gamelist.h"
-#include "sound_driver/pcmsys.h"
-#include "sound_driver/sdrv.h"
-#include "../assets/hav_flag.h"
-#include "../assets/hado.h"
+#include "sound_driver/pcm.h"
 
 #define RESOLUTION_WIDTH (352)
 #define RESOLUTION_HEIGHT (224)
@@ -44,21 +41,32 @@ int main(void)
 
     screen_t *screen = &gamelist_screen;
     screen->init();
-
+#if 0
+#include "../assets/hado.h"
     load_drv(sdrv_bin, sdrv_bin_len, 11520);
     hadoken_snd = load_16bit_pcm(hado_pcm, hado_pcm_len, 11520);
     //pcm8snd = load_8bit_pcm(hav_flag_PCM, hav_flag_PCM_len, 11520);
-    
-int i = 0;
+
+#else
+#include "../assets/hado.h"
+    pcm_sample_t hadoken = {.slot = 0, .addr = 0x1000, .bit = pcm_sample_16bit};
+    pcm_load_sample(&hadoken, hado_pcm, hado_pcm_len);
+    pcm_sample_set_samplerate(&hadoken, 11025);
+    pcm_sample_set_loop(&hadoken, pcm_sample_loop_loop);
+    pcm_sample_start(&hadoken);
+
+#endif
+    int i = 0;
     while (1)
     {
         screen->update();
-
-        if (i > 200) {
-            pcm_play(hadoken_snd,PCM_PROTECTED, 6);
+#if 0
+        if (i > 200)
+        {
+            pcm_play(hadoken_snd, PCM_PROTECTED, 6);
             i = 0;
         }
-
+#endif
         i++;
 
         vdp1_sync_render();
@@ -76,7 +84,7 @@ static void _vblank_out_handler(void *work __unused)
 }
 static void _vblank_in_handler(void *work __unused)
 {
-    sdrv_vblank_rq();
+    // sdrv_vblank_rq();
 }
 
 void user_init(void)
@@ -111,35 +119,36 @@ void user_init(void)
     vdp2_tvmd_display_set();
 }
 
-
 // oops
 void *memmove(void *dest, const void *src, size_t n)
 {
-	uint8_t* from = (uint8_t*) src;
-	uint8_t* to = (uint8_t*) dest;
+    uint8_t *from = (uint8_t *)src;
+    uint8_t *to = (uint8_t *)dest;
 
-	if (from == to || n == 0)
-		return dest;
-	if (to > from && to-from < (int)n) {
-		/* to overlaps with from */
-		/*  <from......>         */
-		/*         <to........>  */
-		/* copy in reverse, to avoid overwriting from */
-		int i;
-		for(i=n-1; i>=0; i--)
-			to[i] = from[i];
-		return dest;
-	}
-	if (from > to && from-to < (int)n) {
-		/* to overlaps with from */
-		/*        <from......>   */
-		/*  <to........>         */
-		/* copy forwards, to avoid overwriting from */
-		size_t i;
-		for(i=0; i<n; i++)
-			to[i] = from[i];
-		return dest;
-	}
-	memcpy(dest, src, n);
-	return dest;
+    if (from == to || n == 0)
+        return dest;
+    if (to > from && to - from < (int)n)
+    {
+        /* to overlaps with from */
+        /*  <from......>         */
+        /*         <to........>  */
+        /* copy in reverse, to avoid overwriting from */
+        int i;
+        for (i = n - 1; i >= 0; i--)
+            to[i] = from[i];
+        return dest;
+    }
+    if (from > to && from - to < (int)n)
+    {
+        /* to overlaps with from */
+        /*        <from......>   */
+        /*  <to........>         */
+        /* copy forwards, to avoid overwriting from */
+        size_t i;
+        for (i = 0; i < n; i++)
+            to[i] = from[i];
+        return dest;
+    }
+    memcpy(dest, src, n);
+    return dest;
 }

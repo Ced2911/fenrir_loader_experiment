@@ -8,3 +8,6 @@
 build/
 cd/
 node_modules
+*.7z
+*.no
+*.vgm
