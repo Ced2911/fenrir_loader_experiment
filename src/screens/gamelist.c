@@ -39,6 +39,8 @@ static void browser_input_callback(browser_t *browser);
 static void browser_change_dir(browser_t *browser, int16_t id);
 static void browser_get_item(browser_t *browser, uint32_t item, char *dst, int max_len);
 
+static int cover_selected __uncached = -1;
+
 static browser_t browser = {
     .count = 0,
     .file_per_page = 12,
@@ -87,7 +89,6 @@ static void browser_input_callback(browser_t *browser)
     }
 }
 
-static int cover_selected __uncached = -1;
 
 static void _slave_entry(void)
 {

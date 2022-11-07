@@ -5,9 +5,11 @@ SET(CMAKE_SYSTEM_VERSION 1)
 
 include(CMakeForceCompiler)
 
-add_link_options(-Wl,--gc-sections --specs=${CMAKE_SOURCE_DIR}/libyaul.specs -ffreestanding -m2 -mb)
+set(YAUL_SPECS ${CMAKE_SOURCE_DIR}/cmake/libyaul.specs)
+
+add_link_options(-Wl,--gc-sections --specs=${YAUL_SPECS} -ffreestanding -m2 -mb)
 add_link_options(-Wl,--defsym=___master_stack=${IP_MASTER_STACK_ADDR} -Wl,--defsym=___slave_stack=${IP_SLAVE_STACK_ADDR})
-add_compile_options(--specs=${CMAKE_SOURCE_DIR}/libyaul.specs -ffunction-sections -fdata-sections  -ffreestanding -m2 -mb)
+add_compile_options(--specs=${YAUL_SPECS} -ffunction-sections -fdata-sections -ffreestanding -m2 -mb)
 
 CMAKE_FORCE_C_COMPILER("$ENV{YAUL_INSTALL_ROOT}/bin/$ENV{YAUL_ARCH_SH_PREFIX}-gcc" GNU)
 CMAKE_FORCE_CXX_COMPILER("$ENV{YAUL_INSTALL_ROOT}/bin/$ENV{YAUL_ARCH_SH_PREFIX}-g++" GNU)

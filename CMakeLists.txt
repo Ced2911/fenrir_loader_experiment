@@ -42,7 +42,6 @@ add_executable(${PROJECT_NAME} ${FENRIR_SRC})
 
 target_link_libraries(${PROJECT_NAME} ${YAUL_LIBS})
 target_include_directories(${PROJECT_NAME} PRIVATE src)
-set_target_properties(${PROJECT_NAME} PROPERTIES LINK_DEPENDS ${CMAKE_SOURCE_DIR}/libyaul.ld)
 
 gen_map()
 gen_start_bin()
