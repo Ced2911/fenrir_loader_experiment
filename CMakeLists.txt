@@ -44,8 +44,7 @@ target_link_libraries(${PROJECT_NAME} ${YAUL_LIBS})
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 set_target_properties(${PROJECT_NAME} PROPERTIES LINK_DEPENDS ${CMAKE_SOURCE_DIR}/libyaul.ld)
 
-add_custom_command(TARGET ${PROJECT_NAME}
- 	POST_BUILD
- 	DEPENDS ${PROJECT_NAME}
- 	COMMAND ${CMAKE_OBJDUMP}  -x ${PROJECT_NAME} > ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.map
-    COMMENT "Generating map file ${PROJECT_NAME}.map" )
+gen_map()
+gen_start_bin()
+gen_symbol_size()
+gen_iso()

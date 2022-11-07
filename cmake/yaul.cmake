@@ -50,3 +50,44 @@ set(YAUL_SYSTEM_INCLUDE_DIRS
 include_directories(${YAUL_INCDIR}/yaul/)
 include_directories(${YAUL_INCLUDE_DIRS})
 include_directories(SYSTEM ${YAUL_SYSTEM_INCLUDE_DIRS})
+
+
+macro(gen_map)
+    add_custom_command(TARGET ${PROJECT_NAME}
+        POST_BUILD
+        DEPENDS ${PROJECT_NAME}
+        COMMAND ${CMAKE_OBJDUMP}  -x ${PROJECT_NAME} > ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.map
+        COMMENT "Generating map file ${PROJECT_NAME}.map" )
+endmacro()
+
+macro(gen_start_bin)
+    add_custom_command(TARGET ${PROJECT_NAME}
+        POST_BUILD
+        DEPENDS ${PROJECT_NAME}
+        COMMAND ${CMAKE_OBJCOPY}  --output-format=binary ${PROJECT_NAME} ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bin
+        COMMENT "Generating bin file ${PROJECT_NAME}.bin" )
+endmacro()
+
+macro(gen_symbol_size)
+    add_custom_command(TARGET ${PROJECT_NAME}
+        POST_BUILD
+        DEPENDS ${PROJECT_NAME}
+        COMMAND ${CMAKE_NM} --print-size --size-sort ${PROJECT_NAME} > ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.size.txt
+        COMMENT "Generating symbol size file ${PROJECT_NAME}.size.txt" )
+endmacro()
+
+macro(gen_iso)
+    add_custom_command(TARGET ${PROJECT_NAME}
+        POST_BUILD
+        DEPENDS     ${PROJECT_NAME}.bin
+        COMMAND     $(YAUL_INSTALL_ROOT)/bin/make-ip
+        ARGS        ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bin ${IP_VERSION} ${IP_RELEASE_DATE} ${IP_AREAS} ${IP_PERIPHERALS} "${IP_TITLE}" ${IP_MASTER_STACK_ADDR} ${IP_SLAVE_STACK_ADDR} ${IP_1ST_READ_ADDR} ${IP_1ST_READ_ADDR} 
+        COMMENT     "Generating ip.bin")
+
+    add_custom_command(TARGET ${PROJECT_NAME}
+        POST_BUILD
+        DEPENDS     ${CMAKE_BINARY_DIR}/IP.bin
+        COMMAND     $(YAUL_INSTALL_ROOT)/bin/make-iso 
+        ARGS        ${CMAKE_SOURCE_DIR}/cd ${CMAKE_BINARY_DIR}/IP.BIN ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bin
+        COMMENT     "Generating disc image for ${PROJECT_NAME}")
+endmacro()
