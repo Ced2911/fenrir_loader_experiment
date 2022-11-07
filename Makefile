@@ -4,9 +4,11 @@ endif
 
 include $(YAUL_INSTALL_ROOT)/share/build.pre.mk
 
+
 BUILTIN_ASSETS+=
 
 SH_PROGRAM:= fenrir-yaul
+
 SH_SRCS:= \
 	assets/army12.c \
 	assets/bitmap.c \
@@ -15,7 +17,6 @@ SH_SRCS:= \
 	src/reset.c \
 	src/vdp1.config.c \
 	src/vdp2.config.c \
-	src/ui.config.c \
 	src/font/font.c \
 	src/fenrir/fenrir.c \
 	src/fenrir/fenrir.dir_op.c \
@@ -24,7 +25,9 @@ SH_SRCS:= \
 	src/screens/gamelist.c \
 	src/screens/gamelist_theme.c \
 	src/screens/browser.c \
+	src/themes/sfz3/theme.c \
 	src/sound_driver/pcm.c \
+	src/sound_driver/vgm/vgm.c \
 	src/lz4/lz4.c
 	
 SH_LIBRARIES:=
@@ -40,5 +43,12 @@ IP_MASTER_STACK_ADDR:= 0x06100000
 IP_SLAVE_STACK_ADDR:= 0x06002000
 IP_1ST_READ_ADDR:= 0x06004000
 IP_1ST_READ_SIZE:= 0
+
+
+
+$(SH_PROGRAM)-cd.bin: $(SH_PROGRAM).iso
+	tools/iso2bin/iso2bin $(SH_PROGRAM).iso $(SH_PROGRAM)-cd.bin
+
+.build: $(SH_PROGRAM)-cd.bin
 
 include $(YAUL_INSTALL_ROOT)/share/build.post.iso-cue.mk

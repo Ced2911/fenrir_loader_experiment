@@ -6,6 +6,7 @@
 *.iso
 *.cue
 build/
+buildcmake/
 cd/
 node_modules
 *.7z

@@ -26,3 +26,5 @@ void pcm_sample_set_samplerate(pcm_sample_t *pcm, uint32_t sr);
 void pcm_sample_start(pcm_sample_t *pcm);
 void pcm_sample_stop(pcm_sample_t *pcm);
 void pcm_sample_set_loop(pcm_sample_t *pcm, pcm_sample_loop_t loop);
+
+void fm_test();

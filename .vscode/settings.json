@@ -32,6 +32,7 @@
         "cd-block.h": "c",
         "pcmsys.h": "c",
         "hav_flag.h": "c",
-        "rgb1555.h": "c"
+        "rgb1555.h": "c",
+        "string.h": "c"
     }
 }

@@ -73,7 +73,7 @@ typedef union scsp_slot_regs
         uint16_t sdir : 1;
         uint16_t total_l : 8;
 
-        // 0x0d
+        // 0x0e
         uint16_t modulation_l : 4;
         uint16_t md_xsl : 6;
         uint16_t md_ysl : 6;

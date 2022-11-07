@@ -7,6 +7,7 @@
 #include "font/font.h"
 #include "screens/gamelist.h"
 #include "sound_driver/pcm.h"
+#include "sound_driver/vgm/vgm.h"
 
 #define RESOLUTION_WIDTH (352)
 #define RESOLUTION_HEIGHT (224)
@@ -16,6 +17,36 @@ status_sector_t *status_sector;
 sd_dir_entry_t *sd_dir_entries;
 
 int16_t hadoken_snd;
+
+vgm_player_t vgm_player;
+void _vgm_init()
+{
+
+    ym2203_init();
+    vgm_init(&vgm_player);
+}
+
+#define SAMPLE_PER_VBK (44100 / 60)
+void _vgm_test()
+{
+    uint16_t s;
+    /*
+    if (vgm_player.sample_count > 0)
+    {
+        vgm_player.sample_count -= SAMPLE_PER_VBK;
+    }
+
+
+
+    vgm_player.sample_count -= SAMPLE_PER_VBK;
+    */
+    vgm_player.sample_count = 0;
+    do
+    {
+        vgm_player.sample_count += vgm_parse(&vgm_player);
+    } while (vgm_player.sample_count < SAMPLE_PER_VBK);
+    dbgio_flush();
+}
 
 void *zalloc(size_t l)
 {
@@ -50,11 +81,11 @@ int main(void)
 #else
 #include "../assets/hado.h"
     pcm_sample_t hadoken = {.slot = 0, .addr = 0x1000, .bit = pcm_sample_16bit};
-    pcm_load_sample(&hadoken, hado_pcm, hado_pcm_len);
-    pcm_sample_set_samplerate(&hadoken, 11025);
-    pcm_sample_set_loop(&hadoken, pcm_sample_loop_loop);
-    pcm_sample_start(&hadoken);
-
+    //  pcm_load_sample(&hadoken, hado_pcm, hado_pcm_len);
+    //   pcm_sample_set_samplerate(&hadoken, 11025);
+    //  pcm_sample_set_loop(&hadoken, pcm_sample_loop_loop);
+    // pcm_sample_start(&hadoken);
+    // _vgm_init();
 #endif
     int i = 0;
     while (1)
@@ -74,6 +105,14 @@ int main(void)
         vdp2_sync();
         vdp1_sync_wait();
         //  vdp2_sync_wait();
+
+        // if (i > 5)
+        {
+
+            // fm_test();
+            // _vgm_test();
+            i = 0;
+        }
     }
     screen->destroy();
 }
@@ -85,6 +124,7 @@ static void _vblank_out_handler(void *work __unused)
 static void _vblank_in_handler(void *work __unused)
 {
     // sdrv_vblank_rq();
+    // fm_test();
 }
 
 void user_init(void)

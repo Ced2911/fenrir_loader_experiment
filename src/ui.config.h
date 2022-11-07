@@ -73,5 +73,3 @@ typedef struct
 
     ui_config_font_t main_font;
 } ui_config_t;
-
-extern ui_config_t ui_config;

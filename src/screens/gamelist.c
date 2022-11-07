@@ -4,7 +4,7 @@
 #include "fenrir/fenrir.h"
 #include "vdp1.config.h"
 #include "vdp2.config.h"
-#include "ui.config.h"
+#include "theme.h"
 #include "noise.h"
 
 #define COVER_TEXTURE_ADDR (browser.texture_base + (FONT_CACHE_SIZE * 2))
@@ -113,7 +113,7 @@ static void gamelist_update()
     gamelist_theme_update(&browser);
 
     // if entry changed, load the cover
-    if (ui_config.screens.gamelist.cover.enabled && browser.selected != gamelist_ctx.last_selected_item)
+    if (theme_get_ui_config()->screens.gamelist.cover.enabled && browser.selected != gamelist_ctx.last_selected_item)
     {
         gamelist_ctx.last_selected_item = browser.selected;
         cover_selected = sd_dir_entries[browser.selected].id;
@@ -152,7 +152,7 @@ static void gamelist_init()
      * themes
      ****************************************************/
     // browser theme
-    memcpy(&browser.browser_ui_config, &ui_config.screens.gamelist.browser, sizeof(ui_config_browser_t));
+    memcpy(&browser.browser_ui_config, &theme_get_ui_config()->screens.gamelist.browser, sizeof(ui_config_browser_t));
     gamelist_theme_apply(&browser);
 
     // init browser

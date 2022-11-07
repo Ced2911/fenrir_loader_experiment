@@ -2,11 +2,11 @@
 #include <yaul.h>
 #include <assert.h>
 #include "font.h"
-#include "ui.config.h"
+#include "theme.h"
 
 #define align_8(addr) (((addr) + 7) & (~7))
 
-#define THEME_FONT (&ui_config.main_font)
+#define THEME_FONT (&theme_get_ui_config()->main_font)
 
 static inline void memcpy4bpp(uint8_t *d, uint8_t *s, uint32_t nb, int off)
 {

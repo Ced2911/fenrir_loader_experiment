@@ -1,43 +1,27 @@
-#include <yaul.h>
-#include "ui.config.h"
-#include "../assets/sfa.c"
-#include "../assets/vdp2.h"
-
-#define THEME_FONT_WIDTH 256
-#define THEME_FONT_HEIGHT 256
-#define THEME_FONT_COUNT 256
-
-typedef struct
-{
-    uint32_t font_height;
-    uint8_t font_width[THEME_FONT_COUNT];
-    uint8_t font[THEME_FONT_WIDTH * THEME_FONT_HEIGHT / 2]; // 8bpp
-} menu_font_t;
-
-#define NOISE_PALETTES                                    \
-    {                                                     \
+#define NOISE_PALETTES                              \
+    {                                               \
         RGB1555(1, 0x00, 0xC0 >> 3, 0x40 >> 3),     \
             RGB1555(1, 0x00, 0xF0 >> 3, 0x00 >> 3), \
             RGB1555(1, 0x00, 0x80 >> 3, 0x60 >> 3), \
             RGB1555(1, 0x00, 0xF0 >> 3, 0xF0 >> 3), \
-                                                          \
+                                                    \
             RGB1555(1, 0x00, 0xC0 >> 3, 0x40 >> 3), \
             RGB1555(1, 0x00, 0xF0 >> 3, 0x00 >> 3), \
             RGB1555(1, 0x00, 0x80 >> 3, 0x60 >> 3), \
             RGB1555(1, 0x00, 0xF0 >> 3, 0xF0 >> 3), \
-                                                          \
+                                                    \
             RGB1555(1, 0x00, 0xC0 >> 3, 0x40 >> 3), \
             RGB1555(1, 0x00, 0xF0 >> 3, 0x00 >> 3), \
             RGB1555(1, 0x00, 0x80 >> 3, 0x60 >> 3), \
             RGB1555(1, 0x00, 0xF0 >> 3, 0xF0 >> 3), \
-                                                          \
+                                                    \
             RGB1555(1, 0x00, 0xC0 >> 3, 0x40 >> 3), \
             RGB1555(1, 0x00, 0xF0 >> 3, 0x00 >> 3), \
             RGB1555(1, 0x00, 0x80 >> 3, 0x60 >> 3), \
             RGB1555(1, 0x00, 0xF0 >> 3, 0xF0 >> 3), \
     }
 
-ui_config_t ui_config = {
+static ui_config_t ui_config = {
     .main_font = {
         .char_height = sfa.char_height,
         .char_width = sfa.char_width,
