@@ -24,27 +24,21 @@ void _vgm_init()
 
     ym2203_init();
     vgm_init(&vgm_player);
+    vgm_player.sample_count = 0;
 }
 
 #define SAMPLE_PER_VBK (44100 / 60)
 void _vgm_test()
 {
     uint16_t s;
-    /*
-    if (vgm_player.sample_count > 0)
-    {
-        vgm_player.sample_count -= SAMPLE_PER_VBK;
-    }
+    vgm_player.cycles_played += SAMPLE_PER_VBK;
 
-
-
-    vgm_player.sample_count -= SAMPLE_PER_VBK;
-    */
-    vgm_player.sample_count = 0;
-    do
+    while (vgm_player.cycles_played > vgm_player.cycles)
+        
     {
         vgm_player.sample_count += vgm_parse(&vgm_player);
-    } while (vgm_player.sample_count < SAMPLE_PER_VBK);
+    }
+    // vgm_player.sample_count -= SAMPLE_PER_VBK;
     dbgio_flush();
 }
 
@@ -116,8 +110,8 @@ int main(void)
         // if (i > 5)
         {
 
-           // fm_test();
-           // dbgio_flush();
+            // fm_test();
+            // dbgio_flush();
             _vgm_test();
             i = 0;
         }

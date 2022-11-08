@@ -16,6 +16,8 @@ typedef struct vgm_player_s
     int sampled;
     int sample_count;
     int frame_size;
+    int cycles;
+    int cycles_played;
 } vgm_player_t;
 
 void ym2203_init();
