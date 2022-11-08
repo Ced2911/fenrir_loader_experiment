@@ -14,8 +14,8 @@ typedef union scsp_common_reg
 
 typedef union scsp_slot_regs
 {
-    uint16_t raw[12];
-    uint32_t raw32[6];
+    uint16_t raw[16];
+    uint32_t raw32[8];
     struct
     {
         /*
@@ -110,5 +110,5 @@ typedef union scsp_slot_regs
 __attribute__((aligned(16)))
 scsp_slot_regs_t;
 
-#define get_scsp_slot(x) ((scsp_slot_regs_t *)(SCSP_SLOT_ADDR + (x * 0x20)))
-#define get_scsp_reg() ((scsp_common_reg_t *)SCSP_COMMON_ADDR)
+#define get_scsp_slot(x) ((volatile scsp_slot_regs_t *)(SCSP_SLOT_ADDR + (x * 0x20)))
+#define get_scsp_reg() ((volatile scsp_common_reg_t *)SCSP_COMMON_ADDR)

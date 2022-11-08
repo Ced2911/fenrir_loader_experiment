@@ -166,7 +166,10 @@ int8_t melody[] = {
 void psg_note(int s, uint16_t n)
 {
     // fill slot
-    scsp_slot_regs_t *slot = get_scsp_slot(s);
+    scsp_slot_regs_t __s;
+    scsp_slot_regs_t *slot = &__s;
+    volatile uint16_t *m = (uint16_t *)SCSP_SLOT_ADDR;
+    dbgio_printf("0x25b00000 mem:0x%4x\n", m[1]);
 
     uint32_t addr = 0x2000;
 
@@ -175,7 +178,7 @@ void psg_note(int s, uint16_t n)
     // setup sample
     slot->sdir = 0;
     slot->sa = addr;
-    slot->lsa = addr;
+    slot->lsa = 0;
     slot->lea = (sizeof(note_c4) / 2) - 1;
     slot->lpctl = 1;
     slot->pcm8b = 0;
@@ -190,6 +193,7 @@ void psg_note(int s, uint16_t n)
     // volume & pan
     slot->disdl = 7;
     slot->dipan = 0;
+    slot->total_l = 7;
 
     // noise
     /*
@@ -206,13 +210,24 @@ void psg_note(int s, uint16_t n)
     slot->fns = 0;
 
     slot->fns = note_fns[n];
+            slot->kyonb = 1;
+            slot->kyonex = 1;
+
+    volatile scsp_slot_regs_t *_s = get_scsp_slot(s);
+    for (int i = 0; i < 16; i++)
+    {
+        _s->raw[i] = slot->raw[i];
+    }
+
+
+    dbgio_printf("slot r0 0x%4x: mem:0x%4x\n", _s->raw[1], m[1]);
 }
 
 void fm_test()
 {
     volatile uint16_t *control = (uint16_t *)0x25b00400;
     control[0] = 7; // master vol
-    scsp_slot_regs_t *slot = get_scsp_slot(1);
+    scsp_slot_regs_t *slot = get_scsp_slot(0);
     static int i = 0;
     static int j = 0;
     i++;
@@ -227,7 +242,7 @@ void fm_test()
     {
         if (melody[j] != NOTE_NUL)
         {
-            psg_note(1, melody[j] - 1);
+            psg_note(0, melody[j] - 1);
             slot->kyonb = 1;
             slot->kyonex = 1;
         }
@@ -246,36 +261,33 @@ void pcm_load_sample(pcm_sample_t *s, uint8_t *data, size_t sz)
 {
     volatile uint16_t *control = (uint16_t *)0x25b00400;
     control[0] = 7; // master vol
-
-    
-
-    /*
-        // setp dma to sound memory
-        cpu_dmac_cfg_t cfg = {
-            .channel = 0,
-            .src_mode = CPU_DMAC_SOURCE_INCREMENT,
-            .dst = SCSP_RAM + s->addr,
-            .dst_mode = CPU_DMAC_DESTINATION_INCREMENT,
-            .src = data,
-            .len = sz,
-            .stride = CPU_DMAC_STRIDE_1_BYTE,
-            .bus_mode = CPU_DMAC_BUS_MODE_BURST,
-            .ihr = NULL,
-            .ihr_work = NULL};
-
-        cpu_dmac_channel_wait(0);
-        cpu_dmac_channel_config_set(&cfg);
-        cpu_dmac_channel_start(0);
-        */
+                    /*
+                        // setp dma to sound memory
+                        cpu_dmac_cfg_t cfg = {
+                            .channel = 0,
+                            .src_mode = CPU_DMAC_SOURCE_INCREMENT,
+                            .dst = SCSP_RAM + s->addr,
+                            .dst_mode = CPU_DMAC_DESTINATION_INCREMENT,
+                            .src = data,
+                            .len = sz,
+                            .stride = CPU_DMAC_STRIDE_1_BYTE,
+                            .bus_mode = CPU_DMAC_BUS_MODE_BURST,
+                            .ihr = NULL,
+                            .ihr_work = NULL};
+                
+                        cpu_dmac_channel_wait(0);
+                        cpu_dmac_channel_config_set(&cfg);
+                        cpu_dmac_channel_start(0);
+                    */
     memcpy((void *)(SCSP_RAM + s->addr), data, sz);
 
     // fill slot
-    scsp_slot_regs_t *slot = get_scsp_slot(s->slot);
+    volatile scsp_slot_regs_t *slot = get_scsp_slot(s->slot);
 
     // setup sample
     slot->pcm8b = s->bit & 1;
     slot->sa = s->addr;
-    slot->lsa = s->addr;
+    slot->lsa = 0;
     slot->lea = (sz / s->bit) - 1;
 
     // why 31 ?

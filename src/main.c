@@ -78,14 +78,21 @@ int main(void)
     hadoken_snd = load_16bit_pcm(hado_pcm, hado_pcm_len, 11520);
     //pcm8snd = load_8bit_pcm(hav_flag_PCM, hav_flag_PCM_len, 11520);
 
-#else
+#elif 0
+    void snd_init();
+    snd_init();
+
 #include "../assets/hado.h"
     pcm_sample_t hadoken = {.slot = 0, .addr = 0x1000, .bit = pcm_sample_16bit};
-    //  pcm_load_sample(&hadoken, hado_pcm, hado_pcm_len);
-    //   pcm_sample_set_samplerate(&hadoken, 11025);
-    //  pcm_sample_set_loop(&hadoken, pcm_sample_loop_loop);
-    // pcm_sample_start(&hadoken);
-    // _vgm_init();
+    pcm_load_sample(&hadoken, hado_pcm, hado_pcm_len);
+    pcm_sample_set_samplerate(&hadoken, 11025);
+    pcm_sample_set_loop(&hadoken, pcm_sample_loop_loop);
+    pcm_sample_start(&hadoken);
+#else
+
+    void snd_init();
+    snd_init();
+    _vgm_init();
 #endif
     int i = 0;
     while (1)
@@ -109,8 +116,9 @@ int main(void)
         // if (i > 5)
         {
 
-            // fm_test();
-            // _vgm_test();
+           // fm_test();
+           // dbgio_flush();
+            _vgm_test();
             i = 0;
         }
     }
