@@ -3,6 +3,142 @@
 #include <string.h>
 #include "../scsp.h"
 
+typedef struct scsp_kc
+{
+    uint16_t fnc;
+    uint16_t oct;
+} scsp_kc_t;
+
+const scsp_kc_t scsp_kc_map[] = {
+    /* C0 */ {0, 0xc},
+    /* C#0 */ {61, 0xc},
+    /* D0 */ {125, 0xc},
+    /* D#0 */ {194, 0xc},
+    /* E0 */ {266, 0xc},
+    /* F0 */ {343, 0xc},
+    /* F#0 */ {424, 0xc},
+    /* G0 */ {510, 0xc},
+    /* G#0 */ {601, 0xc},
+    /* A0 */ {698, 0xc},
+    /* A#0 */ {801, 0xc},
+    /* B0 */ {909, 0xc},
+    /* PADDING0 */ {0, 0xc},
+    /* PADDING0 */ {0, 0xc},
+    /* PADDING0 */ {0, 0xc},
+    /* PADDING0 */ {0, 0xc},
+    /* C1 */ {0, 0xd},
+    /* C#1 */ {61, 0xd},
+    /* D1 */ {125, 0xd},
+    /* D#1 */ {194, 0xd},
+    /* E1 */ {266, 0xd},
+    /* F1 */ {343, 0xd},
+    /* F#1 */ {424, 0xd},
+    /* G1 */ {510, 0xd},
+    /* G#1 */ {601, 0xd},
+    /* A1 */ {698, 0xd},
+    /* A#1 */ {801, 0xd},
+    /* B1 */ {909, 0xd},
+    /* PADDING1 */ {0, 0xd},
+    /* PADDING1 */ {0, 0xd},
+    /* PADDING1 */ {0, 0xd},
+    /* PADDING1 */ {0, 0xd},
+    /* C2 */ {0, 0xe},
+    /* C#2 */ {61, 0xe},
+    /* D2 */ {125, 0xe},
+    /* D#2 */ {194, 0xe},
+    /* E2 */ {266, 0xe},
+    /* F2 */ {343, 0xe},
+    /* F#2 */ {424, 0xe},
+    /* G2 */ {510, 0xe},
+    /* G#2 */ {601, 0xe},
+    /* A2 */ {698, 0xe},
+    /* A#2 */ {801, 0xe},
+    /* B2 */ {909, 0xe},
+    /* PADDING2 */ {0, 0xe},
+    /* PADDING2 */ {0, 0xe},
+    /* PADDING2 */ {0, 0xe},
+    /* PADDING2 */ {0, 0xe},
+    /* C3 */ {0, 0xf},
+    /* C#3 */ {61, 0xf},
+    /* D3 */ {125, 0xf},
+    /* D#3 */ {194, 0xf},
+    /* E3 */ {266, 0xf},
+    /* F3 */ {343, 0xf},
+    /* F#3 */ {424, 0xf},
+    /* G3 */ {510, 0xf},
+    /* G#3 */ {601, 0xf},
+    /* A3 */ {698, 0xf},
+    /* A#3 */ {801, 0xf},
+    /* B3 */ {909, 0xf},
+    /* PADDING3 */ {0, 0xf},
+    /* PADDING3 */ {0, 0xf},
+    /* PADDING3 */ {0, 0xf},
+    /* PADDING3 */ {0, 0xf},
+    /* C4 */ {0, 0x0},
+    /* C#4 */ {61, 0x0},
+    /* D4 */ {125, 0x0},
+    /* D#4 */ {194, 0x0},
+    /* E4 */ {266, 0x0},
+    /* F4 */ {343, 0x0},
+    /* F#4 */ {424, 0x0},
+    /* G4 */ {510, 0x0},
+    /* G#4 */ {601, 0x0},
+    /* A4 */ {698, 0x0},
+    /* A#4 */ {801, 0x0},
+    /* B4 */ {909, 0x0},
+    /* PADDING4 */ {0, 0x0},
+    /* PADDING4 */ {0, 0x0},
+    /* PADDING4 */ {0, 0x0},
+    /* PADDING4 */ {0, 0x0},
+    /* C5 */ {0, 0x1},
+    /* C#5 */ {61, 0x1},
+    /* D5 */ {125, 0x1},
+    /* D#5 */ {194, 0x1},
+    /* E5 */ {266, 0x1},
+    /* F5 */ {343, 0x1},
+    /* F#5 */ {424, 0x1},
+    /* G5 */ {510, 0x1},
+    /* G#5 */ {601, 0x1},
+    /* A5 */ {698, 0x1},
+    /* A#5 */ {801, 0x1},
+    /* B5 */ {909, 0x1},
+    /* PADDING5 */ {0, 0x1},
+    /* PADDING5 */ {0, 0x1},
+    /* PADDING5 */ {0, 0x1},
+    /* PADDING5 */ {0, 0x1},
+    /* C6 */ {0, 0x2},
+    /* C#6 */ {61, 0x2},
+    /* D6 */ {125, 0x2},
+    /* D#6 */ {194, 0x2},
+    /* E6 */ {266, 0x2},
+    /* F6 */ {343, 0x2},
+    /* F#6 */ {424, 0x2},
+    /* G6 */ {510, 0x2},
+    /* G#6 */ {601, 0x2},
+    /* A6 */ {698, 0x2},
+    /* A#6 */ {801, 0x2},
+    /* B6 */ {909, 0x2},
+    /* PADDING6 */ {0, 0x2},
+    /* PADDING6 */ {0, 0x2},
+    /* PADDING6 */ {0, 0x2},
+    /* PADDING6 */ {0, 0x2},
+    /* C7 */ {0, 0x3},
+    /* C#7 */ {61, 0x3},
+    /* D7 */ {125, 0x3},
+    /* D#7 */ {194, 0x3},
+    /* E7 */ {266, 0x3},
+    /* F7 */ {343, 0x3},
+    /* F#7 */ {424, 0x3},
+    /* G7 */ {510, 0x3},
+    /* G#7 */ {601, 0x3},
+    /* A7 */ {698, 0x3},
+    /* A#7 */ {801, 0x3},
+    /* B7 */ {909, 0x3},
+    /* PADDING7 */ {0, 0x3},
+    /* PADDING7 */ {0, 0x3},
+    /* PADDING7 */ {0, 0x3},
+    /* PADDING7 */ {0, 0x3}};
+
 static uint8_t ym2151_regs[256];
 
 unsigned char ym2151_pcm[337] = {
@@ -82,7 +218,7 @@ void ym2151_init()
 void ym2151_w(uint8_t aa, uint8_t dd)
 {
     uint8_t op_slot = ((aa >> 3) & 3) + ((aa & 7) * 4);
-        volatile scsp_slot_regs_t *slot = get_scsp_slot(op_slot);
+    volatile scsp_slot_regs_t *slot = get_scsp_slot(op_slot);
     switch (aa & 0xe0)
     {
     case 0x00:
@@ -137,6 +273,9 @@ void ym2151_w(uint8_t aa, uint8_t dd)
             break;
         case 0x08: /* Key Code */
             uint8_t keycode = dd & 0x7f;
+
+            slot->fns = scsp_kc_map[keycode].fnc;
+            slot->oct = scsp_kc_map[keycode].oct;
             break;
         case 0x10: /* Key Fraction */
                    // 100 = ((2puissance 6)-1) * 1.6)
@@ -174,7 +313,6 @@ void ym2151_w(uint8_t aa, uint8_t dd)
     case 0xc0: /* DT2, D2R */
         uint8_t dt2 = dd >> 7;
         uint8_t d2r = dd & 0x1f;
-
 
         slot->d2r = d2r;
         // slot->d1r = d1r;
