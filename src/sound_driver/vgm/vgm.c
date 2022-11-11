@@ -264,6 +264,23 @@ int vgm_init(vgm_player_t *vgm_player)
    return 0;
 }
 
+/**
+ * from https://antime.kapsi.fi/sega/files/ST-077-R2-052594.pdf
+ * see Table 4.20
+ */
+#define SCSP_FREQ_R ((int)(((440.0f - 261.63f) / 698.2f) * 65536.f))
+
+// calcule frequence ym
+// example:
+// * ratio (~2.359296)
+//       ratio = (Math.pow(2, 20))/(8*Math.pow(10,6))/Math.pow(2, 3)*144
+// *  freq vers Fnumber
+//       Fnumber = 440 * r
+//       * 440 => notes A4
+// * Fnumber vers freq
+//       freq = FNumber/ratio
+#define YM_FREQ_R ((int)(65536.f/2.359296f)
+
 uint8_t ym2203_regs[256];
 
 void ym2203_init()
@@ -334,7 +351,29 @@ void ym2203_init()
 
 /* http://www.vgmpf.com/Wiki/images/f/f5/YM2203_-_Manual.pdf **/
 /* https://github.com/mkoloberdin/unrealspeccy/blob/master/emul_2203.cpp */
+// http://nemesis.hacking-cult.org/MegaDrive/Documentation/YM2608J%20Translated.PDF page 25
+// https://pages.mtu.edu/~suits/notefreqs.html
+// math:
+// cent = 1200*log2((1024+ fns )/1024)
+//
 // 1 channel => 4slots
+//
+// freq hz  - note 4 - fnumber
+// 277.2    |  c4#   |  654
+// 293.7    |  D4    |  692.8
+// 311.1    |  D4#   |  734.0
+// 329.6    |  E     |  777.7
+// 349.2    |  F     |  823.9
+// 370.0    |  F#    |  872.9
+// 392.0    |  G     |  924.8
+// 415.3    |  G#    |  979.8
+// 440.0    |  A     |  1038.1
+// 466.2    |  A#    |  1099.8
+// 493.9    |  B     |  1165.2
+// 523.3    |  C     |  1234.5
+//
+//
+
 #define OPN_SLOT(N) ((N >> 2) & 3)
 void opn_write_mode(uint8_t r, uint8_t v)
 {
@@ -425,6 +464,13 @@ void opn_write_mode(uint8_t r, uint8_t v)
 
       for (int i = 0; i < 4; i++)
       {
+
+         // scsp
+         // fns = Math.pow(2,10)*(Math.pow(2,cent/1200)-1)
+         uint32_t freq_hz = (opn_r_fnum * YM_FREQ_R) >> 16;
+         uint32_t freq_scsp = ((440 - freq_hz) * SCSP_FREQ_R) >> 16;
+
+#if 0
          uint16_t opn_r_multi = (ym2203_regs[0x30 + chan_r + i] & 0xf);
 
          uint16_t opn_f = opn_r_fnum;
@@ -451,6 +497,11 @@ void opn_write_mode(uint8_t r, uint8_t v)
             slots[i].fns = f;
             slots[i].oct = octave;
          }
+#else
+
+         slots[i].oct = opn_r_block;
+         slots[i].fns = opn_r_fnum;
+#endif
       }
       break;
 
