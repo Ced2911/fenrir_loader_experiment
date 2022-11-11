@@ -10,6 +10,37 @@
 #include "tr.h"
 #include "empty_drv.h"
 
+unsigned char c4_8bpp[337] = {
+    0x00, 0x04, 0x09, 0x0E, 0x12, 0x17, 0x1C, 0x20, 0x25, 0x29, 0x2E, 0x32,
+    0x36, 0x3B, 0x3F, 0x43, 0x47, 0x4B, 0x4E, 0x52, 0x56, 0x59, 0x5C, 0x60,
+    0x63, 0x65, 0x68, 0x6B, 0x6D, 0x70, 0x72, 0x74, 0x76, 0x77, 0x79, 0x7A,
+    0x7B, 0x7C, 0x7D, 0x7E, 0x7E, 0x7E, 0x7E, 0x7E, 0x7E, 0x7E, 0x7D, 0x7C,
+    0x7B, 0x7A, 0x79, 0x78, 0x76, 0x74, 0x72, 0x70, 0x6E, 0x6C, 0x69, 0x66,
+    0x63, 0x60, 0x5D, 0x5A, 0x57, 0x53, 0x4F, 0x4C, 0x48, 0x44, 0x40, 0x3C,
+    0x38, 0x33, 0x2F, 0x2B, 0x26, 0x22, 0x1D, 0x18, 0x14, 0x0F, 0x0A, 0x06,
+    0x01, 0xFD, 0xF8, 0xF4, 0xEF, 0xEA, 0xE6, 0xE1, 0xDC, 0xD8, 0xD3, 0xCF,
+    0xCB, 0xC7, 0xC2, 0xBE, 0xBA, 0xB6, 0xB3, 0xAF, 0xAB, 0xA8, 0xA5, 0xA1,
+    0x9E, 0x9B, 0x99, 0x96, 0x93, 0x91, 0x8F, 0x8D, 0x8B, 0x89, 0x88, 0x86,
+    0x85, 0x84, 0x83, 0x83, 0x82, 0x82, 0x82, 0x82, 0x82, 0x82, 0x83, 0x83,
+    0x84, 0x85, 0x87, 0x88, 0x8A, 0x8B, 0x8D, 0x8F, 0x91, 0x94, 0x96, 0x99,
+    0x9C, 0x9F, 0xA2, 0xA5, 0xA8, 0xAC, 0xAF, 0xB3, 0xB7, 0xBB, 0xBF, 0xC3,
+    0xC7, 0xCB, 0xD0, 0xD4, 0xD9, 0xDD, 0xE2, 0xE6, 0xEB, 0xF0, 0xF4, 0xF9,
+    0xFE, 0x02, 0x06, 0x0B, 0x10, 0x14, 0x19, 0x1E, 0x22, 0x27, 0x2B, 0x30,
+    0x34, 0x38, 0x3D, 0x41, 0x45, 0x49, 0x4C, 0x50, 0x54, 0x57, 0x5B, 0x5E,
+    0x61, 0x64, 0x67, 0x69, 0x6C, 0x6E, 0x71, 0x73, 0x75, 0x76, 0x78, 0x79,
+    0x7B, 0x7C, 0x7D, 0x7D, 0x7E, 0x7E, 0x7E, 0x7E, 0x7E, 0x7E, 0x7E, 0x7D,
+    0x7C, 0x7B, 0x7A, 0x78, 0x77, 0x75, 0x73, 0x71, 0x6F, 0x6D, 0x6A, 0x68,
+    0x65, 0x62, 0x5F, 0x5C, 0x59, 0x55, 0x52, 0x4E, 0x4A, 0x46, 0x42, 0x3E,
+    0x3A, 0x36, 0x31, 0x2D, 0x29, 0x24, 0x20, 0x1B, 0x16, 0x12, 0x0D, 0x08,
+    0x03, 0x00, 0xFB, 0xF6, 0xF2, 0xED, 0xE8, 0xE4, 0xDF, 0xDA, 0xD6, 0xD2,
+    0xCD, 0xC9, 0xC5, 0xC1, 0xBC, 0xB9, 0xB5, 0xB1, 0xAD, 0xAA, 0xA6, 0xA3,
+    0xA0, 0x9D, 0x9A, 0x97, 0x95, 0x92, 0x90, 0x8E, 0x8C, 0x8A, 0x89, 0x87,
+    0x86, 0x85, 0x84, 0x83, 0x82, 0x82, 0x82, 0x82, 0x82, 0x82, 0x82, 0x83,
+    0x84, 0x85, 0x86, 0x87, 0x89, 0x8A, 0x8C, 0x8E, 0x90, 0x92, 0x95, 0x97,
+    0x9A, 0x9D, 0xA0, 0xA3, 0xA7, 0xAA, 0xAD, 0xB1, 0xB5, 0xB9, 0xBD, 0xC1,
+    0xC5, 0xC9, 0xCD, 0xD2, 0xD6, 0xDB, 0xDF, 0xE4, 0xE8, 0xED, 0xF2, 0xF6,
+    0xFB};
+
 void snd_init()
 {
    *(volatile uint8_t *)(0x25B00400) = 0x02;
@@ -78,6 +109,7 @@ static uint16_t algo_table[] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 void ym2203_w(uint8_t aa, uint8_t dd);
+#include "./ym2151.h"
 
 #define SAMPLING_RATE 44100
 
@@ -127,6 +159,12 @@ uint16_t vgm_parse(vgm_player_t *vgm_player)
    case 0x53:
       reg = get_vgm_ui8(vgm_player);
       dat = get_vgm_ui8(vgm_player);
+      break;
+      // 0x54	aa dd YM2151, write value dd to register aa
+   case 0x54:
+      reg = get_vgm_ui8(vgm_player);
+      dat = get_vgm_ui8(vgm_player);
+      ym2151_w(reg, dat);
       break;
       // 0x55	aa dd	YM2203, write value dd to register aa
    case 0x55:
@@ -241,7 +279,8 @@ static void vgm_parse_header(vgm_player_t *vgm_player)
    if (vgm_player->clock_ym2203 == 0)
       vgm_player->clock_ym2203 = 3000000; // 4000000;
 }
-
+#include "./coincoin.h"
+#include "./atomic-robot-kid-bgma.h"
 int vgm_init(vgm_player_t *vgm_player)
 {
    dbgio_init();
@@ -250,7 +289,7 @@ int vgm_init(vgm_player_t *vgm_player)
 
    smpc_smc_sndon_call();
 
-   vgm_player->vgm = rawData;
+   vgm_player->vgm = atomic_kid;
    vgm_parse_header(vgm_player);
 
    vgm_player->sampled = 0;
@@ -264,11 +303,14 @@ int vgm_init(vgm_player_t *vgm_player)
    return 0;
 }
 
+/*****************************************************
+ * ym2203
+ ****************************************************/
 /**
  * from https://antime.kapsi.fi/sega/files/ST-077-R2-052594.pdf
  * see Table 4.20
  */
-#define SCSP_FREQ_R ((int)(((440.0f - 261.63f) / 698.2f) * 65536.f))
+#define SCSP_FREQ_R ((int)(65536.f / ((440.0f - 261.63f) / 698.2f)))
 
 // calcule frequence ym
 // example:
@@ -279,7 +321,7 @@ int vgm_init(vgm_player_t *vgm_player)
 //       * 440 => notes A4
 // * Fnumber vers freq
 //       freq = FNumber/ratio
-#define YM_FREQ_R ((int)(65536.f/2.359296f)
+#define YM_FREQ_R ((int)(65536.f / 2.359296f))
 
 uint8_t ym2203_regs[256];
 
@@ -288,10 +330,17 @@ void ym2203_init()
    snd_init();
    // copy sinetable
    uint32_t addr = (0x2000);
-   // 5a02000
+// 5a02000
+#if 0
    memcpy((void *)(SCSP_RAM + addr), SINEPATT_BIN, SINEPATT_BIN_len);
    memcpy((void *)(SCSP_RAM + addr + SINEPATT_BIN_len), SINEPATT_BIN, SINEPATT_BIN_len);
    memcpy((void *)(SCSP_RAM + addr + SINEPATT_BIN_len + SINEPATT_BIN_len), SINEPATT_BIN, SINEPATT_BIN_len);
+#else
+
+   memcpy((void *)(SCSP_RAM + addr), c4_8bpp, sizeof(c4_8bpp));
+   memcpy((void *)(SCSP_RAM + addr + sizeof(c4_8bpp)), c4_8bpp, sizeof(c4_8bpp));
+   memcpy((void *)(SCSP_RAM + addr + sizeof(c4_8bpp) + sizeof(c4_8bpp)), c4_8bpp, sizeof(c4_8bpp));
+#endif
 
    // memcpy((void *)(SCSP_RAM + addr), note_c4, sizeof(note_c4));
    memset(ym2203_regs, 0, 256);
@@ -328,7 +377,7 @@ void ym2203_init()
       slots[i].raw[0] = (addr << 16) | 0x130;
       slots[i].raw[1] = addr & 0xffff;
       slots[i].raw[2] = 0;
-      slots[i].raw[3] = 0x80;
+      slots[i].raw[3] = sizeof(rawData);
 
       slots[i].raw[4] = 0x1F;
       slots[i].raw[5] = 0x1F;
@@ -459,17 +508,70 @@ void opn_write_mode(uint8_t r, uint8_t v)
       break;
    case 0xa0 ... 0xaf:
       // return;
+      /*
+      uint32_t fmclk=3579545;
+      uint32_t x=fmclk >> 8;//13982
+      uint32_t nfreqlow=203210937/x << 1;//29066
+      uint32_t nfreqhigh=nfreqlow << 1-1;//58131
+      uint32_t nfraction=x*169 >> 12;;//576
+      */
+
       uint16_t opn_r_fnum = ((ym2203_regs[0xA4 + chan_r] & 7) << 8) | (ym2203_regs[0xA0 + chan_r]);
       uint16_t opn_r_block = ((ym2203_regs[0xA4 + chan_r] >> 3));
+
+      // uint16_t keycode =
+      if (opn_r_fnum == 0)
+         opn_r_fnum = 1;
 
       for (int i = 0; i < 4; i++)
       {
 
          // scsp
          // fns = Math.pow(2,10)*(Math.pow(2,cent/1200)-1)
-         uint32_t freq_hz = (opn_r_fnum * YM_FREQ_R) >> 16;
-         uint32_t freq_scsp = ((440 - freq_hz) * SCSP_FREQ_R) >> 16;
+         // uint32_t freq_hz = (opn_r_fnum * YM_FREQ_R) >> 16;
+         // uint32_t freq_scsp = ((440 - freq_hz) * SCSP_FREQ_R) >> 16;
 
+         uint32_t freq = YM_FREQ_R * opn_r_fnum;
+         uint32_t octave = opn_r_block;
+         uint32_t delta = freq - (262 << 16);
+         uint32_t scsp_frq = (delta >> 16) * 256529;
+
+         slots[i].oct = 0;
+         slots[i].fns = scsp_frq >> 16;
+
+         dbgio_printf("freq:  %d fnum  %d\n", freq >> 16, opn_r_fnum);
+         dbgio_printf("fns:  %d oct  %x\n", scsp_frq >> 16, octave);
+#if 0
+         uint16_t xx = (ym2203_regs[0x30 + chan_r + i]);
+         uint16_t x = (xx & 15) << 1;
+         uint16_t z = (opn_r_fnum * x) << opn_r_block;
+         uint16_t zz = z;
+
+         if (z < 0x100)
+         {
+            // badfreq
+            continue;
+         }
+
+         uint16_t octave = 0;
+         while (z > 58131)
+         {
+            octave += 2048;
+            z >>= 1;
+         }
+         while (z < 29066)
+         {
+            octave -= 2048;
+            z <<= 1;
+         }
+
+         z = (z - 29066 * 576) >> 14;
+         // z =
+         slots[i].oct = octave >> 11;
+         slots[i].fns = z;
+
+         dbgio_printf("0ct:  %x fns  %x zzz: %x\n", octave >> 11, z, zz);
+#endif
 #if 0
          uint16_t opn_r_multi = (ym2203_regs[0x30 + chan_r + i] & 0xf);
 
@@ -499,8 +601,8 @@ void opn_write_mode(uint8_t r, uint8_t v)
          }
 #else
 
-         slots[i].oct = opn_r_block;
-         slots[i].fns = opn_r_fnum;
+         // slots[i].oct = opn_r_block;
+         // slots[i].fns = opn_r_fnum;
 #endif
       }
       break;

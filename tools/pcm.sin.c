@@ -32,13 +32,41 @@ void main()
     fwrite(samples, LEN, 1, fd);
     fclose(fd);
 }
-#else
+#elif 0
 #define DURATION_SEC 2
 #define SAMPLE_RATE 44100
 #define NOTE_FREQ ((2 * 44100) / 256)
 
 #define INCR ((NOTE_FREQ * 2 * M_PI) / SAMPLE_RATE)
 #define LEN (SAMPLE_RATE / NOTE_FREQ * sizeof(int8_t))
+//#define LEN DURATION_SEC * SAMPLE_RATE * 2
+
+void main()
+{
+    FILE *fd = fopen("sample.pcm", "wb");
+    uint8_t *samples = (uint8_t *)malloc(LEN);
+    double inc = INCR;
+    double v = 0;
+    printf("inc:%f\n", INCR);
+    printf("len:%d\n", LEN);
+    for (int i = 0; i < LEN; i++)
+    {
+        samples[i] = (sin(v) * 127);
+        printf("%d: %04x\n", i, (int)(sin(v) * 127));
+        v += inc;
+    }
+
+    fwrite(samples, LEN, 1, fd);
+    fclose(fd);
+}
+#else
+
+#define DURATION_SEC 2
+#define SAMPLE_RATE 44100
+#define NOTE_FREQ (261.63)
+
+#define INCR ((NOTE_FREQ * 2 * M_PI) / SAMPLE_RATE)
+#define LEN (2 * SAMPLE_RATE / NOTE_FREQ * sizeof(int8_t))
 //#define LEN DURATION_SEC * SAMPLE_RATE * 2
 
 void main()

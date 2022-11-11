@@ -21,8 +21,8 @@ int16_t hadoken_snd;
 vgm_player_t vgm_player;
 void _vgm_init()
 {
-
-    ym2203_init();
+    ym2151_init();
+    // ym2203_init();
     vgm_init(&vgm_player);
     vgm_player.sample_count = 0;
 }
@@ -34,7 +34,7 @@ void _vgm_test()
     vgm_player.cycles_played += SAMPLE_PER_VBK;
 
     while (vgm_player.cycles_played > vgm_player.cycles)
-        
+
     {
         vgm_player.sample_count += vgm_parse(&vgm_player);
     }
