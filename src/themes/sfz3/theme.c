@@ -5,6 +5,8 @@
 #include "./vdp2.sfz3.h"
 #include "theme.config.h"
 
+#include "sound_driver/pcm.h"
+
 static vdp2_scrn_cell_format_t format_nbg0 = {
     .scroll_screen = VDP2_SCRN_NBG0,
     .ccc = VDP2_SCRN_CCC_PALETTE_16,
@@ -132,4 +134,8 @@ void theme_init_vdp()
 ui_config_t *theme_get_ui_config()
 {
     return &ui_config;
+}
+
+void theme_init_bgm()
+{
 }
