@@ -290,8 +290,8 @@ int vgm_init(vgm_player_t *vgm_player)
 
    smpc_smc_sndon_call();
 
-    vgm_player->vgm = debug_2151_vgm;
-   //vgm_player->vgm = atomic_kid;
+   // vgm_player->vgm = debug_2151_vgm;
+   vgm_player->vgm = atomic_kid;
    vgm_parse_header(vgm_player);
 
    vgm_player->sampled = 0;
