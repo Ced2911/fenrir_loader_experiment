@@ -14,6 +14,7 @@ typedef union scsp_common_reg
 
 typedef union scsp_slot_regs
 {
+    uint8_t b[32];
     uint16_t raw[16];
     uint32_t raw32[8];
     struct
@@ -40,9 +41,9 @@ typedef union scsp_slot_regs
         uint32_t __ : 1;
         uint32_t ___ : 1;
 
-        uint32_t kyonex : 1;
-        uint32_t kyonb : 1;
-        uint32_t sbctl : 2;
+        uint32_t kyonex : 1; // 0x10
+        uint32_t kyonb : 1;  // 0x08
+        uint32_t sbctl : 2;  // 0x06
         uint32_t ssctl : 2;
         uint32_t lpctl : 2;
         uint32_t pcm8b : 1;

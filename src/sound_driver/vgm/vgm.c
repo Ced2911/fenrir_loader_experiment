@@ -244,7 +244,7 @@ uint16_t vgm_parse(vgm_player_t *vgm_player)
       vgm_player->pcmoffset = 0;
       break;
    default:
-      dbgio_printf("unknown cmd at 0x%x: 0x%x\n", vgm_player->vgmpos, command);
+      // dbgio_printf("unknown cmd at 0x%x: 0x%x\n", vgm_player->vgmpos, command);
       vgm_player->vgmpos++;
       break;
    }
@@ -281,6 +281,7 @@ static void vgm_parse_header(vgm_player_t *vgm_player)
 }
 #include "./coincoin.h"
 #include "./atomic-robot-kid-bgma.h"
+#include "./debug_vgm.h"
 int vgm_init(vgm_player_t *vgm_player)
 {
    dbgio_init();
@@ -289,7 +290,8 @@ int vgm_init(vgm_player_t *vgm_player)
 
    smpc_smc_sndon_call();
 
-   vgm_player->vgm = atomic_kid;
+    vgm_player->vgm = debug_2151_vgm;
+   //vgm_player->vgm = atomic_kid;
    vgm_parse_header(vgm_player);
 
    vgm_player->sampled = 0;
