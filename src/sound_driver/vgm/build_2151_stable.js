@@ -40,6 +40,8 @@ function note_table() {
     return table.join(',\n')
 }
 
-console.log('const scsp_kc_t scsp_kc_map[] = {')
-console.log(note_table())
-console.log('};')
+const str = 'const scsp_kc_t scsp_kc_map[] = {'+note_table()+'};'
+
+
+const fs = require('fs')
+fs.writeFileSync("sound_table.h", str, ()=> {})
