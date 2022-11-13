@@ -68,8 +68,13 @@ uint16_t algotable[] = {
     0x800, 0, 0x979E, 0,
     0x800, 0, 0, 0};
 
-uint8_t pantable[] = {
+/*
+uint16_t pantable[] = {
     0x60, 0x18, 0x08, 0};
+*/
+
+uint16_t pantable[] = {
+    0x70, 0x1e, 0x0e, 0};
 
 void ym2151_init()
 {
@@ -112,14 +117,13 @@ void ym2151_init()
         slots[i].raw[12] = 0;
         slots[i].attack_rate = 31;
         slots[i].release_r = 31;
-        // slots[i].disdl = 7;
+        slots[i].total_l = 7;
+
         // slots[i].dipan = 0;
         // slots[i].lpctl = 0;
 
         // slots[i].lpctl = 1;
         // slots[i].disdl = 7;
-        slots[i].kyonb = 0;
-        slots[i].kyonex = 0;
     }
 }
 
@@ -143,11 +147,13 @@ void ym2151_w(uint8_t aa, uint8_t dd)
         uint8_t chan = (dd & 7) * 4;
         uint8_t slot_n = dd >> 3 & 0xf;
         volatile scsp_slot_regs_t *slots = get_scsp_slot(chan);
-#if 0
-        slots[0].kyonb = (slot_n & 0x40) ? 1 : 0;
-        slots[1].kyonb = (slot_n & 0x10) ? 1 : 0;
-        slots[2].kyonb = (slot_n & 0x10) ? 1 : 0;
-        slots[3].kyonb = (slot_n & 0x08) ? 1 : 0;
+#if 1
+        slots[0].kyonb = (dd & 0x40) >> 6;  // c2
+        slots[1].kyonb = (dd & 0x10) >> 4;  // c1
+        slots[2].kyonb = (dd & 0x20) >> 5;  // m2
+        slots[3].kyonb = (dd & 0x08) >> 3;  // m1
+        slots[3].kyonex = (dd & 0x08) >> 3; // m1
+                                            // dbgio_printf("ko/foff %d %d %02x\n", chan, slot_n, dd);
 #endif
 #if 0
         slots[0].kyonb = (slot_n >> 6) & 1;
@@ -160,13 +166,14 @@ void ym2151_w(uint8_t aa, uint8_t dd)
         slots[1].kyonex = (slot_n >> 4) & 1;
         slots[2].kyonex = (slot_n >> 5) & 1;
         slots[3].kyonex = (slot_n >> 3) & 1;
-#endif
+
         // damagex way
         slots[0].b[0] = (dd & 0x40) >> 3;
         slots[1].b[0] = (dd & 0x10) >> 1;
         slots[2].b[0] = (dd & 0x20) >> 2;
         slots[3].b[0] = (dd & 0x08) | 0x10;
         // slots[3].kyonex = 1;
+#endif
         break;
     }
     case 0x0f: /* noise mode enable, noise period */
@@ -227,16 +234,25 @@ void ym2151_w(uint8_t aa, uint8_t dd)
         chan_slots[2].raw[0x16 >> 1] = *x++ + xx;
         chan_slots[3].raw[0x16 >> 1] = *x++ + xx;
 #else
-
+#if 1
+#if 1
         chan_slots[0].raw[0xe >> 1] = algotable[connect * 4 + 0] + fbtable[fb];
         chan_slots[1].raw[0xe >> 1] = algotable[connect * 4 + 1] + 0;
         chan_slots[2].raw[0xe >> 1] = algotable[connect * 4 + 2] + 0;
         chan_slots[3].raw[0xe >> 1] = algotable[connect * 4 + 3] + 0;
-
+#else
+        chan_slots[0].chan_slots[1].chan_slots[2].chan_slots[3].chan_slots[0].modulation_l = fb;
+        chan_slots[1].modulation_l = fb;
+        chan_slots[2].modulation_l = fb;
+        chan_slots[3].modulation_l = fb;
+#endif
+#if 0
         chan_slots[0].raw[0x16 >> 1] = mixtable[connect * 4 + 0] + (pantable[pan] << 8);
         chan_slots[1].raw[0x16 >> 1] = mixtable[connect * 4 + 1] + (pantable[pan] << 8);
         chan_slots[2].raw[0x16 >> 1] = mixtable[connect * 4 + 2] + (pantable[pan] << 8);
         chan_slots[3].raw[0x16 >> 1] = mixtable[connect * 4 + 3] + (pantable[pan] << 8);
+#endif
+#endif
 #endif
 
         break;
@@ -254,18 +270,19 @@ void ym2151_w(uint8_t aa, uint8_t dd)
         chan_slots[2].fns = scsp_kc_map[keycode].fnc;
         chan_slots[3].fns = scsp_kc_map[keycode].fnc;
 
-        chan_slots[0].oct = scsp_kc_map[keycode].oct;
-        chan_slots[1].oct = scsp_kc_map[keycode].oct;
-        chan_slots[2].oct = scsp_kc_map[keycode].oct;
-        chan_slots[3].oct = scsp_kc_map[keycode].oct;
+        chan_slots[0].oct = scsp_kc_map[keycode].oct + 1;
+        chan_slots[1].oct = scsp_kc_map[keycode].oct + 1;
+        chan_slots[2].oct = scsp_kc_map[keycode].oct + 1;
+        chan_slots[3].oct = scsp_kc_map[keycode].oct + 1;
 
-        dbgio_printf("kc: 0x%4x => %s\n", keycode, scsp_kc_map[keycode].dbg);
+        // dbgio_printf("kc: 0x%4x => %s\n", keycode, scsp_kc_map[keycode].dbg);
         break;
     }
+#if 1
     case 0x30 ... 0x37: /* Key Fraction */
                         // 100 = ((2puissance 6)-1) * 1.6)
 
-        dbgio_printf("kf: 0x%4x => %04x\n", dd, dd >> 2);
+        // dbgio_printf("kf: 0x%4x => %04x\n", dd, dd >> 2);
         break;
     case 0x38 ... 0x3f: /* PMS, AMS */
         uint8_t pms = (dd >> 4) & 7;
@@ -286,7 +303,7 @@ void ym2151_w(uint8_t aa, uint8_t dd)
         uint8_t ar = dd & 0x1f;
 
         slot->attack_rate = ar;
-        slot->kr_scale = ks;
+        slot->kr_scale = ks << 2;
         break;
     case 0xa0: /* LFO AM enable, D1R */
         uint8_t am = dd >> 7;
@@ -304,10 +321,10 @@ void ym2151_w(uint8_t aa, uint8_t dd)
         uint8_t d1l = dd >> 4;
         uint8_t rr = dd & 0x0f;
 
-        slot->release_r = rr;
-        slot->decay_l = d1l;
+        slot->release_r = rr << 1;
+        slot->decay_l = d1l << 1;
         break;
-
+#endif
     default:
         break;
     }
