@@ -66,7 +66,7 @@ static void vdp2_ngb0_init()
     vdp2_scrn_normal_map_t nbg0_map;
     set_plane_addr(&nbg0_map,
                    NBG0_PATTERN_ADDR,
-                   ui_config.screens.gamelist.background.pattern_sz);
+                   ui_config.background.pattern_sz);
 
     vdp2_scrn_cell_format_set(&format_nbg0, &nbg0_map);
     vdp2_scrn_priority_set(VDP2_SCRN_NBG0, 2);
@@ -91,7 +91,7 @@ static void vdp2_ngb2_init()
     vdp2_scrn_normal_map_t nbg2_map;
     set_plane_addr(&nbg2_map,
                    NBG2_PATTERN_ADDR,
-                   ui_config.screens.gamelist.fg.pattern_sz);
+                   ui_config.foreground.pattern_sz);
 
     vdp2_scrn_cell_format_set(&format_nbg2, &nbg2_map);
     vdp2_scrn_priority_set(VDP2_SCRN_NBG2, 4);

@@ -9,3 +9,15 @@ typedef struct
     screen_destroy_t destroy;
     screen_update_t update;
 } screen_t;
+
+typedef enum screens
+{
+    screen_gamelist,
+    screen_error_no_sd,
+    screen_error_bad_filesystem,
+    screen_max
+} screens_type_t;
+
+void screen_init();
+void screen_select(screens_type_t scr);
+screen_t *get_screen();

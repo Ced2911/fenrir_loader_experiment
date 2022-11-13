@@ -64,12 +64,20 @@ typedef struct
                 rgb1555_t noise_palettes[NOISE_PALETTE_SIZE];
                 uint8_t enabled;
             } cover;
-            ui_config_background_t fg;
-            ui_config_background_t background;
             ui_config_browser_t browser;
 
         } gamelist;
+        struct
+        {
+            int nothing;
+        } error_no_sd;
+        struct
+        {
+            int nothing;
+        } error_bad_filesystem;
     } screens;
 
+    ui_config_background_t foreground;
+    ui_config_background_t background;
     ui_config_font_t main_font;
 } ui_config_t;
