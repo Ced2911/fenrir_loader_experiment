@@ -210,8 +210,8 @@ void ym2151_w(uint8_t aa, uint8_t dd)
         uint8_t chan = (aa & 7);
         volatile scsp_slot_regs_t *chan_slots = get_scsp_slot(chan * 4);
 
-#if 0 
-//damagex way
+#if 1
+        // damagex way
 
         // uint32_t w = ym2151_regs[0x20 + chan];
         //  uint32_t x = w & 7 << 3 + mixtable;
@@ -234,7 +234,7 @@ void ym2151_w(uint8_t aa, uint8_t dd)
         chan_slots[2].raw[0x16 >> 1] = *x++ + xx;
         chan_slots[3].raw[0x16 >> 1] = *x++ + xx;
 #else
-#if 1
+#if 0
 #if 1
         chan_slots[0].raw[0xe >> 1] = algotable[connect * 4 + 0] + fbtable[fb];
         chan_slots[1].raw[0xe >> 1] = algotable[connect * 4 + 1] + 0;
@@ -265,15 +265,23 @@ void ym2151_w(uint8_t aa, uint8_t dd)
 
         volatile scsp_slot_regs_t *chan_slots = get_scsp_slot(chan);
 
-        chan_slots[0].fns = scsp_kc_map[keycode].fnc;
-        chan_slots[1].fns = scsp_kc_map[keycode].fnc;
-        chan_slots[2].fns = scsp_kc_map[keycode].fnc;
-        chan_slots[3].fns = scsp_kc_map[keycode].fnc;
+        uint16_t fns = scsp_kc_map[keycode].fnc;
+        uint8_t oct = scsp_kc_map[keycode].oct;
 
-        chan_slots[0].oct = scsp_kc_map[keycode].oct + 1;
-        chan_slots[1].oct = scsp_kc_map[keycode].oct + 1;
-        chan_slots[2].oct = scsp_kc_map[keycode].oct + 1;
-        chan_slots[3].oct = scsp_kc_map[keycode].oct + 1;
+        uint8_t mul0 = ym2151_regs[0x40 + 0 + chan * 4];
+        uint8_t mul1 = ym2151_regs[0x40 + 1 + chan * 4];
+        uint8_t mul2 = ym2151_regs[0x40 + 2 + chan * 4];
+        uint8_t mul3 = ym2151_regs[0x40 + 3 + chan * 4];
+
+        chan_slots[0].fns = fns;
+        chan_slots[1].fns = fns;
+        chan_slots[2].fns = fns;
+        chan_slots[3].fns = fns;
+
+        chan_slots[0].oct = oct; // + mul0;
+        chan_slots[1].oct = oct; // + mul1;
+        chan_slots[2].oct = oct; // + mul2;
+        chan_slots[3].oct = oct; // + mul3;
 
         // dbgio_printf("kc: 0x%4x => %s\n", keycode, scsp_kc_map[keycode].dbg);
         break;
@@ -289,35 +297,35 @@ void ym2151_w(uint8_t aa, uint8_t dd)
         uint8_t ams = (dd & 3);
         break;
 
-    case 0x40: /* DT1, MUL */
+    case 0x40 ... 0x5F: /* DT1, MUL */
         uint8_t dt1 = (dd >> 4) & 0x07;
         uint8_t mul = dd & 0x0f;
         break;
-    case 0x60: /* TL */
+    case 0x60 ... 0x7F: /* TL */
         uint8_t tl = dd & 0x7f;
 
         slot->total_l = tl << 1;
         break;
-    case 0x80: /* KS, AR */
+    case 0x80 ... 0x9F: /* KS, AR */
         uint8_t ks = dd >> 6;
         uint8_t ar = dd & 0x1f;
 
         slot->attack_rate = ar;
         slot->kr_scale = ks << 2;
         break;
-    case 0xa0: /* LFO AM enable, D1R */
+    case 0xa0 ... 0xbF: /* LFO AM enable, D1R */
         uint8_t am = dd >> 7;
         uint8_t d1r = dd & 0x1f;
 
         slot->d1r = d1r;
         break;
-    case 0xc0: /* DT2, D2R */
+    case 0xc0 ... 0xdF: /* DT2, D2R */
         uint8_t dt2 = dd >> 7;
         uint8_t d2r = dd & 0x1f;
 
         slot->d2r = d2r;
         break;
-    case 0xe0: /* D1L, RR */
+    case 0xe0 ... 0xff: /* D1L, RR */
         uint8_t d1l = dd >> 4;
         uint8_t rr = dd & 0x0f;
 

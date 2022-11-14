@@ -91,7 +91,7 @@ int main(void)
     int i = 0;
     while (1)
     {
-        screen->update();
+        // screen->update();
 #if 0
         if (i > 200)
         {
@@ -105,7 +105,7 @@ int main(void)
         vdp1_sync();
         vdp2_sync();
         vdp1_sync_wait();
-        //  vdp2_sync_wait();
+        vdp2_sync_wait();
 
         // if (i > 5)
         {
