@@ -78,6 +78,7 @@ async function main() {
 
     // pattern for each file/screen
     const pattern: Record<string, number[]> = {}
+    const pattern_offset_per_key: Record<string, number> = {}
 
     // palette for each file/screen
     const palettes: Record<string, RGBA[]> = {}
@@ -132,23 +133,26 @@ async function main() {
 
     let bpp = Vdp2ColorCnt.color8bpp
 
-    await Promise.all(config.images.map(async ({ key, file }) => {
+    await Promise.all(config.images.map(async ({ screen, file }) => {
+        palettes[screen] = palettes[screen] || []
+        pattern[screen] = pattern[screen] || []
 
         // 1st step build palettes
         await Jimp.read(file)
             .then(image => {
-                palettes[key] = buildPalette(image)
+                palettes[screen].push(...buildPalette(image))
             })
+    }))
 
-        const all4bpp = (Object.values(palettes)).every(c => c.length < 16)
-        bpp = all4bpp ? Vdp2ColorCnt.color4bpp : Vdp2ColorCnt.color8bpp
+    const all4bpp = (Object.values(palettes)).every(c => c.length < 16)
+    bpp = all4bpp ? Vdp2ColorCnt.color4bpp : Vdp2ColorCnt.color8bpp
 
-
+    await Promise.all(config.images.map(async ({ screen, file }) => {
         // 2nd unik tiles
         await Jimp.read(file)
             .then(image => {
                 let unikcell = 0;
-                tileImage(image, cellSize, palettes[key], (cellData) => {
+                tileImage(image, cellSize, palettes[screen], (cellData) => {
                     const cell: Cell = {
                         data: cellData,
                         id: Object.values(cells).length,
@@ -156,26 +160,39 @@ async function main() {
                     }
                     unikcell += addCell(cell)
                 })
-                cellsPerScreen[key] = unikcell;
+                cellsPerScreen[screen] = unikcell;
             })
+    }))
 
+    await Promise.all(config.images.map(async ({ screen, key, file }) => {
         // 3rd pattern
         await Jimp.read(file)
             .then(image => {
                 const pages: Record<number, number[]> = { 0: [], 1: [], 2: [], 3: [] }
 
-                tileImage(image, cellSize, palettes[key], (cellData, tilen, x, y) => {
+                tileImage(image, cellSize, palettes[screen], (cellData, tilen, x, y) => {
                     const hash = createHash('sha256').update(Buffer.from(cellData)).digest('hex');
 
                     const cell = findCell(hash)
                     if (!cell)
                         throw (`cell for hash: ${hash} not`)
 
-                    const p = palettes[key].length < 16 ? cell4pbbPattern(cell) : cellPattern(cell)
+                    const p = palettes[screen].length < 16 ? cell4pbbPattern(cell) : cellPattern(cell)
                     pages[patternGetPage(x, y)].push(p)
                 })
 
-                pattern[key] = Object.values(pages).flatMap(x => x)
+                // need padding ?
+                let len = pattern[screen].length;
+                if (len > 0) {
+                    const boundaries = 1 << 14
+                    len = (len + (boundaries - 1)) & -boundaries
+                    console.log('len', len, pattern[screen].length, 'd', len - pattern[screen].length)
+                    // add 0 padding
+                    pattern[screen].push(...Array(len - pattern[screen].length))
+                }
+                pattern_offset_per_key[key] = len
+
+                pattern[screen].push(...Object.values(pages).flatMap(x => x))
             })
     }))
 
@@ -185,15 +202,15 @@ async function main() {
     console.log(`number of global palettes: ${Object.values(pattern).reduce((acc, pscreen) => acc + pscreen.length, 0)}`)
 
 
-    config.images.map(({ key, file }) => {
+    config.images.map(({ screen, file }) => {
         console.log('\n')
         console.log(`file: ${file}`)
-        if (cellsPerScreen[key] > 0x0200) {
+        if (cellsPerScreen[screen] > 0x0200) {
             console.warn("\tcells are bigger than 0x200 expect some errors")
         }
-        console.log(`\tnumber of ${key} cells: ${cellsPerScreen[key]}`)
-        console.log(`\tnumber of ${key} pattern: ${pattern[key].length}`)
-        console.log(`\tnumber of ${key} palettes: ${palettes[key].length}`)
+        console.log(`\tnumber of ${screen} cells: ${cellsPerScreen[screen]}`)
+        console.log(`\tnumber of ${screen} pattern: ${pattern[screen].length}`)
+        console.log(`\tnumber of ${screen} palettes: ${palettes[screen].length}`)
     })
 
     // output..
@@ -201,9 +218,9 @@ async function main() {
 
     const sharedCell = Object.values(cells).flatMap(cell => cell.data)
     vdp2.addSharedCells(sharedCell, bpp)
-    config.images.map(({ key, file, screen }) => {
-        vdp2.addCharPattern(screen, pattern[key])
-        vdp2.addPalette(screen, { palettes: Object.values(palettes[key]) })
+    config.images.map(({ screen }) => {
+        vdp2.addCharPattern(screen, pattern[screen])
+        vdp2.addPalette(screen, { palettes: Object.values(palettes[screen]) })
     })
 
     const vdpb = vdp2.exportToBin()
@@ -211,8 +228,10 @@ async function main() {
     writeFile('vd2p.bin', vdpb, () => { })
     const vdp2c = vdp2.exportToCompressed() + vdp2.exportConfig() + vdp2.exportCyclePattern()
 
+    const cfg = Object.entries(pattern_offset_per_key).filter(([k, l]) => l !== undefined).map(([k, l]) => `uint32_t pattern_offset_${k}=${l};`).join('\n')
+
     // write to file    
-    writeFile(config.output, `// Auto generated\n//${config.images.map(({ key, file }) => file).join('\n//')}\n` + vdp2c, () => { })
+    writeFile(config.output, `// Auto generated\n//${config.images.map(({ key, file }) => file).join('\n//')}\n` + cfg + vdp2c, () => { })
 }
 
 main();

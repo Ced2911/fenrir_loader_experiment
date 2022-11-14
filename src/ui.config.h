@@ -12,14 +12,7 @@ typedef struct
 
 typedef struct
 {
-    uintptr_t pattern_addr;
-    uintptr_t cell_addr;
-    uintptr_t pal_addr;
-
-    size_t pattern_sz;
-    size_t cell_sz;
-    size_t pal_sz;
-
+    uintptr_t pattern_offset;
     fix16_t velocity_x;
     fix16_t velocity_y;
 } ui_config_background_t;
@@ -66,18 +59,22 @@ typedef struct
             } cover;
             ui_config_browser_t browser;
 
+            ui_config_background_t foreground;
+            ui_config_background_t background;
         } gamelist;
         struct
         {
+            ui_config_background_t foreground;
+            ui_config_background_t background;
             int nothing;
         } error_no_sd;
         struct
         {
+            ui_config_background_t foreground;
+            ui_config_background_t background;
             int nothing;
         } error_bad_filesystem;
     } screens;
 
-    ui_config_background_t foreground;
-    ui_config_background_t background;
     ui_config_font_t main_font;
 } ui_config_t;

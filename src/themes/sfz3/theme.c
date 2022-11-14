@@ -16,19 +16,11 @@ static vdp2_scrn_cell_format_t format_nbg0 = {
     .aux_mode = 1,
     .plane_size = VDP2_SCRN_PLANE_SIZE_1X1,
     .cpd_base = NBG0_CELL_ADDR,
-    /*
-    .usage_banks = {
-        .a0 = VDP2_VRAM_USAGE_TYPE_COEFF_TBL,
-        .a1 = VDP2_VRAM_USAGE_TYPE_NONE,
-        .b0 = VDP2_VRAM_USAGE_TYPE_NONE,
-        .b1 = VDP2_VRAM_USAGE_TYPE_NONE},
-        */
     .palette_base = NBG0_COLOR_ADDR};
 
 static vdp2_scrn_cell_format_t format_nbg2 = {
     .scroll_screen = VDP2_SCRN_NBG2,
     .ccc = VDP2_SCRN_CCC_PALETTE_16,
-    //.ccc = VDP2_SCRN_CCC_PALETTE_256,
     .char_size = VDP2_SCRN_CHAR_SIZE_1X1,
     .pnd_size = 2,
     .aux_mode = 1,
@@ -66,7 +58,7 @@ static void vdp2_ngb0_init()
     vdp2_scrn_normal_map_t nbg0_map;
     set_plane_addr(&nbg0_map,
                    NBG0_PATTERN_ADDR,
-                   ui_config.background.pattern_sz);
+                   0);
 
     vdp2_scrn_cell_format_set(&format_nbg0, &nbg0_map);
     vdp2_scrn_priority_set(VDP2_SCRN_NBG0, 2);
@@ -90,8 +82,8 @@ static void vdp2_ngb2_init()
 
     vdp2_scrn_normal_map_t nbg2_map;
     set_plane_addr(&nbg2_map,
-                   NBG2_PATTERN_ADDR,
-                   ui_config.foreground.pattern_sz);
+                   NBG2_PATTERN_ADDR + (pattern_offset_gameselect_front),
+                   0);
 
     vdp2_scrn_cell_format_set(&format_nbg2, &nbg2_map);
     vdp2_scrn_priority_set(VDP2_SCRN_NBG2, 4);

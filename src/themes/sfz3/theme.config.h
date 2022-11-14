@@ -28,17 +28,39 @@ static ui_config_t ui_config = {
         .char_spacing = sfa.char_spacing,
         .data = sfa.data,
     },
-    .background = {
-        .velocity_x = 0, // FIX16(-0.7),
-        .velocity_y = 0, // FIX16(-0.7),
-    },
-
-    .foreground = {
-        .velocity_x = FIX16(-3),
-        .velocity_y = 0,
-    },
     .screens = {
+        .error_no_sd = {
+            .background = {
+                .velocity_x = 0, // FIX16(-0.7),
+                .velocity_y = 0, // FIX16(-0.7),
+            },
+
+            .foreground = {
+                .velocity_x = 0,
+                .velocity_y = 0,
+            },
+        },
+        .error_bad_filesystem = {
+            .background = {
+                .velocity_x = 0, // FIX16(-0.7),
+                .velocity_y = 0, // FIX16(-0.7),
+            },
+
+            .foreground = {
+                .velocity_x = 0,
+                .velocity_y = 0,
+            },
+        },
         .gamelist = {
+            .background = {
+                .velocity_x = 0, // FIX16(-0.7),
+                .velocity_y = 0, // FIX16(-0.7),
+            },
+
+            .foreground = {
+                .velocity_x = FIX16(-3),
+                .velocity_y = 0,
+            },
 
             // use vdp2 so coord need to be aligned to 8
             .cover = {

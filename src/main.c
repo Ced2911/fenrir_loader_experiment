@@ -30,14 +30,14 @@ static void theme_update()
     static fix16_t __cx2 = 0;
     static fix16_t __cy2 = 0;
 
-    __cx2 += theme_get_ui_config()->foreground.velocity_x;
-    __cy2 += theme_get_ui_config()->foreground.velocity_y;
+    __cx2 += theme_get_ui_config()->screens.gamelist.foreground.velocity_x;
+    __cy2 += theme_get_ui_config()->screens.gamelist.foreground.velocity_y;
 
     // animate bg
-    if (theme_get_ui_config()->background.velocity_x)
-        vdp2_scrn_scroll_x_update(VDP2_SCRN_NBG0, theme_get_ui_config()->background.velocity_x);
-    if (theme_get_ui_config()->background.velocity_y)
-        vdp2_scrn_scroll_y_update(VDP2_SCRN_NBG0, theme_get_ui_config()->background.velocity_y);
+    if (theme_get_ui_config()->screens.gamelist.background.velocity_x)
+        vdp2_scrn_scroll_x_update(VDP2_SCRN_NBG0, theme_get_ui_config()->screens.gamelist.background.velocity_x);
+    if (theme_get_ui_config()->screens.gamelist.background.velocity_y)
+        vdp2_scrn_scroll_y_update(VDP2_SCRN_NBG0, theme_get_ui_config()->screens.gamelist.background.velocity_y);
 
     vdp2_scrn_scroll_x_set(VDP2_SCRN_NBG2, __cx2);
     vdp2_scrn_scroll_y_set(VDP2_SCRN_NBG2, __cy2);
@@ -59,7 +59,7 @@ int main(void)
     sd_dir_entries = (sd_dir_entry_t *)zalloc(sizeof(sd_dir_entry_t) * 2500);
 
     screen_init();
-    //screen_select(screen_error_no_sd);
+    // screen_select(screen_error_no_sd);
     screen_t *screen;
 
     while (1)
