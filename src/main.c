@@ -18,6 +18,7 @@ sd_dir_entry_t *sd_dir_entries;
 
 int16_t hadoken_snd;
 
+
 void *zalloc(size_t l)
 {
     void *ptr = malloc(l);
@@ -72,6 +73,7 @@ int main(void)
         vdp1_sync();
         vdp2_sync();
         vdp1_sync_wait();
+        vdp2_sync_wait();
     }
     screen->destroy();
 }

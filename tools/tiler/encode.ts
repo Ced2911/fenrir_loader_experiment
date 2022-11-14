@@ -343,9 +343,9 @@ static inline void __setup_vdp2_cycles() {
             //currAddr = ((currAddr >> 17) + 1) << 17
         }
         this.vdp2_cycp[currAddr >> 17].pattern.push(Vdp2Screen.nbg1)
-        this.vdp2_cycp[(currAddr + 0x02000) >> 17].cell.push(Vdp2Screen.nbg1)
+        this.vdp2_cycp[(currAddr + 0x04000) >> 17].cell.push(Vdp2Screen.nbg1)
 
-        this.cells[Vdp2Screen.nbg1].addr = currAddr + 0x02000;
+        this.cells[Vdp2Screen.nbg1].addr = currAddr + 0x04000;
         this.cells[Vdp2Screen.nbg1].color = Vdp2ColorCnt.color4bpp
         this.patterns[Vdp2Screen.nbg1].addr = currAddr;
         this.palettes[Vdp2Screen.nbg1].addr = palAddr;

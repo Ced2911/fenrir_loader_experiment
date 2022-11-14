@@ -24,7 +24,7 @@ static screen_t *get(screens_type_t scr)
 
 void screen_init()
 {
-    next_screen = screen_gamelist;
+    next_screen = screen_error_no_sd;
     current_screen = screen_max;
 }
 

@@ -2,7 +2,7 @@ import Jimp from 'jimp';
 import { writeFile } from 'fs';
 import { createHash } from 'crypto';
 import { buildPalette, tileImage, RGBA, TileSize, Cell, Cell8bppTo4bpp } from './tiler'
-import { cell4pbbPattern, cellPattern, patternGetPage, Vdp2ColorCnt, VDP2Memory, Vdp2Screen } from './encode'
+import { cell4pbbPattern, cellPattern, patternGetPage, Vdp2ColorCnt, VDP2Memory, Vdp2Screen, vdpNextPatternAddrBoundary } from './encode'
 
 interface ConfigImage {
     key: string,
@@ -136,12 +136,22 @@ async function main() {
     await Promise.all(config.images.map(async ({ screen, file }) => {
         palettes[screen] = palettes[screen] || []
         pattern[screen] = pattern[screen] || []
+        let palette = []
 
         // 1st step build palettes
         await Jimp.read(file)
             .then(image => {
-                palettes[screen].push(...buildPalette(image))
+                palette = buildPalette(image)
             })
+        const paletteUniques: Map<number, RGBA> = new Map;
+        [...palette, ...palettes[screen]].forEach(p => {
+            paletteUniques.set(p.pixel, p)
+        })
+
+        palettes[screen] = Array.from(paletteUniques.values())
+        
+        // rebuild ids
+        palettes[screen].map((p, i) => p.id = i)
     }))
 
     const all4bpp = (Object.values(palettes)).every(c => c.length < 16)
@@ -184,13 +194,13 @@ async function main() {
                 // need padding ?
                 let len = pattern[screen].length;
                 if (len > 0) {
-                    const boundaries = 1 << 14
-                    len = (len + (boundaries - 1)) & -boundaries
-                    console.log('len', len, pattern[screen].length, 'd', len - pattern[screen].length)
-                    // add 0 padding
-                    pattern[screen].push(...Array(len - pattern[screen].length))
+                    len = 1 << 12;
+                    const off = len
+                    // console.log('len', len, pattern[screen].length, 'd', off - pattern[screen].length)
+                    // add padding
+                    pattern[screen].push(...Array(off - pattern[screen].length))
                 }
-                pattern_offset_per_key[key] = len
+                pattern_offset_per_key[key] = len * 4 // 1word
 
                 pattern[screen].push(...Object.values(pages).flatMap(x => x))
             })
@@ -205,9 +215,6 @@ async function main() {
     config.images.map(({ screen, file }) => {
         console.log('\n')
         console.log(`file: ${file}`)
-        if (cellsPerScreen[screen] > 0x0200) {
-            console.warn("\tcells are bigger than 0x200 expect some errors")
-        }
         console.log(`\tnumber of ${screen} cells: ${cellsPerScreen[screen]}`)
         console.log(`\tnumber of ${screen} pattern: ${pattern[screen].length}`)
         console.log(`\tnumber of ${screen} palettes: ${palettes[screen].length}`)

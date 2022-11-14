@@ -82,7 +82,7 @@ static void vdp2_ngb2_init()
 
     vdp2_scrn_normal_map_t nbg2_map;
     set_plane_addr(&nbg2_map,
-                   NBG2_PATTERN_ADDR + (pattern_offset_gameselect_front),
+                   NBG2_PATTERN_ADDR + (0),
                    0);
 
     vdp2_scrn_cell_format_set(&format_nbg2, &nbg2_map);
@@ -130,4 +130,32 @@ ui_config_t *theme_get_ui_config()
 
 void theme_init_bgm()
 {
+}
+
+void test_0()
+{
+
+    vdp2_scrn_normal_map_t nbg2_map;
+    set_plane_addr(&nbg2_map,
+                   NBG2_PATTERN_ADDR + (0),
+                   0);
+
+    vdp2_scrn_cell_format_set(&format_nbg2, &nbg2_map);
+    vdp2_scrn_priority_set(VDP2_SCRN_NBG2, 4);
+    vdp2_cram_offset_set(VDP2_SCRN_NBG2, 0);
+    vdp2_cram_offset_set(VDP2_SCRN_NBG2, format_nbg2.palette_base);
+}
+
+void test_1()
+{
+
+    vdp2_scrn_normal_map_t nbg2_map;
+    set_plane_addr(&nbg2_map,
+                   NBG2_PATTERN_ADDR + pattern_offset_error_front,
+                   0);
+
+    vdp2_scrn_cell_format_set(&format_nbg2, &nbg2_map);
+    vdp2_scrn_priority_set(VDP2_SCRN_NBG2, 4);
+    vdp2_cram_offset_set(VDP2_SCRN_NBG2, 0);
+    vdp2_cram_offset_set(VDP2_SCRN_NBG2, format_nbg2.palette_base);
 }
