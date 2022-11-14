@@ -12,3 +12,4 @@ node_modules
 *.7z
 *.no
 *.vgm
+compile_commands.json

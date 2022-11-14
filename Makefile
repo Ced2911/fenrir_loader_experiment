@@ -12,6 +12,7 @@ SH_PROGRAM:= fenrir-yaul
 SH_SRCS:= \
 	assets/army12.c \
 	assets/bitmap.c \
+	src/compat.c \
 	src/main.c \
 	src/noise.c \
 	src/reset.c \

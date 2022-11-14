@@ -1,21 +1,10 @@
 #include <stdlib.h>
-#include <ctype.h>
 #include <yaul.h>
 #include "fenrir.h"
 #include "bios_ex.h"
 #include "cd-miss.h"
 
 extern void sys_reset(void);
-
-static int strcicmp(char const *a, char const *b)
-{
-    for (;; a++, b++)
-    {
-        int d = tolower((unsigned char)*a) - tolower((unsigned char)*b);
-        if (d != 0 || !*a)
-            return d;
-    }
-}
 
 static int sd_compare(const void *s1, const void *s2)
 {
@@ -79,7 +68,6 @@ static void __noreturn fenrir_direct_boot()
         // launch disc
         case 0x14:
         {
-            sys_reset();
             bios_cd_init();
             bios_cd_read();
             while (1)
@@ -145,15 +133,7 @@ void fenrir_refresh_entries(sd_dir_t *sd_dir, sd_dir_entry_t *sd_dir_entries)
 void __noreturn fenrir_launch_game(uint32_t id, int boot_method)
 {
     // stop interrupts and slave cpu
-    cpu_intc_mask_set(15);
-    scu_ic_mask_set(SCU_IC_MASK_ALL);
-    scu_dma_stop();
-    scu_dsp_program_stop();
-
-    cpu_dmac_stop();
-    cpu_dmac_disable();
-
-    smpc_smc_sshoff_call();
+    sys_reset();
 
     // launch game
     fenrir_call(FENRIR_EVENT_LAUNCH_ID_START_FAD + id);
