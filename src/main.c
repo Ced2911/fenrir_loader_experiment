@@ -7,7 +7,6 @@
 #include "font/font.h"
 #include "screens/screen.h"
 #include "sound_driver/pcm.h"
-#include "theme.h"
 
 #define RESOLUTION_WIDTH (352)
 #define RESOLUTION_HEIGHT (224)
@@ -18,30 +17,11 @@ sd_dir_entry_t *sd_dir_entries;
 
 int16_t hadoken_snd;
 
-
 void *zalloc(size_t l)
 {
     void *ptr = malloc(l);
     memset(ptr, 0, l);
     return ptr;
-}
-
-static void theme_update()
-{
-    static fix16_t __cx2 = 0;
-    static fix16_t __cy2 = 0;
-
-    __cx2 += theme_get_ui_config()->screens.gamelist.foreground.velocity_x;
-    __cy2 += theme_get_ui_config()->screens.gamelist.foreground.velocity_y;
-
-    // animate bg
-    if (theme_get_ui_config()->screens.gamelist.background.velocity_x)
-        vdp2_scrn_scroll_x_update(VDP2_SCRN_NBG0, theme_get_ui_config()->screens.gamelist.background.velocity_x);
-    if (theme_get_ui_config()->screens.gamelist.background.velocity_y)
-        vdp2_scrn_scroll_y_update(VDP2_SCRN_NBG0, theme_get_ui_config()->screens.gamelist.background.velocity_y);
-
-    vdp2_scrn_scroll_x_set(VDP2_SCRN_NBG2, __cx2);
-    vdp2_scrn_scroll_y_set(VDP2_SCRN_NBG2, __cy2);
 }
 
 int main(void)
@@ -52,6 +32,10 @@ int main(void)
     vdp1_init();
     vdp2_init();
 
+    dbgio_init();
+   dbgio_dev_default_init(DBGIO_DEV_VDP2_ASYNC);
+   dbgio_dev_font_load();
+
     // slave cpu setup
     cpu_dual_comm_mode_set(CPU_DUAL_ENTRY_ICI);
 
@@ -59,23 +43,19 @@ int main(void)
     status_sector = (status_sector_t *)zalloc(sizeof(status_sector_t));
     sd_dir_entries = (sd_dir_entry_t *)zalloc(sizeof(sd_dir_entry_t) * 2500);
 
-    screen_init();
-    // screen_select(screen_error_no_sd);
-    screen_t *screen;
+    screens_init();
 
     while (1)
     {
-        screen_t *screen = get_screen();
-        theme_update();
-        screen->update();
-
+        screens_update();
+     
         vdp1_sync_render();
         vdp1_sync();
         vdp2_sync();
         vdp1_sync_wait();
         vdp2_sync_wait();
     }
-    screen->destroy();
+    screens_destroy();
 }
 
 static void _vblank_out_handler(void *work __unused)

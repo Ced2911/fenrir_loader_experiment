@@ -31,33 +31,42 @@ static ui_config_t ui_config = {
     .screens = {
         .error_no_sd = {
             .background = {
+                .pattern_offset = NBG0_PATTERN_ADDR, .screen = THEME_SCR_NBG0,
                 .velocity_x = 0, // FIX16(-0.7),
                 .velocity_y = 0, // FIX16(-0.7),
             },
 
             .foreground = {
-                .velocity_x = 0,
+                .pattern_offset = NBG2_PATTERN_ADDR,
+                .screen = THEME_SCR_NBG2,
+                .velocity_x = FIX16(-3),
                 .velocity_y = 0,
             },
         },
         .error_bad_filesystem = {
             .background = {
+                .pattern_offset = NBG0_PATTERN_ADDR, .screen = THEME_SCR_NBG0,
                 .velocity_x = 0, // FIX16(-0.7),
                 .velocity_y = 0, // FIX16(-0.7),
             },
 
             .foreground = {
+                .pattern_offset = NBG2_PATTERN_ADDR + pattern_offset_error_front,
+                .screen = THEME_SCR_NBG2,
                 .velocity_x = 0,
                 .velocity_y = 0,
             },
         },
         .gamelist = {
             .background = {
+                .pattern_offset = NBG0_PATTERN_ADDR, .screen = THEME_SCR_NBG0,
                 .velocity_x = 0, // FIX16(-0.7),
                 .velocity_y = 0, // FIX16(-0.7),
             },
 
             .foreground = {
+                .pattern_offset = NBG2_PATTERN_ADDR,
+                .screen = THEME_SCR_NBG2,
                 .velocity_x = FIX16(-3),
                 .velocity_y = 0,
             },

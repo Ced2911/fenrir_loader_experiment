@@ -235,7 +235,7 @@ async function main() {
     writeFile('vd2p.bin', vdpb, () => { })
     const vdp2c = vdp2.exportToCompressed() + vdp2.exportConfig() + vdp2.exportCyclePattern()
 
-    const cfg = Object.entries(pattern_offset_per_key).filter(([k, l]) => l !== undefined).map(([k, l]) => `uint32_t pattern_offset_${k}=${l};`).join('\n')
+    const cfg = Object.entries(pattern_offset_per_key).filter(([k, l]) => l !== undefined).map(([k, l]) => `static const uint32_t pattern_offset_${k}=${l};`).join('\n')
 
     // write to file    
     writeFile(config.output, `// Auto generated\n//${config.images.map(({ key, file }) => file).join('\n//')}\n` + cfg + vdp2c, () => { })

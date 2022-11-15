@@ -18,6 +18,7 @@ typedef enum screens
     screen_max
 } screens_type_t;
 
-void screen_init();
-void screen_select(screens_type_t scr);
-screen_t *get_screen();
+void screens_init();
+void screens_select(screens_type_t scr);
+void screens_update();
+void screens_destroy();

@@ -1,9 +1,6 @@
 #include "screen.h"
 #include "yaul.h"
 
-extern void test_0();
-extern void test_1();
-
 static void _vbk()
 {
     // smpc - input
@@ -23,11 +20,11 @@ static void error_update()
     smpc_peripheral_digital_port(1, &digital);
     if (digital.released.button.a)
     {
-        test_0();
+        screens_select(screen_error_no_sd);
     }
     if (digital.released.button.b)
-    {
-        test_1();
+    {        
+        screens_select(screen_error_bad_filesystem);
     }
 }
 

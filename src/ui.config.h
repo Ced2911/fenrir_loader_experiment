@@ -2,6 +2,11 @@
 
 #define NOISE_PALETTE_SIZE (16)
 
+typedef enum {
+    THEME_SCR_NBG0,
+    THEME_SCR_NBG2
+} theme_scr_t;
+
 typedef struct
 {
     int char_width;
@@ -12,6 +17,7 @@ typedef struct
 
 typedef struct
 {
+    theme_scr_t screen;
     uintptr_t pattern_offset;
     fix16_t velocity_x;
     fix16_t velocity_y;
