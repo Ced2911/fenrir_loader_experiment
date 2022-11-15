@@ -284,7 +284,7 @@ static inline void __setup_vdp2_cycles() {
 
     memoryFiled = false
 
-    private fillmem() {
+    fillmem() {
         const pall_pank_sz = 0x100;
         let palAddr = pall_pank_sz;
 

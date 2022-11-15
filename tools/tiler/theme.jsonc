@@ -1,0 +1,99 @@
+{
+    "version": 0.0,
+    "ressources": {
+        "vdp2": [
+            {
+                "screens": [
+                    "gamelist"
+                ],
+                "type": "foreground",
+                // only png
+                "file": "../../assets/game_select.png",
+            },
+            {
+                "screens": [
+                    "gamelist",
+                    "error_bad_filesystem",
+                    "error_no_sd"
+                ],
+                "type": "background",
+                // only png
+                "file": "../../assets/map.png",
+            },
+            {
+                "screens": [
+                    "error_bad_filesystem",
+                    "error_no_sd"
+                ],
+                "type": "foreground",
+                // only png
+                "file": "../../assets/error.png",
+            },
+        ],
+        // only bff is supported
+        "font": "../../assets/Street Fighter Alpha Regular.bff"
+    },
+    "screens": {
+        "error_no_sd": {
+            "background": {
+                "velocity_x": 0, // FIX16(-07),
+                "velocity_y": 0, // FIX16(-07),
+            },
+            "foreground": {
+                "velocity_x": 0,
+                "velocity_y": 0,
+            },
+        },
+        "error_bad_filesystem": {
+            "background": {
+                "velocity_x": 0, // FIX16(-07),
+                "velocity_y": 0, // FIX16(-07),
+            },
+            "foreground": {
+                "velocity_x": 0,
+                "velocity_y": 0,
+            },
+        },
+        "gamelist": {
+            "background": {
+                "velocity_x": 0, // FIX16(-07),
+                "velocity_y": 0, // FIX16(-07),
+            },
+            "foreground": {
+                "velocity_x": 0,
+                "velocity_y": 0,
+            },
+            // use vdp2 so coord need to be aligned to 8
+            "cover": {
+                "noise_palettes": [],
+                "x": 8,
+                "y": 56,
+                "w": 128,
+                "h": 96,
+                "enabled": true,
+            },
+            "browser": {
+                "x": 148,
+                "y": 56,
+                "w": 100,
+                "h": 200,
+                "line_height": 12,
+                "item_colors": {
+                    "colors": [],
+                    "gouraud": [],
+                },
+                "item_focused_colors": {
+                    "colors": [],
+                    "gouraud": [],
+                },
+                "position_bar": {
+                    "enabled": false,
+                    "color": 0,
+                    "gouraud": [],
+                    "w": 5,
+                    "h": 12,
+                }
+            }
+        }
+    }
+}

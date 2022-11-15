@@ -3,8 +3,8 @@
 #define NOISE_PALETTE_SIZE (16)
 
 typedef enum {
-    THEME_SCR_NBG0,
-    THEME_SCR_NBG2
+    THEME_SCR_NBG0 = 0,
+    THEME_SCR_NBG2 = 2
 } theme_scr_t;
 
 typedef struct
@@ -17,7 +17,7 @@ typedef struct
 
 typedef struct
 {
-    theme_scr_t screen;
+    uint8_t screen;
     uintptr_t pattern_offset;
     fix16_t velocity_x;
     fix16_t velocity_y;
@@ -72,13 +72,11 @@ typedef struct
         {
             ui_config_background_t foreground;
             ui_config_background_t background;
-            int nothing;
         } error_no_sd;
         struct
         {
             ui_config_background_t foreground;
             ui_config_background_t background;
-            int nothing;
         } error_bad_filesystem;
     } screens;
 

@@ -3,6 +3,8 @@
     "transpileOnly": true
   },
   "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "lib": [
       "ES2019"

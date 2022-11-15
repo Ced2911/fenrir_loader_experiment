@@ -33,6 +33,7 @@
         "pcmsys.h": "c",
         "hav_flag.h": "c",
         "rgb1555.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "ui.config.h": "c"
     }
 }
