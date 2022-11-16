@@ -1,7 +1,7 @@
 #include <yaul.h>
 #include "lz4/lz4.h"
 #include "theme.h"
-#include "./font.sfa.h"
+//#include "./font.sfa.h"
 #include "./vdp2.sfz3.h"
 #include "theme.config.h"
 
@@ -57,8 +57,8 @@ static void vdp2_ngb0_init()
 {
     vdp2_scrn_normal_map_t nbg0_map;
     vdp2_set_plane_addr(&nbg0_map,
-                   NBG0_PATTERN_ADDR,
-                   0);
+                        NBG0_PATTERN_ADDR,
+                        0);
 
     vdp2_scrn_cell_format_set(&format_nbg0, &nbg0_map);
     vdp2_scrn_priority_set(VDP2_SCRN_NBG0, 2);
@@ -82,8 +82,8 @@ static void vdp2_ngb2_init()
 
     vdp2_scrn_normal_map_t nbg2_map;
     vdp2_set_plane_addr(&nbg2_map,
-                   NBG2_PATTERN_ADDR + (0),
-                   0);
+                        NBG2_PATTERN_ADDR + (0),
+                        0);
 
     vdp2_scrn_cell_format_set(&format_nbg2, &nbg2_map);
     vdp2_scrn_priority_set(VDP2_SCRN_NBG2, 4);
@@ -113,7 +113,7 @@ void theme_init_vdp()
 
 ui_config_t *theme_get_ui_config()
 {
-    return &ui_config;
+    return ui_config;
 }
 
 void theme_init_bgm()

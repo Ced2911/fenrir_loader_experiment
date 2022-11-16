@@ -134,7 +134,8 @@ export async function tileVdp2(config: Config,
 
     let bpp = Vdp2ColorCnt.color8bpp
 
-    await Promise.all(config.images.map(async ({ screen, file }) => {
+    //await Promise.all(config.images.map(async ({ screen, file }) => {
+    for (const { screen, file } of config.images) {
 
         let palette: RGBA[] = []
         palettes[screen] = palettes[screen] || []
@@ -155,12 +156,14 @@ export async function tileVdp2(config: Config,
 
         // rebuild ids
         palettes[screen].map((p, i) => p.id = i)
-    }))
+        //}))
+    }
 
     const all4bpp = (Object.values(palettes)).every(c => c.length < 16)
     bpp = all4bpp ? Vdp2ColorCnt.color4bpp : Vdp2ColorCnt.color8bpp
 
-    await Promise.all(config.images.map(async ({ screen, file }) => {
+    //await Promise.all(config.images.map(async ({ screen, file }) => {
+    for (const { screen, file } of config.images) {
         // 2nd unik tiles
         await Jimp.read(file)
             .then(image => {
@@ -175,9 +178,11 @@ export async function tileVdp2(config: Config,
                 })
                 cellsPerScreen[screen] = unikcell;
             })
-    }))
+        //}))
+    }
 
-    await Promise.all(config.images.map(async ({ screen, key, file }) => {
+    //await Promise.all(config.images.map(async ({ screen, key, file }) => {
+    for (const { screen, key, file } of config.images) {
         // 3rd pattern
         await Jimp.read(file)
             .then(image => {
@@ -207,7 +212,8 @@ export async function tileVdp2(config: Config,
 
                 pattern[screen].push(...Object.values(pages).flatMap(x => x))
             })
-    }))
+        //}))
+    }
 
     // build binaries
     const sharedCell = Object.values(cells).flatMap(cell => cell.data)
@@ -217,6 +223,7 @@ export async function tileVdp2(config: Config,
         vdp2.addPalette(screen, { palettes: Object.values(palettes[screen]) })
     })
 
+    console.log(palettes)
 
     //const cfg = Object.entries(pattern_offset_per_key).filter(([k, l]) => l !== undefined).map(([k, l]) => `static const uint32_t pattern_offset_${k}=${l};`).join('\n')
 

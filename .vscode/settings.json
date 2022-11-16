@@ -34,6 +34,8 @@
         "hav_flag.h": "c",
         "rgb1555.h": "c",
         "string.h": "c",
-        "ui.config.h": "c"
+        "ui.config.h": "c",
+        "theme.h": "c",
+        "font.sfa.h": "c"
     }
 }

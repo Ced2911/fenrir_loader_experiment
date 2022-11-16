@@ -30,15 +30,13 @@ export class RessourceImporter {
 
         config.forEach((cfg, k) => {
             tilerConfig.images.push({
-                "key": [k, ...cfg.screens].join('-'),
+                "key": [k, cfg.type, map2bg[cfg.type], ...cfg.screens].join('-'),
                 "screen": map2bg[cfg.type],
                 "file": cfg.file
             })
         })
 
-
-
-        tileVdp2(tilerConfig, this.vdp2mem, this.vdp2config)
+        await tileVdp2(tilerConfig, this.vdp2mem, this.vdp2config)
         this.vdp2mem.fillmem()
     }
 

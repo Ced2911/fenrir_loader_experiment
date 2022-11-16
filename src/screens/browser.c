@@ -27,6 +27,7 @@ static void draw_selector(browser_t *browser, int y)
     /*****************************************************
      * Draw browser selector position
      ****************************************************/
+    /*
     const int16_t area_h = browser->browser_ui_config.line_height * browser->file_per_page + 1;
     const int16_t area_y = browser->browser_ui_config.y - browser->browser_ui_config.line_height / 2;
     const int16_t area_x = browser->browser_ui_config.x - browser->browser_ui_config.position_bar.w;
@@ -65,6 +66,7 @@ static void draw_selector(browser_t *browser, int y)
     vdp1_cmdt_param_gouraud_base_set(cmdt, browser->gouraud_base + 0 * sizeof(int16_t));
 
     cmdt++;
+    */
 }
 
 static void browser_draw_items(browser_t *browser)
@@ -244,8 +246,8 @@ void browser_update(browser_t *browser)
 
     cmdt = &cmdt_list->cmdts[ORDER_BUFFER_STARTING_INDEX];
 
-    if (browser->browser_ui_config.position_bar.enabled)
-        draw_selector(browser, browser->selected);
+  //  if (browser->browser_ui_config.position_bar.enabled)
+  //      draw_selector(browser, browser->selected);
 
     // Only draw items if page changed
     if (browser->old_page != browser->page)

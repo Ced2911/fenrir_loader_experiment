@@ -866,4 +866,4 @@ const uint8_t sfa_font_bitmap[] = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-const ui_config_font_t sfa = {.char_width=8, .char_height=9, .data=sfa_font_bitmap, .char_spacing=sfa_font_width};
+// const ui_config_font_t sfa = {.char_width=8, .char_height=9, .data=sfa_font_bitmap, .char_spacing=sfa_font_width};

@@ -33,7 +33,8 @@ screen_t *get_screen()
 
 void screens_init()
 {
-    next_screen = screen_error_no_sd;
+   // next_screen = screen_error_no_sd;
+    next_screen = screen_gamelist;
     current_screen = screen_max;
 }
 

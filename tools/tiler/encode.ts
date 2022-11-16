@@ -1,6 +1,6 @@
 import { RGBA, Cell, RGB8888To555Number, Cell8bppTo4bpp } from './tiler'
 
-import LZ4 from 'lz4'; import cstruct, { Struct } from 'struct';
+import LZ4 from 'lz4'; 
 
 
 interface Palettes {
@@ -142,8 +142,6 @@ export class VDP2Memory {
 
     palSz: number
 
-    struct: Struct
-
     constructor() {
         this.size = 0;
         this.vmem = Buffer.alloc(512 * 1024)
@@ -173,15 +171,6 @@ export class VDP2Memory {
             cell: [],
             pattern: []
         }]
-
-        this.struct = cstruct()/*header start*/
-        .word8('version')
-        .word32Ube('vdp2mem_sz') 
-        .word32Ube('vdp2pal_sz')
-        .word32Ube('vdp2mem_off')
-        .word32Ube('vdp2pal_off')
-        
-        /*header end*/
     }
 
     addSharedCells(cells: number[], colorcnt: Vdp2ColorCnt) {
@@ -202,7 +191,6 @@ export class VDP2Memory {
         this.palettes[screen].mem = bin
     }
 
-    exportToBin(): Buffer { return this.vmem }
     exportToC(): string {
         this.fillmem()
         let exp = ''
@@ -211,6 +199,7 @@ export class VDP2Memory {
         exp += exportBufferToC("cmem", this.cmem);
         return exp;
     }
+
     exportToCompressed(): string {
         this.fillmem()
         let exp = ''
