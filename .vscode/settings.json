@@ -36,6 +36,8 @@
         "string.h": "c",
         "ui.config.h": "c",
         "theme.h": "c",
-        "font.sfa.h": "c"
+        "font.sfa.h": "c",
+        "screen.h": "c",
+        "theme.config.h": "c"
     }
 }

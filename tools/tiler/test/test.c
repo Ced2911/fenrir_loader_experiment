@@ -29,6 +29,10 @@ void main()
     printf("%s: %08x\n", "ui_config->vdp2.nbg1.pattern_addr", ui_config->vdp2.nbg1.pattern_addr);
     printf("%s: %08x\n", "ui_config->vdp2.nbg2.pattern_addr", ui_config->vdp2.nbg2.pattern_addr);
     printf("%s: %08x\n", "ui_config->vdp2.nbg3.pattern_addr", ui_config->vdp2.nbg3.pattern_addr);
+    printf("%s: %08x\n", "ui_config->vdp2.nbg0.pal_addr", ui_config->vdp2.nbg0.pal_addr);
+    printf("%s: %08x\n", "ui_config->vdp2.nbg1.pal_addr", ui_config->vdp2.nbg1.pal_addr);
+    printf("%s: %08x\n", "ui_config->vdp2.nbg2.pal_addr", ui_config->vdp2.nbg2.pal_addr);
+    printf("%s: %08x\n", "ui_config->vdp2.nbg3.pal_addr", ui_config->vdp2.nbg3.pal_addr);
 
     // printf("%s: %d\n", "ui_config->main_font.char_spacing", ui_config->main_font.char_spacing);
     // printf("%s: %d\n", "ui_config->main_font.data", ui_config->main_font.data);

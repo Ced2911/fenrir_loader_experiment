@@ -1,4 +1,3 @@
-static const 
 
 unsigned char theme_0_bin[] = {
   0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x25, 0xe0, 0x00, 0x00,
@@ -7216,5 +7215,3 @@ unsigned char theme_0_bin[] = {
 unsigned int theme_0_bin_len = 86528;
 
 
-
-static ui_config_t *ui_config = (ui_config_t *)theme_0_bin;

@@ -45,9 +45,6 @@ int main(void)
 
     screens_init();
 
-    void dbg_do();
-   // dbg_do();
-
     while (1)
     {
         screens_update();
