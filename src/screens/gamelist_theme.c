@@ -42,7 +42,7 @@ void gamelist_theme_apply(browser_t *browser)
     pal[BROWSER_FOCUSED_ITEM_COLOR + 1] = theme_get_ui_config()->screens.gamelist.browser.item_focused_colors.colors[0];
     pal[BROWSER_FOCUSED_ITEM_COLOR + 2] = theme_get_ui_config()->screens.gamelist.browser.item_focused_colors.colors[1];
 
- //   pal[32 + 1] = theme_get_ui_config()->screens.gamelist.browser.position_bar.color;
+    pal[32 + 1] = theme_get_ui_config()->screens.gamelist.browser.position_bar.color[0];
 
     // gouraud colors
     rgb1555_t *gouraud = (rgb1555_t *)browser->gouraud_base;
@@ -50,7 +50,7 @@ void gamelist_theme_apply(browser_t *browser)
     {
         gouraud[i + 0] = theme_get_ui_config()->screens.gamelist.browser.item_colors.gouraud[i];
         gouraud[i + 16] = theme_get_ui_config()->screens.gamelist.browser.item_focused_colors.gouraud[i];
-     //   gouraud[i + 24] = theme_get_ui_config()->screens.gamelist.browser.position_bar.gouraud[i];
+        gouraud[i + 24] = theme_get_ui_config()->screens.gamelist.browser.position_bar.gouraud[i];
     }
 
     // vdp2 color (each banks is 0x10)

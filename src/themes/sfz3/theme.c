@@ -121,3 +121,82 @@ void theme_init_bgm()
 }
 
 // a bouger
+void dbg_do()
+{
+    dbgio_printf("sizeof stuct: %d\n", sizeof(ui_config_t));
+
+    // main font
+    dbgio_printf("%s: %d\n", "ui_config->version", ui_config->version);
+    dbgio_printf("%s: %d\n", "ui_config->size", ui_config->size);
+#if 0
+        // vdp2 cfg
+        dbgio_printf("%s: %08x\n", "ui_config->vdp2.nbg0.cell_addr", ui_config->vdp2.nbg0.cell_addr);
+        dbgio_printf("%s: %08x\n", "ui_config->vdp2.nbg1.cell_addr", ui_config->vdp2.nbg1.cell_addr);
+        dbgio_printf("%s: %08x\n", "ui_config->vdp2.nbg2.cell_addr", ui_config->vdp2.nbg2.cell_addr);
+        dbgio_printf("%s: %08x\n", "ui_config->vdp2.nbg3.cell_addr", ui_config->vdp2.nbg3.cell_addr);
+
+        // dbgio_printf("%s: %d\n", "ui_config->main_font.char_spacing", ui_config->main_font.char_spacing);
+        // dbgio_printf("%s: %d\n", "ui_config->main_font.data", ui_config->main_font.data);
+#endif
+#if 1
+    // screen
+    dbgio_printf("%s: %d\n", "ui_config->screens.gamelist.foreground.pattern_offset", ui_config->screens.gamelist.foreground.pattern_offset);
+
+    dbgio_printf("%s: %08X\n", "ui_config->screens.error_bad_filesystem.background.pattern_offset", ui_config->screens.error_bad_filesystem.background.pattern_offset);
+    dbgio_printf("%s: %08X\n", "ui_config->screens.error_bad_filesystem.foreground.pattern_offset", ui_config->screens.error_bad_filesystem.foreground.pattern_offset);
+#endif
+#if 0
+    // gamelist browser
+    dbgio_printf("%s: %d\n", "ui_config->screens.error_no_sd.background.velocity_x", ui_config->screens.error_no_sd.background.velocity_x);
+    dbgio_printf("%s: %d\n", "ui_config->screens.error_no_sd.background.velocity_y", ui_config->screens.error_no_sd.background.velocity_y);
+#endif
+#if 0
+        // gamelist browser
+        dbgio_printf("%s: %d\n", "ui_config->screens.gamelist.browser.x", ui_config->screens.gamelist.browser.x);
+        dbgio_printf("%s: %d\n", "ui_config->screens.gamelist.browser.y", ui_config->screens.gamelist.browser.y);
+        dbgio_printf("%s: %d\n", "ui_config->screens.gamelist.browser.line_height", ui_config->screens.gamelist.browser.line_height);
+        dbgio_printf("%s: %d\n", "ui_config->screens.gamelist.browser.position_bar.enabled", ui_config->screens.gamelist.browser.position_bar.enabled);
+        dbgio_printf("%s: %d\n", "ui_config->screens.gamelist.browser.position_bar.w", ui_config->screens.gamelist.browser.position_bar.w);
+        dbgio_printf("%s: %d\n", "ui_config->screens.gamelist.browser.position_bar.h", ui_config->screens.gamelist.browser.position_bar.h);
+        dbgio_printf("%s: %d\n", "ui_config->screens.gamelist.browser.position_bar.color", ui_config->screens.gamelist.browser.position_bar.color);
+        dbgio_printf("%s: %d\n", "ui_config->screens.gamelist.browser.position_bar.gouraud[0]", ui_config->screens.gamelist.browser.position_bar.gouraud[0]);
+        dbgio_printf("%s: %d\n", "ui_config->screens.gamelist.browser.position_bar.gouraud[1]", ui_config->screens.gamelist.browser.position_bar.gouraud[1]);
+        dbgio_printf("%s: %d\n", "ui_config->screens.gamelist.browser.position_bar.gouraud[2]", ui_config->screens.gamelist.browser.position_bar.gouraud[2]);
+        dbgio_printf("%s: %d\n", "ui_config->screens.gamelist.browser.position_bar.gouraud[3]", ui_config->screens.gamelist.browser.position_bar.gouraud[3]);
+#endif
+#if 0
+    dbgio_printf("%s: %d\n", "ui_config->screens.gamelist.background.velocity_x", ui_config->screens.gamelist.background.velocity_x);
+    dbgio_printf("%s: %d\n", "ui_config->screens.gamelist.background.velocity_y", ui_config->screens.gamelist.background.velocity_y);
+    dbgio_printf("%s: %d\n", "ui_config->screens.gamelist.foreground.velocity_x", ui_config->screens.gamelist.foreground.velocity_x);
+    dbgio_printf("%s: %d\n", "ui_config->screens.gamelist.foreground.velocity_y", ui_config->screens.gamelist.foreground.velocity_y);
+#endif
+#if 0 // ok
+    // gamelist cover
+    dbgio_printf("%s: %d\n", "ui_config->screens.gamelist.cover.x", ui_config->screens.gamelist.cover.x);
+    dbgio_printf("%s: %d\n", "ui_config->screens.gamelist.cover.y", ui_config->screens.gamelist.cover.y);
+    dbgio_printf("%s: %d\n", "ui_config->screens.gamelist.cover.w", ui_config->screens.gamelist.cover.w);
+    dbgio_printf("%s: %d\n", "ui_config->screens.gamelist.cover.h", ui_config->screens.gamelist.cover.h);
+    dbgio_printf("%s: %d\n", "ui_config->screens.gamelist.cover.enabled", ui_config->screens.gamelist.cover.enabled);
+    dbgio_printf("%s: %d\n", "ui_config->screens.gamelist.cover.noise_palettes[0]", ui_config->screens.gamelist.cover.noise_palettes[0]);
+    dbgio_printf("%s: %d\n", "ui_config->screens.gamelist.cover.noise_palettes[5]", ui_config->screens.gamelist.cover.noise_palettes[5]);
+    dbgio_printf("%s: %d\n", "ui_config->screens.gamelist.cover.noise_palettes[10]", ui_config->screens.gamelist.cover.noise_palettes[10]);
+    dbgio_printf("%s: %d\n", "ui_config->screens.gamelist.cover.noise_palettes[15]", ui_config->screens.gamelist.cover.noise_palettes[15]);
+#endif
+#if 0
+    // ressource
+    dbgio_printf("%s: %d\n", "offsetof ui_config->ressource_count", offsetof(ui_config_t, ressource_count));
+    dbgio_printf("%s: %d\n", "offsetof ui_config->ressources", offsetof(ui_config_t, ressources));
+    dbgio_printf("%s: %d\n", "offsetof ui_config->ressources", offsetof(ui_config_ressources_t, type));
+
+    dbgio_printf("%s: %d\n", "ui_config->ressource_count", ui_config->ressource_count);
+#endif
+#if 0
+    for (int i = 0; i < ui_config->ressource_count; i++)
+    {
+        dbgio_printf("ui_config->ressources[%d].type: %d\n", i, ui_config->ressources[i].type);
+        dbgio_printf("ui_config->ressources[%d].offset: %d\n", i, ui_config->ressources[i].offset);
+        dbgio_printf("ui_config->ressources[%d].lenght: %d\n", i, ui_config->ressources[i].lenght);
+    }
+#endif
+    dbgio_flush();
+}

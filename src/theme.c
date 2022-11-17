@@ -38,30 +38,35 @@ static void vdp2_set_plane_addr(vdp2_scrn_normal_map_t *planes, uintptr_t plan_a
     }
 }
 
-void theme_set_pattern(theme_scr_t scr, uint32_t pattern_addr)
+void theme_set_pattern(theme_scr_t scr, uint32_t pattern_offset)
 {
     vdp2_scrn_normal_map_t map;
+    ui_config_t *ui_config = theme_get_ui_config();
 
     switch (scr)
     {
     case THEME_SCR_NBG0:
         vdp2_set_plane_addr(&map,
-                            pattern_addr,
+                            pattern_offset + ui_config->vdp2.nbg0.pattern_addr,
                             0);
         vdp2_scrn_cell_format_set(&format_nbg0, &map);
         break;
     case THEME_SCR_NBG2:
         vdp2_set_plane_addr(&map,
-                            pattern_addr,
+                            pattern_offset + ui_config->vdp2.nbg2.pattern_addr,
                             0);
         vdp2_scrn_cell_format_set(&format_nbg2, &map);
+        break;
+    default:
         break;
     }
 }
 
 void theme_background_config_set(ui_config_background_t *b)
 {
-    theme_set_pattern(b->screen, b->pattern_offset);
+     theme_set_pattern(b->screen, b->pattern_offset);
+
+    //dbgio_printf("unknow %d-%d\n", b->screen, b->pattern_offset);
 }
 
 void theme_set_background(screens_type_t scr)
@@ -89,6 +94,7 @@ void theme_set_background(screens_type_t scr)
     default:
         break;
     }
+    dbgio_flush();
 }
 
 void theme_update()

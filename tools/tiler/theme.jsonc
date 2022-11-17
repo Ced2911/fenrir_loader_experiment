@@ -87,7 +87,7 @@
                 "y": 56,
                 "w": 128,
                 "h": 96,
-                "enabled": 1,
+                "enabled": false,
             },
             "browser": {
                 "x": 148,
@@ -112,7 +112,7 @@
                     "gouraud": [60610, 60610, 65314, 65314],
                 },
                 "position_bar": {
-                    "color": 0,
+                    "color": [1,2],
                     "gouraud": [
                         1,
                         2,

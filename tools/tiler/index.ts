@@ -62,7 +62,6 @@ function bufferWriterLE(buffer: Buffer): BinaryWriter {
 
 async function main() {
     const buffer = Buffer.alloc(512) // sizeof(ui_config_t)
-    const bwr = bufferWriterBE(buffer)
     let uiConfig = new UiConfig();
     uiConfig.parse(themejson)
 
@@ -71,35 +70,42 @@ async function main() {
     const resourceImporter = new RessourceImporter
     await resourceImporter.importRessources(themejson.ressources)
 
-    // merge ressources in config
-    Object.entries(resourceImporter.vdp2config).forEach(([r, offset]) => {
-        const [k, type, vdpscreen, ...screens] = r.split('-')
-
-        screens.forEach(scr => {
-            console.log('offset', offset)
-            uiConfig.screens[scr][type].pattern_offset = offset
-        })
-
-    })
+    const vdp2_addr = 0x25E00000;
+    const cram_addr = 0x25F00000;
 
     // fill vdp2 config
     console.log(resourceImporter.vdp2mem)
     console.log(resourceImporter.vdp2config)
 
-    uiConfig.vdp2.nbg0.cell_addr = resourceImporter.vdp2mem.cells.nbg0.addr;
-    uiConfig.vdp2.nbg1.cell_addr = resourceImporter.vdp2mem.cells.nbg1.addr;
-    uiConfig.vdp2.nbg2.cell_addr = resourceImporter.vdp2mem.cells.nbg2.addr;
-    uiConfig.vdp2.nbg3.cell_addr = resourceImporter.vdp2mem.cells.nbg3.addr;
-    
-    uiConfig.vdp2.nbg0.pattern_addr = resourceImporter.vdp2mem.patterns.nbg0.addr;
-    uiConfig.vdp2.nbg1.pattern_addr = resourceImporter.vdp2mem.patterns.nbg1.addr;
-    uiConfig.vdp2.nbg2.pattern_addr = resourceImporter.vdp2mem.patterns.nbg2.addr;
-    uiConfig.vdp2.nbg3.pattern_addr = resourceImporter.vdp2mem.patterns.nbg3.addr;
-    
-    uiConfig.vdp2.nbg0.pal_addr = resourceImporter.vdp2mem.palettes?.nbg0.addr;
-    uiConfig.vdp2.nbg1.pal_addr = resourceImporter.vdp2mem.palettes?.nbg1.addr;
-    uiConfig.vdp2.nbg2.pal_addr = resourceImporter.vdp2mem.palettes?.nbg2.addr;
-    uiConfig.vdp2.nbg3.pal_addr = resourceImporter.vdp2mem.palettes?.nbg3.addr;
+    uiConfig.vdp2.nbg0.cell_addr = resourceImporter.vdp2mem.cells.nbg0.addr | vdp2_addr;
+    uiConfig.vdp2.nbg1.cell_addr = resourceImporter.vdp2mem.cells.nbg1.addr | vdp2_addr;
+    uiConfig.vdp2.nbg2.cell_addr = resourceImporter.vdp2mem.cells.nbg2.addr | vdp2_addr;
+    uiConfig.vdp2.nbg3.cell_addr = resourceImporter.vdp2mem.cells.nbg3.addr | vdp2_addr;
+
+    uiConfig.vdp2.nbg0.pattern_addr = resourceImporter.vdp2mem.patterns.nbg0.addr | vdp2_addr;
+    uiConfig.vdp2.nbg1.pattern_addr = resourceImporter.vdp2mem.patterns.nbg1.addr | vdp2_addr;
+    uiConfig.vdp2.nbg2.pattern_addr = resourceImporter.vdp2mem.patterns.nbg2.addr | vdp2_addr;
+    uiConfig.vdp2.nbg3.pattern_addr = resourceImporter.vdp2mem.patterns.nbg3.addr | vdp2_addr;
+
+    uiConfig.vdp2.nbg0.pal_addr = resourceImporter.vdp2mem.palettes?.nbg0.addr | cram_addr;
+    uiConfig.vdp2.nbg1.pal_addr = resourceImporter.vdp2mem.palettes?.nbg1.addr | cram_addr;
+    uiConfig.vdp2.nbg2.pal_addr = resourceImporter.vdp2mem.palettes?.nbg2.addr | cram_addr;
+    uiConfig.vdp2.nbg3.pal_addr = resourceImporter.vdp2mem.palettes?.nbg3.addr | cram_addr;
+
+
+
+    // merge ressources in config
+    Object.entries(resourceImporter.vdp2config).forEach(([r, offset]) => {
+        const [k, type, vdpscreen, ...screens] = r.split('-')
+        const screenToId = {'nbg0':0,'nbg1':1, 'nbg2':2, 'nbg3':3}
+
+        screens.forEach(scr => {
+            console.log('offset', vdpscreen, k, type)
+            uiConfig.screens[scr][type].screen = screenToId[vdpscreen]
+            uiConfig.screens[scr][type].pattern_offset = offset
+        })
+
+    })
 
     uiConfig.ressources = []
 
@@ -124,12 +130,17 @@ async function main() {
 
     uiConfig.ressource_count = uiConfig.ressources.length;
 
-    uiConfig.write(bwr)
+    for (let i = 0; i < 2; i++) {
+        const wr = [bufferWriterBE, bufferWriterLE]
+        const bwr = wr[i](buffer)
+        uiConfig.write(bwr)
 
-    const finalBufferSize = buffer.length + vdp2vmem.length + vdp2cmem.length
-    const finalBuffer = Buffer.concat([buffer, vdp2vmem, vdp2cmem], finalBufferSize)
-    
-    writeFileSync("theme.bin", finalBuffer)
+        const finalBufferSize = buffer.length + vdp2vmem.length + vdp2cmem.length
+        const finalBuffer = Buffer.concat([buffer, vdp2vmem, vdp2cmem], finalBufferSize)
+
+        writeFileSync(`theme_${i}.bin`, finalBuffer)
+
+    }
 }
 
 main()

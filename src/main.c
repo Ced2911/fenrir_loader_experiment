@@ -33,8 +33,8 @@ int main(void)
     vdp2_init();
 
     dbgio_init();
-   dbgio_dev_default_init(DBGIO_DEV_VDP2_ASYNC);
-   dbgio_dev_font_load();
+    dbgio_dev_default_init(DBGIO_DEV_VDP2_ASYNC);
+    dbgio_dev_font_load();
 
     // slave cpu setup
     cpu_dual_comm_mode_set(CPU_DUAL_ENTRY_ICI);
@@ -45,10 +45,13 @@ int main(void)
 
     screens_init();
 
+    void dbg_do();
+   // dbg_do();
+
     while (1)
     {
         screens_update();
-     
+
         vdp1_sync_render();
         vdp1_sync();
         vdp2_sync();

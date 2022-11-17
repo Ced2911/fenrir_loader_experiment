@@ -1,7 +1,6 @@
 #include "screen.h"
 #include "gamelist.h"
 #include "error.h"
-#include "yaul.h"
 
 void theme_update();
 void theme_set_background(screens_type_t scr);
@@ -33,8 +32,8 @@ screen_t *get_screen()
 
 void screens_init()
 {
-   // next_screen = screen_error_no_sd;
-    next_screen = screen_gamelist;
+    //next_screen = screen_error_no_sd;
+     next_screen = screen_gamelist;
     current_screen = screen_max;
 }
 
@@ -50,8 +49,6 @@ void screens_update()
         get(current_screen)->destroy();
         get(next_screen)->init();
         current_screen = next_screen;
-        dbgio_printf("set screen\n");
-        dbgio_flush();
 
         theme_set_background(current_screen);
     }

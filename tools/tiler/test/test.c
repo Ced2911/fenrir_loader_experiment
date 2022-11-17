@@ -12,7 +12,7 @@ typedef uint16_t rgb1555_t;
 void main()
 {
     ui_config_t * ui_config = (ui_config_t *)malloc(512);
-    FILE *fd = fopen("../theme.bin", "rb");
+    FILE *fd = fopen("../theme_1.bin", "rb");
     printf("sizeof stuct: %d\n", sizeof(ui_config_t));
     fread(ui_config, 512, 1, fd);
 
@@ -25,14 +25,22 @@ void main()
     printf("%s: %08x\n", "ui_config->vdp2.nbg1.cell_addr", ui_config->vdp2.nbg1.cell_addr);
     printf("%s: %08x\n", "ui_config->vdp2.nbg2.cell_addr", ui_config->vdp2.nbg2.cell_addr);
     printf("%s: %08x\n", "ui_config->vdp2.nbg3.cell_addr", ui_config->vdp2.nbg3.cell_addr);
+    printf("%s: %08x\n", "ui_config->vdp2.nbg0.pattern_addr", ui_config->vdp2.nbg0.pattern_addr);
+    printf("%s: %08x\n", "ui_config->vdp2.nbg1.pattern_addr", ui_config->vdp2.nbg1.pattern_addr);
+    printf("%s: %08x\n", "ui_config->vdp2.nbg2.pattern_addr", ui_config->vdp2.nbg2.pattern_addr);
+    printf("%s: %08x\n", "ui_config->vdp2.nbg3.pattern_addr", ui_config->vdp2.nbg3.pattern_addr);
 
     // printf("%s: %d\n", "ui_config->main_font.char_spacing", ui_config->main_font.char_spacing);
     // printf("%s: %d\n", "ui_config->main_font.data", ui_config->main_font.data);
 
     // screen
-    printf("%s: %d\n", "ui_config->screens.gamelist.foreground.pattern_offset", ui_config->screens.gamelist.foreground.pattern_offset);
+    printf("%s:%08x\n", "ui_config->screens.gamelist.foreground.pattern_offset", ui_config->screens.gamelist.foreground.pattern_offset);
+    printf("%s:%08x\n", "ui_config->screens.error_bad_filesystem.foreground.pattern_offset", ui_config->screens.error_bad_filesystem.foreground.pattern_offset);
+    printf("%s:%08x\n", "ui_config->screens.error_no_sd.foreground.pattern_offset", ui_config->screens.error_no_sd.foreground.pattern_offset);
 
-    printf("%s: %d\n", "ui_config->screens.error_bad_filesystem.foreground.pattern_offset", ui_config->screens.error_bad_filesystem.foreground.pattern_offset);
+    
+    printf("%s:%08x\n", "ui_config->screens.error_no_sd.foreground.screen", ui_config->screens.error_no_sd.foreground.screen);
+    printf("%s:%08x\n", "ui_config->screens.error_no_sd.background.screen", ui_config->screens.error_no_sd.background.screen);
 
     // gamelist browser
     printf("%s: %d\n", "ui_config->screens.error_no_sd.background.velocity_x", ui_config->screens.error_no_sd.background.velocity_x);
