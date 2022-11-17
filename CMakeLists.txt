@@ -44,7 +44,9 @@ add_executable(${PROJECT_NAME} ${FENRIR_SRC})
 target_link_libraries(${PROJECT_NAME} ${YAUL_LIBS})
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 
-gen_map()
-gen_start_bin()
-gen_symbol_size()
-gen_iso()
+set(LOADER_IP_BIN	${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bin)
+
+gen_map(${PROJECT_NAME} ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.map)
+gen_start_bin(${PROJECT_NAME} ${LOADER_IP_BIN})
+gen_symbol_size(${PROJECT_NAME} ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.size.txt)
+gen_iso(${PROJECT_NAME} ${LOADER_IP_BIN} ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bin)

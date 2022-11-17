@@ -54,42 +54,42 @@ include_directories(${YAUL_INCLUDE_DIRS})
 include_directories(SYSTEM ${YAUL_SYSTEM_INCLUDE_DIRS})
 
 
-macro(gen_map)
-    add_custom_command(TARGET ${PROJECT_NAME}
+macro(gen_map target output)
+    add_custom_command(TARGET ${target}
         POST_BUILD
-        DEPENDS ${PROJECT_NAME}
-        COMMAND ${CMAKE_OBJDUMP}  -x ${PROJECT_NAME} > ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.map
-        COMMENT "Generating map file ${PROJECT_NAME}.map" )
+        DEPENDS ${target}
+        COMMAND ${CMAKE_OBJDUMP}  -x ${target} > ${output}
+        COMMENT "Generating map file ${output}" )
 endmacro()
 
-macro(gen_start_bin)
-    add_custom_command(TARGET ${PROJECT_NAME}
+macro(gen_start_bin target output)
+    add_custom_command(TARGET ${target}
         POST_BUILD
-        DEPENDS ${PROJECT_NAME}
-        COMMAND ${CMAKE_OBJCOPY}  --output-format=binary ${PROJECT_NAME} ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bin
-        COMMENT "Generating bin file ${PROJECT_NAME}.bin" )
+        DEPENDS ${target}
+        COMMAND ${CMAKE_OBJCOPY}  --output-format=binary ${target} ${output}
+        COMMENT "Generating bin file ${output}" )
 endmacro()
 
-macro(gen_symbol_size)
-    add_custom_command(TARGET ${PROJECT_NAME}
+macro(gen_symbol_size target output)
+    add_custom_command(TARGET ${target}
         POST_BUILD
-        DEPENDS ${PROJECT_NAME}
-        COMMAND ${CMAKE_NM} --print-size --size-sort ${PROJECT_NAME} > ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.size.txt
-        COMMENT "Generating symbol size file ${PROJECT_NAME}.size.txt" )
+        DEPENDS ${target}
+        COMMAND ${CMAKE_NM} --print-size --size-sort ${target} > ${output}
+        COMMENT "Generating symbol size file ${output}" )
 endmacro()
 
-macro(gen_iso)
-    add_custom_command(TARGET ${PROJECT_NAME}
+macro(gen_iso target bootbin output)
+    add_custom_command(TARGET ${target}
         POST_BUILD
-        DEPENDS     ${PROJECT_NAME}.bin
+        DEPENDS     ${bootbin}
         COMMAND     $(YAUL_INSTALL_ROOT)/bin/make-ip
-        ARGS        ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bin ${IP_VERSION} ${IP_RELEASE_DATE} ${IP_AREAS} ${IP_PERIPHERALS} "${IP_TITLE}" ${IP_MASTER_STACK_ADDR} ${IP_SLAVE_STACK_ADDR} ${IP_1ST_READ_ADDR} ${IP_1ST_READ_ADDR} 
+        ARGS        ${bootbin} ${IP_VERSION} ${IP_RELEASE_DATE} ${IP_AREAS} ${IP_PERIPHERALS} "${IP_TITLE}" ${IP_MASTER_STACK_ADDR} ${IP_SLAVE_STACK_ADDR} ${IP_1ST_READ_ADDR} ${IP_1ST_READ_ADDR} 
         COMMENT     "Generating ip.bin")
 
-    add_custom_command(TARGET ${PROJECT_NAME}
+    add_custom_command(TARGET ${target}
         POST_BUILD
         DEPENDS     ${CMAKE_BINARY_DIR}/IP.bin
         COMMAND     $(YAUL_INSTALL_ROOT)/bin/make-iso 
-        ARGS        ${CMAKE_SOURCE_DIR}/cd ${CMAKE_BINARY_DIR}/IP.BIN ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bin
-        COMMENT     "Generating disc image for ${PROJECT_NAME}")
+        ARGS        ${CMAKE_SOURCE_DIR}/cd ${CMAKE_BINARY_DIR}/IP.BIN ${output}
+        COMMENT     "Generating disc image for ${TARGET}")
 endmacro()
