@@ -33,9 +33,10 @@ set(FENRIR_SRC
 	src/screens/gamelist.c 
 	src/screens/gamelist_theme.c 
 	src/screens/browser.c 
-	src/themes/sfz3/theme.c 
+	src/screens/error.c 
+	src/screens/screen.c 
+	src/theme.c 
 	src/sound_driver/pcm.c 
-	src/sound_driver/vgm/vgm.c 
 	src/lz4/lz4.c)
 
 add_executable(${PROJECT_NAME} ${FENRIR_SRC})
