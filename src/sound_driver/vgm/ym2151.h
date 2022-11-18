@@ -57,8 +57,59 @@ uint16_t mixtable[] = {
     0, 0xA000, 0xA000, 0xA000,
     0, 0xA000, 0xA000, 0xA000,
     0xA000, 0xA000, 0xA000, 0xA000};
-
+/*
 uint16_t algotable[] = {
+    0x800, 0x9861, 0x979E, 0x979E,
+    0x800, 0x985F, 0, 0x979E,
+    0x800, 0x9861, 0, 0x979D,
+    0x800, 0, 0x979E, 0x979F,
+    0x800, 0, 0x979E, 0x979E,
+    0x800, 0x97DF, 0x979E, 0x975D,
+    0x800, 0, 0x979E, 0,
+    0x800, 0, 0, 0};
+*/
+// 8algo
+/**
+algo ym2151
+    see:    https://user-images.githubusercontent.com/1408749/45317517-3f3b0b00-b508-11e8-81b3-c44d60247177.png       
+            https://github.com/vgmrips/vgmplay/blob/master/VGMPlay/chips/ym2151.c
+
+    
+	MEM is simply one sample delay
+
+    0:  M1---C1---MEM---M2---C2---OUT 
+
+    1:  M1------+-MEM---M2---C2---OUT
+             C1-+
+
+    2:  M1------+-MEM---M2---C2---OUT
+             C1-+
+                            
+    3:  M1---C1---MEM------+-C2---OUT 
+		                M2-+          
+
+    4:  M1---C1-+-OUT 
+	    M2---C2-+     
+		MEM: not used
+    
+    5:          +----C1----+
+             M1-+-MEM---M2-+-OUT
+                +----C2----+
+    
+    6:  M1---C1-+
+             M2-+-OUT
+             C2-+
+
+    7:  M1-+
+        C1-+-OUT
+        M2-+
+        C2-+
+        MEM: not used
+
+// https://antime.kapsi.fi/sega/files/ST-077-R2-052594.pdf
+M - C = J
+*/
+    uint16_t algotable[] = {
     0x800, 0x9861, 0x979E, 0x979E,
     0x800, 0x985F, 0, 0x979E,
     0x800, 0x9861, 0, 0x979D,
@@ -152,7 +203,7 @@ void ym2151_w(uint8_t aa, uint8_t dd)
         slots[1].kyonb = (dd & 0x10) >> 4;  // c1
         slots[2].kyonb = (dd & 0x20) >> 5;  // m2
         slots[3].kyonb = (dd & 0x08) >> 3;  // m1
-        slots[3].kyonex = (dd & 0x08) >> 3; // m1
+        slots[3].kyonex = (dd & 0x08) >> 3; // 
                                             // dbgio_printf("ko/foff %d %d %02x\n", chan, slot_n, dd);
 #endif
 #if 0

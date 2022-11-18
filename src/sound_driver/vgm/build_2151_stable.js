@@ -1,6 +1,52 @@
 function freq_table() {
 
 }
+
+function t(h) {
+    const kf = 3584 + 64 * 12 * Math.log2(h/ 440.0)
+    const o = kf/64/12
+    const k = (kf/64)%12
+    
+    const notes_str = [
+        'C',
+        'C#',
+        'D',
+        'D#',
+        'E',
+        'F',
+        'F#',
+        'G',
+        'G#',
+        'A',
+        'A#',
+        'B',
+    ];
+    console.log(o, notes_str[Math.floor(k)+1]+Math.floor(o), k)
+} 
+
+function r(oct, kf) {
+    const roct = oct * 64 * 12
+    const rkf = kf * 64
+    const hz = Math.pow(2, (((roct + rkf) - 3584) / (64 * 12))) * 440;
+
+    return hz
+}
+
+// output all frequency 
+function test_frequence() {
+    const ar = []
+
+    for (let oct = 0; oct < 9; oct++) {
+        for (let kf = 0; kf < 12; kf++) {
+            ar.push(r(oct, kf))
+        }
+    }
+
+    console.log(JSON.stringify(ar.map(Math.floor), null, 2))
+}
+
+
+
 // https://github.com/commanderx16/x16-docs/blob/master/X16%20Reference%20-%2009%20-%20Sound%20Programming.md
 function note_table() {
     // C4

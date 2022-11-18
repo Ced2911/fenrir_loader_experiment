@@ -21,8 +21,6 @@ int16_t hadoken_snd;
 vgm_player_t vgm_player;
 void _vgm_init()
 {
-    ym2151_init();
-    // ym2203_init();
     vgm_init(&vgm_player);
     vgm_player.sample_count = 0;
 }
