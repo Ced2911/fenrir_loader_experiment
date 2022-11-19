@@ -168,33 +168,14 @@ void ym2151_w(uint8_t aa, uint8_t dd)
         uint8_t chan = (dd & 7) * 4;
         uint8_t slot_n = dd >> 3 & 0xf;
         volatile scsp_slot_regs_t *slots = get_scsp_slot(chan);
-#if 1
+        
         slots[0].kyonb = (dd & 0x40) >> 6;  // c2
         slots[1].kyonb = (dd & 0x10) >> 4;  // c1
         slots[2].kyonb = (dd & 0x20) >> 5;  // m2
         slots[3].kyonb = (dd & 0x08) >> 3;  // m1
         slots[3].kyonex = (dd & 0x08) >> 3; // 
                                             // dbgio_printf("ko/foff %d %d %02x\n", chan, slot_n, dd);
-#endif
-#if 0
-        slots[0].kyonb = (slot_n >> 6) & 1;
-        slots[1].kyonb = (slot_n >> 4) & 1;
-        slots[2].kyonb = (slot_n >> 5) & 1;
-        slots[3].kyonb = (slot_n >> 3) & 1;
-#endif
-#if 0
-        slots[0].kyonex = (slot_n >> 6) & 1;
-        slots[1].kyonex = (slot_n >> 4) & 1;
-        slots[2].kyonex = (slot_n >> 5) & 1;
-        slots[3].kyonex = (slot_n >> 3) & 1;
 
-        // damagex way
-        slots[0].b[0] = (dd & 0x40) >> 3;
-        slots[1].b[0] = (dd & 0x10) >> 1;
-        slots[2].b[0] = (dd & 0x20) >> 2;
-        slots[3].b[0] = (dd & 0x08) | 0x10;
-        // slots[3].kyonex = 1;
-#endif
         break;
     }
     case 0x0f: /* noise mode enable, noise period */
