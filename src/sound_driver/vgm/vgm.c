@@ -10,7 +10,7 @@
 #include "tr.h"
 #include "empty_drv.h"
 
-
+#include "notes.h"
 
 void snd_init()
 {
@@ -119,12 +119,31 @@ uint16_t vgm_parse(vgm_player_t *vgm_player)
          vgm_player->vgmpos++;
       }
       break;
-   case 0x67:
+   case 0x67: //  0x67 0x66 tt ss ss ss ss (data)
+
+   {
       get_vgm_ui8(vgm_player); // 0x66
-      get_vgm_ui8(vgm_player); // 0x00 data type
-      vgm_player->datpos = vgm_player->vgmpos + 4;
-      vgm_player->vgmpos += get_vgm_ui32(vgm_player); // size of data, in bytes
-      break;
+      uint8_t tt = get_vgm_ui8(vgm_player);
+      uint32_t size = get_vgm_ui32(vgm_player);
+      uint8_t *data_start = vgm_player->vgm + vgm_player->vgmpos;
+
+      uint32_t chunk_pos = vgm_player->vgmpos;
+      switch (tt)
+      {
+      case 0x8B:
+         uint32_t rom_size = get_vgm_ui32(vgm_player);
+         uint32_t rom_off = get_vgm_ui32(vgm_player);
+         uint32_t rom_len = size - 8;
+         dbgio_printf("oki m6295 data %04x %04x %04x\n", rom_size, rom_off, rom_len);
+         break;
+      default:
+         break;
+      }
+
+      vgm_player->datpos = vgm_player->vgmpos;
+      vgm_player->vgmpos = chunk_pos + size;
+   }
+   break;
    case 0x70:
    case 0x71:
    case 0x72:
@@ -164,12 +183,18 @@ uint16_t vgm_parse(vgm_player_t *vgm_player)
       //   YM2612_Write(1, vgm_player->vgm[vgm_player->datpos + vgm_player->pcmpos + vgm_player->pcmoffset]);
       vgm_player->pcmoffset++;
       break;
+
+   case 0xB8: // 0xB8	aa dd	OKIM6295, write value dd to register aa
+
+      get_vgm_ui8(vgm_player); // 0x66
+      get_vgm_ui8(vgm_player); // 0x00 data type
+      break;
    case 0xe0:
       vgm_player->pcmpos = get_vgm_ui32(vgm_player);
       vgm_player->pcmoffset = 0;
       break;
    default:
-      // dbgio_printf("unknown cmd at 0x%x: 0x%x\n", vgm_player->vgmpos, command);
+      dbgio_printf("unknown cmd at 0x%x: 0x%x\n", vgm_player->vgmpos, command);
       vgm_player->vgmpos++;
       break;
    }
@@ -218,6 +243,9 @@ static void vgm_parse_header(vgm_player_t *vgm_player)
 #include "./atomic-robot-kid-bgma.h"
 #include "./debug_vgm.h"
 #include "./ys.h"
+#include "./sf2_title.h"
+#include "./sf2_ryu.h"
+
 int vgm_init(vgm_player_t *vgm_player)
 {
    dbgio_init();
@@ -227,8 +255,10 @@ int vgm_init(vgm_player_t *vgm_player)
    smpc_smc_sndon_call();
 
    // vgm_player->vgm = debug_2151_vgm;
-   //vgm_player->vgm = atomic_kid;
-   vgm_player->vgm = ys_vgm;
+   // vgm_player->vgm = atomic_kid;
+   // vgm_player->vgm = ys_vgm;
+   //vgm_player->vgm = sf2_ryu;
+   vgm_player->vgm = sf2_title;
    vgm_parse_header(vgm_player);
 
    vgm_player->sampled = 0;

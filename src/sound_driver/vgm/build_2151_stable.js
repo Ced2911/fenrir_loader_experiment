@@ -3,10 +3,10 @@ function freq_table() {
 }
 
 function t(h) {
-    const kf = 3584 + 64 * 12 * Math.log2(h/ 440.0)
-    const o = kf/64/12
-    const k = (kf/64)%12
-    
+    const kf = 3584 + 64 * 12 * Math.log2(h / 440.0)
+    const o = kf / 64 / 12
+    const k = (kf / 64) % 12
+
     const notes_str = [
         'C',
         'C#',
@@ -21,8 +21,8 @@ function t(h) {
         'A#',
         'B',
     ];
-    console.log(o, notes_str[Math.floor(k)+1]+Math.floor(o), k)
-} 
+    console.log(o, notes_str[Math.floor(k) + 1] + Math.floor(o), k)
+}
 
 function r(oct, kf) {
     const roct = oct * 64 * 12
@@ -85,6 +85,14 @@ function note_table() {
     const cent_fcns = [...Array(12).keys()].map(v => {
         return Math.pow(2, 10) * (Math.pow(2, v * 100 / 1200) - 1)
     })
+
+    // first note is c#4
+    // remap array
+    console.log(cent_fcns)
+    const fns_c4 = cent_fcns.pop()
+    cent_fcns.splice(0, 0, fns_c4)
+
+    console.log(cent_fcns)
 
 
     const table = [...Array(16 * 8).keys()].map(v => {

@@ -63,7 +63,7 @@ void main()
 
 #define DURATION_SEC 2
 #define SAMPLE_RATE 44100
-#define NOTE_FREQ (261.63)
+#define NOTE_FREQ (277.18)
 
 #define INCR ((NOTE_FREQ * 2 * M_PI) / SAMPLE_RATE)
 #define LEN (2 * SAMPLE_RATE / NOTE_FREQ * sizeof(int8_t))
