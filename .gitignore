@@ -12,4 +12,5 @@ node_modules
 *.7z
 *.no
 *.vgm
+*.tmp
 compile_commands.json

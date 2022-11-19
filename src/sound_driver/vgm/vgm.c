@@ -12,6 +12,21 @@
 
 #include "notes.h"
 
+void snd_init();
+
+#include "./coincoin.h"
+#include "./atomic-robot-kid-bgma.h"
+#include "./debug_vgm.h"
+#include "./ys.h"
+#include "./sf2_title.h"
+#include "./sf2_ryu.h"
+#include "./sn76496_sonic.h"
+
+// chips
+#include "./ym2151.h"
+#include "./ym2203.h"
+#include "./sn76496.h"
+
 void snd_init()
 {
    *(volatile uint8_t *)(0x25B00400) = 0x02;
@@ -32,9 +47,6 @@ void snd_init()
    // Turn on Sound CPU again
    smpc_smc_sndon_call();
 }
-
-#include "./ym2151.h"
-#include "./ym2203.h"
 
 #define SAMPLING_RATE 44100
 
@@ -76,8 +88,9 @@ uint16_t vgm_parse(vgm_player_t *vgm_player)
       break;
 
       // SN76489/SN76496
-   case 0x50:
+   case 0x50: // 0x50	dd	PSG (SN76489/SN76496) write value dd
       dat = get_vgm_ui8(vgm_player);
+      sn76496_w(dat);
       break;
       // YM2612 port 0 - 1
    case 0x52:
@@ -184,8 +197,7 @@ uint16_t vgm_parse(vgm_player_t *vgm_player)
       vgm_player->pcmoffset++;
       break;
 
-   case 0xB8: // 0xB8	aa dd	OKIM6295, write value dd to register aa
-
+   case 0xB8:                  // 0xB8	aa dd	OKIM6295, write value dd to register aa
       get_vgm_ui8(vgm_player); // 0x66
       get_vgm_ui8(vgm_player); // 0x00 data type
       break;
@@ -223,11 +235,22 @@ static void vgm_parse_header(vgm_player_t *vgm_player)
    vgm_player->vgmpos = 0x30;
    vgm_player->clock_ym2151 = get_vgm_ui32(vgm_player);
 
+   vgm_player->vgmpos = 0x0C;
+   vgm_player->clock_sn76 = get_vgm_ui32(vgm_player);
+
    vgm_player->vgmpos = 0x1c;
    vgm_player->vgmloopoffset = get_vgm_ui32(vgm_player);
 
    vgm_player->vgmpos = 0x34;
-   vgm_player->vgmpos = 0x34 + get_vgm_ui32(vgm_player);
+   uint32_t offset = get_vgm_ui32(vgm_player);
+   if (offset == 0)
+   {
+      vgm_player->vgmpos = 0x40;
+   }
+   else
+   {
+      vgm_player->vgmpos = 0x34 + offset;
+   }
 
    if (vgm_player->clock_ym2151)
       ym2151_init();
@@ -235,16 +258,12 @@ static void vgm_parse_header(vgm_player_t *vgm_player)
    if (vgm_player->clock_ym2203)
       ym2203_init();
 
+   if (vgm_player->clock_sn76)
+      sn76496_init();
+
    if (vgm_player->clock_ym2203 == 0)
       vgm_player->clock_ym2203 = 3000000; // 4000000;
 }
-
-#include "./coincoin.h"
-#include "./atomic-robot-kid-bgma.h"
-#include "./debug_vgm.h"
-#include "./ys.h"
-#include "./sf2_title.h"
-#include "./sf2_ryu.h"
 
 int vgm_init(vgm_player_t *vgm_player)
 {
@@ -257,8 +276,9 @@ int vgm_init(vgm_player_t *vgm_player)
    // vgm_player->vgm = debug_2151_vgm;
    // vgm_player->vgm = atomic_kid;
    // vgm_player->vgm = ys_vgm;
-   //vgm_player->vgm = sf2_ryu;
-   vgm_player->vgm = sf2_title;
+   // vgm_player->vgm = sf2_ryu;
+   // vgm_player->vgm = sf2_title;
+   vgm_player->vgm = sonic_sn76496;
    vgm_parse_header(vgm_player);
 
    vgm_player->sampled = 0;
