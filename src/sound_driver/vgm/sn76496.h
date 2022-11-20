@@ -24,8 +24,15 @@ sn_scsp_map_t sn_scsp_map[] = {
 #include "sn_map.h"
 };
 
-#define SN_NOTE (note_a4)
+#define SN_NOTE (note_a4_square)
 //#define SN_NOTE (note_c_d_4)
+
+// The SN76489 attenuates the volume by 2dB for each step in the volume register
+// 32767, 26028, 20675, 16422, 13045, 10362,  8231,  6568,
+// 5193,  4125,  3277,  2603,  2067,  1642,  1304,     0
+uint8_t sn_scsp_tl[] = {
+
+};
 
 void sn76496_init()
 {
@@ -80,9 +87,19 @@ void sn76496_init()
 
     for (int i = 0; i < 4; i++)
     {
+        slots[i].total_l = 0;
+        slots[i].disdl = 7;
+    }
+
+    // slots[3].alfows = 3; // noise
+    // slots[3].plfows = 3; // noise
+    // slots[3].ssctl = 1;  // select noise
+
+    for (int i = 0; i < 4; i++)
+    {
+        slots[i].total_l = 0;
         slots[i].kyonb = 1;
         slots[i].kyonex = 1;
-        slots[i].total_l = 0;
     }
 
     sn76496_t *chip = &sn_chip_0;
@@ -122,25 +139,11 @@ void sn76496_w(uint8_t dd)
         if ((dd & 0x80) == 0)
             chip->registers[r] = (chip->registers[r] & 0x0f) | ((dd & 0x3f) << 4);
 
-        chip->period[r] = chip->registers[r];
-        // slots[chan].fns = 2 * chip->registers[r];
-        slots[chan].fns = sn_scsp_map[chip->registers[r]].fns;
-        slots[chan].oct = sn_scsp_map[chip->registers[r]].oct;
+        chip->period[chan] = chip->registers[r];
 
-        if (r == 4)
-        {
-            // update noise shift frequency
-            if ((chip->registers[6] & 0x03) == 0x03)
-            {
-                chip->period[3] = chip->period[2] << 1;
-
-                slots[chan].fns = sn_scsp_map[chip->period[3]].fns;
-                slots[chan].oct = sn_scsp_map[chip->period[3]].oct;
-            }
-        }
-
-        //  dbgio_printf("set frequency: %04x %04x\n", chip->registers[r], sn_scsp_map[r].fns, sn_scsp_map[r].oct);
-        // dbgio_printf("set frequency: %04x\n", chip->registers[r]);
+        uint16_t tone = chip->registers[r] & 0x3ff;
+        slots[chan].fns = sn_scsp_map[tone].fns;
+        slots[chan].oct = sn_scsp_map[tone].oct;
         break;
 
     case 1: // tone 0: volume
@@ -150,17 +153,31 @@ void sn76496_w(uint8_t dd)
         if ((dd & 0x80) == 0)
             chip->registers[r] = (chip->registers[r] & 0x3f0) | (dd & 0x0f);
 
-        // dbgio_printf("set volume: %04x\n", dd & 0xf);
-        slots[chan].total_l = (dd & 0xf) << 2;
+        uint8_t vol = chip->registers[r] & 0xf;
+        slots[chan].total_l = vol << 2;
         break;
     case 6: // noise: frequency, mode
         if ((dd & 0x80) == 0)
             chip->registers[r] = (chip->registers[r] & 0x3f0) | (dd & 0x0f);
 
         uint16_t n = chip->registers[6];
-        uint16_t f = ((n & 3) == 3) ? (chip->period[2] << 1) : (1 << (5 + (n & 3)));
-        slots[2].fns = sn_scsp_map[f].fns;
-        slots[2].oct = sn_scsp_map[f].oct;
+
+        uint8_t tt = (n >> 2) & 3; // selects the mode (white (1) or "periodic" (0)).
+        uint8_t rr = n & 3;        // select the shift rate
+
+        // tone mode
+        if (tt)
+        {
+            uint16_t tone = chip->period[chan] << 1;
+            slots[3].fns = sn_scsp_map[tone].fns;
+            slots[3].oct = sn_scsp_map[tone].oct;
+        }
+        else
+        {
+            slots[3].fns = 0;
+            slots[3].oct = rr;
+        }
+
         break;
 
     default:
