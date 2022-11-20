@@ -20,11 +20,8 @@ typedef struct
     uint16_t fns;
 } sn_scsp_map_t;
 
-sn_scsp_map_t sn_scsp_map[] = {
 #include "sn_map.h"
-};
 
-#define SN_NOTE (note_a4_square)
 //#define SN_NOTE (note_c_d_4)
 
 // The SN76489 attenuates the volume by 2dB for each step in the volume register
@@ -34,16 +31,24 @@ uint8_t sn_scsp_tl[] = {
 
 };
 
+#define SN_NOTE (note_a4_square)
+#define SN_PER_NOTE (sn_noise_per)
+#define SN_NOISE_NOTE (sn_noise_per)
+
+uint32_t sn_square_addr = (0x2000);
+uint32_t sn_periodic_addr = (0x2400);
+uint32_t sn_white_noise_addr = (0x2800);
+
 void sn76496_init()
 {
-
     snd_init();
     // copy sinetable
-    uint32_t addr = (0x2000);
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 1; i++)
     {
 
-        memcpy((void *)(SCSP_RAM + addr + (i * sizeof(SN_NOTE))), SN_NOTE, sizeof(SN_NOTE));
+        memcpy((void *)(SCSP_RAM + sn_square_addr + (i * sizeof(SN_NOTE))), SN_NOTE, sizeof(SN_NOTE));
+        memcpy((void *)(SCSP_RAM + sn_periodic_addr + (i * sizeof(SN_PER_NOTE))), SN_PER_NOTE, sizeof(SN_PER_NOTE));
+        memcpy((void *)(SCSP_RAM + sn_white_noise_addr + (i * sizeof(SN_NOISE_NOTE))), SN_NOISE_NOTE, sizeof(SN_NOISE_NOTE));
     }
 
     memset(sn74xx_regs, 0, 256);
@@ -58,8 +63,8 @@ void sn76496_init()
     // 8 chanl * 4 op
     for (int i = 0; i < 8 * 4; i++)
     {
-        slots[i].raw[0] = (addr << 16) + 0x130;
-        slots[i].raw[1] = addr & 0xffff;
+        slots[i].raw[0] = (sn_square_addr << 16) + 0x130;
+        slots[i].raw[1] = sn_square_addr & 0xffff;
         slots[i].raw[2] = 0;
         slots[i].raw[3] = sizeof(SN_NOTE);
 
@@ -130,6 +135,8 @@ void sn76496_w(uint8_t dd)
     }
 
     uint8_t chan = r >> 1;
+    uint16_t tone = 0;
+    uint8_t vol = 0;
 
     switch (r)
     {
@@ -141,7 +148,7 @@ void sn76496_w(uint8_t dd)
 
         chip->period[chan] = chip->registers[r];
 
-        uint16_t tone = chip->registers[r] & 0x3ff;
+        tone = chip->registers[r] & 0x3ff;
         slots[chan].fns = sn_scsp_map[tone].fns;
         slots[chan].oct = sn_scsp_map[tone].oct;
         break;
@@ -153,7 +160,7 @@ void sn76496_w(uint8_t dd)
         if ((dd & 0x80) == 0)
             chip->registers[r] = (chip->registers[r] & 0x3f0) | (dd & 0x0f);
 
-        uint8_t vol = chip->registers[r] & 0xf;
+        vol = chip->registers[r] & 0xf;
         slots[chan].total_l = vol << 2;
         break;
     case 6: // noise: frequency, mode
@@ -165,17 +172,45 @@ void sn76496_w(uint8_t dd)
         uint8_t tt = (n >> 2) & 3; // selects the mode (white (1) or "periodic" (0)).
         uint8_t rr = n & 3;        // select the shift rate
 
-        // tone mode
-        if (tt)
+        tone = 0;
+
+        slots[3].kyonb = 0;
+        slots[3].kyonex = 0;
+        if (tt == 1)
         {
-            uint16_t tone = chip->period[chan] << 1;
-            slots[3].fns = sn_scsp_map[tone].fns;
-            slots[3].oct = sn_scsp_map[tone].oct;
+            slots[3].sa = sn_white_noise_addr;
+            slots[3].lea = sizeof(SN_PER_NOTE);
         }
         else
         {
-            slots[3].fns = 0;
-            slots[3].oct = rr;
+            slots[3].sa = sn_periodic_addr;
+            slots[3].lea = sizeof(SN_NOISE_NOTE);
+        }
+        slots[3].lpctl = 1;
+        slots[3].pcm8b = 1;
+        slots[3].kyonb = 1;
+        slots[3].kyonex = 1;
+
+        switch (rr)
+        {
+            // periodic
+        case 0:
+            slots[3].fns = sn_noise_scsp_map[0].fns;
+            slots[3].oct = sn_noise_scsp_map[0].oct;
+            break;
+        case 1:
+            slots[3].fns = sn_noise_scsp_map[1].fns;
+            slots[3].oct = sn_noise_scsp_map[1].oct;
+            break;
+        case 2:
+            slots[3].fns = sn_noise_scsp_map[2].fns;
+            slots[3].oct = sn_noise_scsp_map[2].oct;
+            break;
+        case 3:
+            tone = chip->period[2];
+            slots[3].fns = sn_scsp_map[tone].fns;
+            slots[3].oct = sn_scsp_map[tone].oct;
+            break;
         }
 
         break;
