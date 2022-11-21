@@ -87,7 +87,7 @@
                 "y": 56,
                 "w": 128,
                 "h": 96,
-                "enabled": false,
+                "enabled": true,
             },
             "browser": {
                 "x": 148,
@@ -97,8 +97,20 @@
                 "line_height": 12,
                 "item_colors": {
                     "colors": [
-                        50737,
-                        38053
+                        {
+                            "type": "RGB1555",
+                            "msb": 1,
+                            "r": 17,
+                            "g": 17,
+                            "b": 17
+                        },
+                        {
+                            "type": "RGB1555",
+                            "msb": 1,
+                            "r": 5,
+                            "g": 5,
+                            "b": 5
+                        },
                     ],
                     "gouraud": [
                         51794,
@@ -108,11 +120,57 @@
                     ],
                 },
                 "item_focused_colors": {
-                    "colors": [50737, 32768],
-                    "gouraud": [60610, 60610, 65314, 65314],
+                    "colors": [
+                        {
+                            "type": "RGB1555",
+                            "msb": 1,
+                            "r": 15,
+                            "g": 15,
+                            "b": 15
+                        },
+                        {
+                            "type": "RGB1555",
+                            "msb": 1,
+                            "r": 3,
+                            "g": 3,
+                            "b": 3
+                        },
+                    ],
+                    "gouraud": [
+                        {
+                            "type": "RGB1555",
+                            "msb": 1,
+                            "r": 0,
+                            "g": 0,
+                            "b": 31
+                        },
+                        {
+                            "type": "RGB1555",
+                            "msb": 1,
+                            "r": 0,
+                            "g": 0,
+                            "b": 31
+                        },{
+                            "type": "RGB1555",
+                            "msb": 1,
+                            "r": 31,
+                            "g": 0,
+                            "b": 0
+                        },
+                        {
+                            "type": "RGB1555",
+                            "msb": 1,
+                            "r": 31,
+                            "g": 0,
+                            "b": 0
+                        },
+                    ],
                 },
                 "position_bar": {
-                    "color": [1,2],
+                    "color": [
+                        1,
+                        2
+                    ],
                     "gouraud": [
                         1,
                         2,

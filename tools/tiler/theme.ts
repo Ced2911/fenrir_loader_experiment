@@ -5,7 +5,11 @@ enum DataType {
     u16,
     u32,
     f16,
+    color,
     s32,
+    color_x2,
+    color_x4,
+    color_x16,
     u16_x2,
     u16_x4,
     u16_x16,
@@ -71,6 +75,36 @@ export interface BinaryWriter {
     writeS32(v: number): void,
 }
 
+function colorToC(color: any): number {
+    let color_be = 0;
+    function RGB1555(color: any): number {
+        return (color.msb << 15) | (color.b << 10) | (color.g << 5) | (color.r)
+    }
+    function RGB888_RGB1555_INITIALIZER(color: any): number {
+        return RGB1555({ msb: color.msb, r: color.r >> 3, g: color.g >> 3, b: color.b >> 3 })
+    }
+
+    const types = {
+        'RGB1555': RGB1555, 'RGB888_RGB1555_INITIALIZER': RGB888_RGB1555_INITIALIZER
+    }
+
+    if (Number.isInteger(color)) {
+        color_be = color;
+    }
+    else if (typeof color == 'object') {
+        if (Object.keys(types).includes(color.type.toUpperCase())) {
+            color_be = types[color.type](color)
+        }
+    }
+    /*
+    // it will be swapped by write so swap it again
+    const hi = color_be >> 8;
+    const lo = color_be && 0xff;
+    return lo << 8 | hi;
+    */
+   return color_be
+}
+
 class CSerializable {
     constructor() {
 
@@ -121,8 +155,11 @@ class CSerializable {
                         writer.writeU16(this[k])
                         break;
                     case DataType.u32:
-                    case DataType.f16:
                         writer.writeU32(this[k])
+                        break;
+                    case DataType.f16:
+                        const f16x16 = (Math.round(this[k] * 65536)) & 0xffffffff; // << 16                        
+                        writer.writeS32(f16x16)
                         break;
                     case DataType.s32:
                         writer.writeS32(this[k])
@@ -141,6 +178,31 @@ class CSerializable {
                     case DataType.u16_x16:
                         for (let i = 0; i < 16; i++)
                             writer.writeU16(this[k][i])
+                        break;
+                    // couleur
+
+                    case DataType.color:
+                        const color = colorToC(this[k])
+                        writer.writeU16(color)
+
+                        break;
+                    case DataType.color_x2:
+                        for (let i = 0; i < 2; i++) {
+                            const color = colorToC(this[k][i])
+                            writer.writeU16(color)
+                        }
+                        break;
+                    case DataType.color_x4:
+                        for (let i = 0; i < 4; i++) {
+                            const color = colorToC(this[k][i])
+                            writer.writeU16(color)
+                        }
+                        break;
+                    case DataType.color_x16:
+                        for (let i = 0; i < 16; i++) {
+                            const color = colorToC(this[k][i])
+                            writer.writeU16(color)
+                        }
                         break;
                     default:
                         console.error('type not handled')
@@ -209,11 +271,11 @@ class UiPositionBar extends CSerializable {
     @structPropsType('uint16_t')
     h: number = 0;
 
-    @ctype(DataType.u16_x2)
+    @ctype(DataType.color_x2)
     @structPropsType('rgb1555_t', 2)
     color: number[] = Array(2);
 
-    @ctype(DataType.u16_x4)
+    @ctype(DataType.color_x4)
     @structPropsType('rgb1555_t', 4)
     gouraud: number[] = Array(4);
 
@@ -229,11 +291,11 @@ class UiPositionBar extends CSerializable {
 }
 
 class UiItemColor extends CSerializable {
-    @ctype(DataType.u16_x2)
+    @ctype(DataType.color_x2)
     @structPropsType('rgb1555_t', 2)
     colors: number[] = Array(2);
 
-    @ctype(DataType.u16_x4)
+    @ctype(DataType.color_x4)
     @structPropsType('rgb1555_t', 4)
     gouraud: number[] = Array(4);
 }
@@ -285,7 +347,7 @@ class UiConfigScreenGameListCover extends CSerializable {
     @structPropsType('uint16_t')
     h: number = 0;
 
-    @ctype(DataType.u16_x16)
+    @ctype(DataType.color_x16)
     @structPropsType('rgb1555_t', 16)
     noise_palettes: number[] = Array(16);
 

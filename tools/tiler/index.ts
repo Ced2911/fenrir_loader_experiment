@@ -3,7 +3,9 @@ import { readFileSync, writeFileSync } from 'fs';
 import { parse } from 'jsonc-parser'
 import { UiConfig, BinaryWriter, ToCStruct, UiConfigRessources } from './theme';
 import { RessourceImporter } from './ressources'
-import { off } from 'process';
+import { Command } from 'commander';
+import { exportBufferToC } from './encode';
+
 
 const themejson = parse(readFileSync('theme.jsonc').toString())
 
@@ -60,7 +62,7 @@ function bufferWriterLE(buffer: Buffer): BinaryWriter {
 }
 
 
-async function main() {
+async function main(theme_filename: string, options: any) {
     const buffer = Buffer.alloc(512) // sizeof(ui_config_t)
     let uiConfig = new UiConfig();
     uiConfig.parse(themejson)
@@ -97,7 +99,7 @@ async function main() {
     // merge ressources in config
     Object.entries(resourceImporter.vdp2config).forEach(([r, offset]) => {
         const [k, type, vdpscreen, ...screens] = r.split('-')
-        const screenToId = {'nbg0':0,'nbg1':1, 'nbg2':2, 'nbg3':3}
+        const screenToId = { 'nbg0': 0, 'nbg1': 1, 'nbg2': 2, 'nbg3': 3 }
 
         screens.forEach(scr => {
             console.log('offset', vdpscreen, k, type)
@@ -130,18 +132,44 @@ async function main() {
 
     uiConfig.ressource_count = uiConfig.ressources.length;
 
-    for (let i = 0; i < 2; i++) {
-        const wr = [bufferWriterBE, bufferWriterLE]
-        const bwr = wr[i](buffer)
+    if (options.test) {
+        const bwr = bufferWriterLE(buffer)
         uiConfig.write(bwr)
-
         const finalBufferSize = buffer.length + vdp2vmem.length + vdp2cmem.length
         const finalBuffer = Buffer.concat([buffer, vdp2vmem, vdp2cmem], finalBufferSize)
 
-        writeFileSync(`theme_${i}.bin`, finalBuffer)
+        writeFileSync(`theme_1.bin`, finalBuffer)
+    } else {
+        const bwr = bufferWriterBE(buffer)
+        uiConfig.write(bwr)
+        const finalBufferSize = buffer.length + vdp2vmem.length + vdp2cmem.length
+        const finalBuffer = Buffer.concat([buffer, vdp2vmem, vdp2cmem], finalBufferSize)
 
+        if (options.i) {
+            const c_code = exportBufferToC('theme', finalBuffer);
+            writeFileSync(options.output, c_code)
+        } else {
+            writeFileSync(options.output, finalBuffer)
+        }
     }
 }
+const program = new Command();
 
-main()
+program
+    .name('fenrir-theme-builder')
+    .description('CLI to some JavaScript string utilities')
+    .version('0.0.0');
+
+program
+    .argument('<string>', 'theme\'s json')
+    .option('--test', 'encode in little endian (used for testing)')
+    .option('-i', 'output a .h file (used for include)')
+    .option('-o, --output <string>', 'binary file for theme', 'theme.bin')
+    .action((theme, options) => {
+        main(theme, options)
+    })
+
+program.showHelpAfterError();
+program.parse(process.argv);
+//main()
 writeFileSync('struct.h.tmp', ToCStruct())
