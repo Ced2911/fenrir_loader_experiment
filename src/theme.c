@@ -91,10 +91,10 @@ static void vdp2_ngb0_init()
 static void vdp2_ngb1_init()
 {
     const vdp2_scrn_normal_map_t nbg1_map = {
-        .plane_a = ui_config->vdp2.nbg1.pal_addr,
-        .plane_b = ui_config->vdp2.nbg1.pal_addr,
-        .plane_c = ui_config->vdp2.nbg1.pal_addr,
-        .plane_d = ui_config->vdp2.nbg1.pal_addr};
+        .plane_a = ui_config->vdp2.nbg1.pattern_addr,
+        .plane_b = ui_config->vdp2.nbg1.pattern_addr,
+        .plane_c = ui_config->vdp2.nbg1.pattern_addr,
+        .plane_d = ui_config->vdp2.nbg1.pattern_addr};
 
     format_nbg1.cpd_base = ui_config->vdp2.nbg1.cell_addr;
     format_nbg1.palette_base = ui_config->vdp2.nbg1.pal_addr << 1;
@@ -176,7 +176,7 @@ void theme_init_vdp()
     vdp2_ngb2_init();
 
     uint8_t *ressources = ((uint8_t *)ui_config) + 512;
-    for (int i = 0; i < ui_config->ressource_count; i++)
+    for (uint32_t i = 0; i < ui_config->ressource_count; i++)
     {
         if (ui_config->ressources[i].type == 1)
         {
@@ -275,8 +275,8 @@ void theme_init_bgm()
 /*****************************************************
  * theme loader
  ****************************************************/
-#include "themes/sfz3/theme.config.h"
-static ui_config_t *ui_config = (ui_config_t *)theme_0_bin;
+#include "themes/sfz3/theme.demo.h"
+static ui_config_t *ui_config = (ui_config_t *)theme;
 ui_config_t *theme_get_ui_config()
 {
     return ui_config;
