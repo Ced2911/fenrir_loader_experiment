@@ -216,8 +216,8 @@ export class VDP2Memory {
          const cmem_sz = cmemz.length
          */
 
-        console.log('vmemz', vmem_sz)
-        console.log('cmemz', cmem_sz)
+      //  console.log('vmemz', vmem_sz)
+      //  console.log('cmemz', cmem_sz)
 
         exp += exportBufferToC("vmemz", vmemz.slice(0, vmem_sz));
         exp += exportBufferToC("cmemz", cmemz.slice(0, cmem_sz));
@@ -312,7 +312,7 @@ static inline void __setup_vdp2_cycles() {
                 pal.addr = palAddr;
                 pal.mem.copy(this.cmem, palAddr * 2);
 
-                console.log(pal.mem.length)
+               // console.log(pal.mem.length)
                 palAddr += pall_pank_sz;
             }
         })

@@ -76,8 +76,8 @@ async function main(theme_filename: string, options: any) {
     const cram_addr = 0x25F00000;
 
     // fill vdp2 config
-    console.log(resourceImporter.vdp2mem)
-    console.log(resourceImporter.vdp2config)
+   // console.log(resourceImporter.vdp2mem)
+   // console.log(resourceImporter.vdp2config)
 
     uiConfig.vdp2.nbg0.cell_addr = resourceImporter.vdp2mem.cells.nbg0.addr | vdp2_addr;
     uiConfig.vdp2.nbg1.cell_addr = resourceImporter.vdp2mem.cells.nbg1.addr | vdp2_addr;
@@ -102,7 +102,7 @@ async function main(theme_filename: string, options: any) {
         const screenToId = { 'nbg0': 0, 'nbg1': 1, 'nbg2': 2, 'nbg3': 3 }
 
         screens.forEach(scr => {
-            console.log('offset', vdpscreen, k, type)
+            // console.log('offset', vdpscreen, k, type)
             uiConfig.screens[scr][type].screen = screenToId[vdpscreen]
             uiConfig.screens[scr][type].pattern_offset = offset
         })

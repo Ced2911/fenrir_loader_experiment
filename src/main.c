@@ -45,6 +45,22 @@ int main(void)
 
     screens_init();
 
+    // read status
+    fenrir_read_configuration(sd_dir);
+
+    switch (sd_dir->hdr.sd_card_status)
+    {
+    case FENRIR_SD_CARD_STATUS_CARD_PRESENT:
+        screens_select(screen_gamelist);
+        break;
+    case FENRIR_SD_CARD_STATUS_NO_CARD:
+        screens_select(screen_error_no_sd);
+        break;
+    case FENRIR_SD_CARD_STATUS_WRONG_FS:
+        screens_select(screen_error_bad_filesystem);
+        break;
+    }
+
     while (1)
     {
         screens_update();

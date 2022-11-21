@@ -27,7 +27,7 @@
                 ],
                 "type": "foreground",
                 // only png
-                "file": "../../assets/error.png",
+                "file": "../../assets/error_bad_filesystem.png",
             },
         ],
         // only bff is supported
@@ -60,7 +60,7 @@
                 "velocity_y": 0, // FIX16(-07),
             },
             "foreground": {
-                "velocity_x": 0,
+                "velocity_x": -3,
                 "velocity_y": 0,
             },
             // use vdp2 so coord need to be aligned to 8

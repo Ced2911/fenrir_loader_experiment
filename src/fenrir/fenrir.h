@@ -80,7 +80,7 @@ enum
 /*****************************************************
  * fenrir main functions
  ****************************************************/
-
+void fenrir_read_configuration(sd_dir_t *sd_dir);
 void fenrir_read_status_sector(status_sector_t *status_sector);
 void fenrir_refresh_entries(sd_dir_t *sd_dir, sd_dir_entry_t *sd_dir_entries);
 void fenrir_set_gamelist_source(uint8_t source);

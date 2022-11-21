@@ -82,6 +82,20 @@ static void __noreturn fenrir_direct_boot()
     }
 }
 
+void fenrir_read_configuration(sd_dir_t *sd_dir)
+{
+    if (EMU_BUILD)
+    {
+        sd_dir->hdr.sd_card_status = FENRIR_SD_CARD_STATUS_NO_CARD;
+        sd_dir->hdr.count = 25;
+        sd_dir->hdr.use_cover = 1;
+    }
+    else
+    {
+        cd_block_sector_read(FENRIR_READ_CONFIGURATION_FAD, (void *)sd_dir);
+    }
+}
+
 void fenrir_read_status_sector(status_sector_t *status_sector)
 {
     if (EMU_BUILD)

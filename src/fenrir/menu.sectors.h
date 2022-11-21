@@ -108,6 +108,13 @@ enum
     FENRIR_WIFI_CONNECTED
 };
 
+enum
+{
+    FENRIR_SD_CARD_STATUS_CARD_PRESENT = 0,
+    FENRIR_SD_CARD_STATUS_NO_CARD = 1,
+    FENRIR_SD_CARD_STATUS_WRONG_FS = 2
+};
+
 typedef union
 {
     uint8_t raw[STATUS_SECTOR_SIZE];

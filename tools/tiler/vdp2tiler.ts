@@ -159,7 +159,8 @@ export async function tileVdp2(config: Config,
         //}))
     }
 
-    const all4bpp = (Object.values(palettes)).every(c => c.length < 16)
+    //const all4bpp = (Object.values(palettes)).every(c => c.length < 16)
+    const all4bpp=1
     bpp = all4bpp ? Vdp2ColorCnt.color4bpp : Vdp2ColorCnt.color8bpp
 
     //await Promise.all(config.images.map(async ({ screen, file }) => {
@@ -202,9 +203,10 @@ export async function tileVdp2(config: Config,
                 // need padding ?
                 let len = pattern[screen].length;
                 if (len > 0) {
-                    len = 1 << 12;
+                    // align to next 1<<12
+                    len = 1<<12//(len + 4095) & (~4095);
                     const off = len
-                    // console.log('len', len, pattern[screen].length, 'd', off - pattern[screen].length)
+                   //  console.log('len', len, pattern[screen].length, 'd', off, off - pattern[screen].length)
                     // add padding
                     pattern[screen].push(...Array(off - pattern[screen].length))
                 }
@@ -223,7 +225,9 @@ export async function tileVdp2(config: Config,
         vdp2.addPalette(screen, { palettes: Object.values(palettes[screen]) })
     })
 
-    console.log(palettes)
+    // console.log(palettes)
+
+    console.log(`use ${Object.values(cells).length} cells`)
 
     //const cfg = Object.entries(pattern_offset_per_key).filter(([k, l]) => l !== undefined).map(([k, l]) => `static const uint32_t pattern_offset_${k}=${l};`).join('\n')
 
