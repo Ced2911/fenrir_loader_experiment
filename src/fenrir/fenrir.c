@@ -86,7 +86,7 @@ void fenrir_read_configuration(sd_dir_t *sd_dir)
 {
     if (EMU_BUILD)
     {
-        sd_dir->hdr.sd_card_status = FENRIR_SD_CARD_STATUS_NO_CARD;
+        sd_dir->hdr.sd_card_status = 0;//FENRIR_SD_CARD_STATUS_NO_CARD;
         sd_dir->hdr.count = 25;
         sd_dir->hdr.use_cover = 1;
     }

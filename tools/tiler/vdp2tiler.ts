@@ -160,7 +160,7 @@ export async function tileVdp2(config: Config,
     }
 
     //const all4bpp = (Object.values(palettes)).every(c => c.length < 16)
-    const all4bpp=1
+    const all4bpp = 0
     bpp = all4bpp ? Vdp2ColorCnt.color4bpp : Vdp2ColorCnt.color8bpp
 
     //await Promise.all(config.images.map(async ({ screen, file }) => {
@@ -204,9 +204,9 @@ export async function tileVdp2(config: Config,
                 let len = pattern[screen].length;
                 if (len > 0) {
                     // align to next 1<<12
-                    len = 1<<12//(len + 4095) & (~4095);
+                    len = (len + 4095) & (~4095);
                     const off = len
-                   //  console.log('len', len, pattern[screen].length, 'd', off, off - pattern[screen].length)
+                    //  console.log('len', len, pattern[screen].length, 'd', off, off - pattern[screen].length)
                     // add padding
                     pattern[screen].push(...Array(off - pattern[screen].length))
                 }
