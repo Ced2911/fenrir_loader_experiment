@@ -196,7 +196,8 @@ export async function tileVdp2(config: Config,
                     if (!cell)
                         throw (`cell for hash: ${hash} not`)
 
-                    const p = palettes[screen].length < 16 ? cell4pbbPattern(cell) : cellPattern(cell)
+                    //const p = palettes[screen].length < 16 ? cell4pbbPattern(cell) : cellPattern(cell)
+                    const p =cellPattern(cell)
                     pages[patternGetPage(x, y)].push(p)
                 })
 
