@@ -160,8 +160,8 @@ export async function tileVdp2(config: Config,
     }
 
     //const all4bpp = (Object.values(palettes)).every(c => c.length < 16)
-    const all4bpp = 0
-    bpp = all4bpp ? Vdp2ColorCnt.color4bpp : Vdp2ColorCnt.color8bpp
+    const all4bpp = 1
+    bpp = Vdp2ColorCnt.color4bpp
 
     //await Promise.all(config.images.map(async ({ screen, file }) => {
     for (const { screen, file } of config.images) {
@@ -197,7 +197,8 @@ export async function tileVdp2(config: Config,
                         throw (`cell for hash: ${hash} not`)
 
                     //const p = palettes[screen].length < 16 ? cell4pbbPattern(cell) : cellPattern(cell)
-                    const p =cellPattern(cell)
+                    //const p = cellPattern(cell)
+                    const p = cell4pbbPattern(cell)
                     pages[patternGetPage(x, y)].push(p)
                 })
 
@@ -205,13 +206,14 @@ export async function tileVdp2(config: Config,
                 let len = pattern[screen].length;
                 if (len > 0) {
                     // align to next 1<<12
-                    len = (len + 4095) & (~4095);
+                    //len = (len + 4095) & (~4095);
+                    len = 1<<12
                     const off = len
                     //  console.log('len', len, pattern[screen].length, 'd', off, off - pattern[screen].length)
                     // add padding
                     pattern[screen].push(...Array(off - pattern[screen].length))
                 }
-                pattern_offset_per_key[key] = len * 4 // 1word
+                pattern_offset_per_key[key] = len * 8 // 1word
 
                 pattern[screen].push(...Object.values(pages).flatMap(x => x))
             })

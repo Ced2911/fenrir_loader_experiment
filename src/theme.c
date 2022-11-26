@@ -26,8 +26,8 @@ static current_theme_config_t current_theme_config = {
  ****************************************************/
 vdp2_scrn_cell_format_t format_nbg0 = {
     .scroll_screen = VDP2_SCRN_NBG0,
-    //.ccc = VDP2_SCRN_CCC_PALETTE_16,
-    .ccc = VDP2_SCRN_CCC_PALETTE_256,
+    .ccc = VDP2_SCRN_CCC_PALETTE_16,
+   // .ccc = VDP2_SCRN_CCC_PALETTE_256,
     .char_size = VDP2_SCRN_CHAR_SIZE_1X1,
     .pnd_size = 2,
     .aux_mode = 1,
@@ -38,8 +38,8 @@ vdp2_scrn_cell_format_t format_nbg0 = {
 
 vdp2_scrn_cell_format_t format_nbg2 = {
     .scroll_screen = VDP2_SCRN_NBG2,
-    // .ccc = VDP2_SCRN_CCC_PALETTE_16,
-    .ccc = VDP2_SCRN_CCC_PALETTE_256,
+     .ccc = VDP2_SCRN_CCC_PALETTE_16,
+    //.ccc = VDP2_SCRN_CCC_PALETTE_256,
     .char_size = VDP2_SCRN_CHAR_SIZE_1X1,
     .pnd_size = 2,
     .aux_mode = 1,
@@ -101,7 +101,7 @@ static void vdp2_ngb1_init()
     format_nbg1.palette_base = ui_config->vdp2.nbg1.pal_addr << 1;
 
     vdp2_scrn_cell_format_set(&format_nbg1, &nbg1_map);
-    vdp2_scrn_priority_set(VDP2_SCRN_NBG1, 3);
+    vdp2_scrn_priority_set(VDP2_SCRN_NBG1, 6);
     vdp2_cram_offset_set(VDP2_SCRN_NBG1, format_nbg1.palette_base);
 }
 

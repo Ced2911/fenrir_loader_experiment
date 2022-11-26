@@ -4,7 +4,9 @@
         "vdp2": [
             {
                 "screens": [
-                    "gamelist"
+                    "gamelist",
+                    "error_bad_filesystem",
+                    "error_no_sd"
                 ],
                 "type": "foreground",
                 // only png
@@ -19,15 +21,6 @@
                 "type": "background",
                 // only png
                 "file": "../../assets/map.png",
-            },
-            {
-                "screens": [
-                    "error_bad_filesystem",
-                    "error_no_sd"
-                ],
-                "type": "foreground",
-                // only png
-                "file": "../../assets/error_bad_filesystem.png",
             },
         ],
         // only bff is supported
@@ -66,35 +59,131 @@
             // use vdp2 so coord need to be aligned to 8
             "cover": {
                 "noise_palettes": [
-                    33544,
-                    33728,
-                    33292,
-                    33758,
-                    33544,
-                    33728,
-                    33292,
-                    33758,
-                    33544,
-                    33728,
-                    33292,
-                    33758,
-                    33544,
-                    33728,
-                    33292,
-                    33758
+                    {
+                        "type": "RGB1555",
+                        "msb": 1,
+                        "r": 31,
+                        "g": 31,
+                        "b": 31
+                    },
+                    {
+                        "type": "RGB1555",
+                        "msb": 1,
+                        "r": 0,
+                        "g": 0,
+                        "b": 0
+                    },
+                    {
+                        "type": "RGB1555",
+                        "msb": 1,
+                        "r": 0,
+                        "g": 0,
+                        "b": 0
+                    },
+                    {
+                        "type": "RGB1555",
+                        "msb": 1,
+                        "r": 31,
+                        "g": 31,
+                        "b": 31
+                    },
+                    {
+                        "type": "RGB1555",
+                        "msb": 1,
+                        "r": 31,
+                        "g": 31,
+                        "b": 31
+                    },
+                    {
+                        "type": "RGB1555",
+                        "msb": 1,
+                        "r": 31,
+                        "g": 31,
+                        "b": 31
+                    },
+                    {
+                        "type": "RGB1555",
+                        "msb": 1,
+                        "r": 0,
+                        "g": 0,
+                        "b": 0
+                    },
+                    {
+                        "type": "RGB1555",
+                        "msb": 1,
+                        "r": 31,
+                        "g": 31,
+                        "b": 31
+                    },
+                    {
+                        "type": "RGB1555",
+                        "msb": 1,
+                        "r": 0,
+                        "g": 0,
+                        "b": 0
+                    },
+                    {
+                        "type": "RGB1555",
+                        "msb": 1,
+                        "r": 0,
+                        "g": 0,
+                        "b": 0
+                    },
+                    {
+                        "type": "RGB1555",
+                        "msb": 1,
+                        "r": 31,
+                        "g": 31,
+                        "b": 31
+                    },
+                    {
+                        "type": "RGB1555",
+                        "msb": 1,
+                        "r": 31,
+                        "g": 31,
+                        "b": 31
+                    },
+                    {
+                        "type": "RGB1555",
+                        "msb": 1,
+                        "r": 0,
+                        "g": 0,
+                        "b": 0
+                    },
+                    {
+                        "type": "RGB1555",
+                        "msb": 1,
+                        "r": 31,
+                        "g": 31,
+                        "b": 31
+                    },
+                    {
+                        "type": "RGB1555",
+                        "msb": 1,
+                        "r": 0,
+                        "g": 0,
+                        "b": 0
+                    },
+                    {
+                        "type": "RGB1555",
+                        "msb": 1,
+                        "r": 31,
+                        "g": 31,
+                        "b": 31
+                    },
                 ],
                 "x": 8,
-                "y": 56,
-                "w": 128,
-                "h": 96,
+                "y": 160,
+                "w": 96,
+                "h": 72,
                 "enabled": true,
             },
             "browser": {
-                "x": 148,
-                "y": 56,
+                "x": 16,
+                "y": 16,
                 "w": 100,
                 "h": 200,
-                "line_height": 12,
+                "line_height": 11,
                 "item_colors": {
                     "colors": [
                         {
@@ -150,7 +239,8 @@
                             "r": 0,
                             "g": 0,
                             "b": 31
-                        },{
+                        },
+                        {
                             "type": "RGB1555",
                             "msb": 1,
                             "r": 31,
