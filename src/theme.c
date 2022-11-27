@@ -276,7 +276,7 @@ void theme_init_bgm()
 /*****************************************************
  * theme loader
  ****************************************************/
-#include "themes/sfz3/theme.demo.h"
+#include "themes/demo/theme.demo.h"
 static ui_config_t *ui_config = (ui_config_t *)theme;
 ui_config_t *theme_get_ui_config()
 {
