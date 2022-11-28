@@ -8,6 +8,8 @@
 #include "screens/screen.h"
 #include "sound_driver/pcm.h"
 
+#include "ui.h"
+
 #define RESOLUTION_WIDTH (352)
 #define RESOLUTION_HEIGHT (224)
 
@@ -23,6 +25,13 @@ void *zalloc(size_t l)
     memset(ptr, 0, l);
     return ptr;
 }
+
+ui_item_t error_box[] = {
+    {
+        .type = UI_LABEL,
+        .label = {.text = "test"},
+    },
+    {.type = UI_END}};
 
 int main(void)
 {
@@ -59,6 +68,17 @@ int main(void)
     case FENRIR_SD_CARD_STATUS_WRONG_FS:
         screens_select(screen_error_bad_filesystem);
         break;
+    }
+
+    while (1)
+    {
+        ui_render(error_box);
+
+        vdp1_sync_render();
+        vdp1_sync();
+        vdp2_sync();
+        vdp1_sync_wait();
+        vdp2_sync_wait();
     }
 
     while (1)

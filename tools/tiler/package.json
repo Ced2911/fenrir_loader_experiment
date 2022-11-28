@@ -6,11 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tiler": "ts-node index.ts theme.jsonc",
-    "demo": "ts-node index.ts theme.jsonc -i -o /workspaces/loader_yaul/src/themes/sfz3/demo.demo.h",
-    "demo-t": "ts-node index.ts theme.jsonc --test -i -o /workspaces/loader_yaul/src/themes/demo/theme.demo.h",
-    "_tiler": "yarn bg && yarn layer",
-    "bg": "ts-node index.ts ../../assets/mvsc_bg.png ../../assets/mvsc_bg.h mvsc_bg",
-    "layer": "ts-node index.ts ../../assets/marvel_fenrir.png ../../assets/marvel_fenrir.h marvel_fenrir"
+    "demo": "ts-node index.ts theme.jsonc -i -o /workspaces/loader_yaul/src/themes/demo/theme.demo.h",
+    "demo-t": "ts-node index.ts theme.jsonc --test -i -o /workspaces/loader_yaul/src/themes/demo/theme.demo.h"
   },
   "author": "",
   "license": "ISC",

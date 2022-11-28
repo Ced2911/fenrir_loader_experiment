@@ -20,7 +20,7 @@
                 ],
                 "type": "background",
                 // only png
-                "file": "../../assets/map.png",
+                "file": "../../assets/galaxy.png",
             },
         ],
         // only bff is supported
@@ -49,8 +49,8 @@
         },
         "gamelist": {
             "background": {
-                "velocity_x": 0, // FIX16(-07),
-                "velocity_y": 0, // FIX16(-07),
+                "velocity_x": -0.5,
+                "velocity_y": -0.8,
             },
             "foreground": {
                 "velocity_x": -3,
@@ -172,7 +172,7 @@
                         "b": 31
                     },
                 ],
-                "x": 8,
+                "x": 128,
                 "y": 160,
                 "w": 96,
                 "h": 72,
@@ -180,10 +180,10 @@
             },
             "browser": {
                 "x": 16,
-                "y": 16,
+                "y": 38,
                 "w": 100,
                 "h": 200,
-                "line_height": 11,
+                "line_height": 10,
                 "item_colors": {
                     "colors": [
                         {
