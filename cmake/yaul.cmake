@@ -83,13 +83,18 @@ macro(gen_iso target bootbin output)
         POST_BUILD
         DEPENDS     ${bootbin}
         COMMAND     $(YAUL_INSTALL_ROOT)/bin/make-ip
-        ARGS        ${bootbin} ${IP_VERSION} ${IP_RELEASE_DATE} ${IP_AREAS} ${IP_PERIPHERALS} "${IP_TITLE}" ${IP_MASTER_STACK_ADDR} ${IP_SLAVE_STACK_ADDR} ${IP_1ST_READ_ADDR} ${IP_1ST_READ_ADDR} 
-        COMMENT     "Generating ip.bin")
+        ARGS        ${bootbin} ${IP_VERSION} ${IP_RELEASE_DATE} ${IP_AREAS} ${IP_PERIPHERALS} "${IP_TITLE}" ${IP_MASTER_STACK_ADDR} ${IP_SLAVE_STACK_ADDR} ${IP_1ST_READ_ADDR} ${IP_1ST_READ_SIZE} 
+        COMMENT     "Generating IP.bin")
 
     add_custom_command(TARGET ${target}
         POST_BUILD
         DEPENDS     ${CMAKE_BINARY_DIR}/IP.bin
-        COMMAND     $(YAUL_INSTALL_ROOT)/bin/make-iso 
-        ARGS        ${CMAKE_SOURCE_DIR}/cd ${CMAKE_BINARY_DIR}/IP.BIN ${output}
-        COMMENT     "Generating disc image for ${TARGET}")
+        # COMMAND     $(YAUL_INSTALL_ROOT)/bin/make-iso 
+        # ARGS        ${CMAKE_SOURCE_DIR}/cd ${CMAKE_BINARY_DIR}/IP.BIN ${output}
+
+        COMMAND     xorrisofs -quiet -sysid "SEGA SEGASATURN" -volid "FENRIR LOADER" -volset "FENRIR LOADER" -publisher "SEGA ENTERPRISES, LTD." -preparer "SEGA ENTERPRISES, LTD." -appid "SEGA ENTERPRISES, LTD." 
+                    -full-iso9660-filenames
+                    -generic-boot ${CMAKE_BINARY_DIR}/IP.bin -abstract "ABS.TXT" -biblio "BIB.TXT" -copyright "CPY.TXT" -verbose
+                    -o "${output}" ${bootbin}
+        COMMENT     "Generating disc image for ${target}")
 endmacro()

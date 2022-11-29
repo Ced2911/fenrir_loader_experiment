@@ -36,6 +36,7 @@ set(FENRIR_SRC
 	src/screens/error.c 
 	src/screens/screen.c 
 	src/theme.c 
+	src/ui.c 
 	src/sound_driver/pcm.c 
 	src/lz4/lz4.c)
 
@@ -49,4 +50,4 @@ set(LOADER_IP_BIN	${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bin)
 gen_map(${PROJECT_NAME} ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.map)
 gen_start_bin(${PROJECT_NAME} ${LOADER_IP_BIN})
 gen_symbol_size(${PROJECT_NAME} ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.size.txt)
-gen_iso(${PROJECT_NAME} ${LOADER_IP_BIN} ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bin)
+gen_iso(${PROJECT_NAME} ${LOADER_IP_BIN} ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.iso)

@@ -38,6 +38,8 @@
         "theme.h": "c",
         "font.sfa.h": "c",
         "screen.h": "c",
-        "theme.config.h": "c"
+        "theme.config.h": "c",
+        "ui.h": "c",
+        "scrn_shared.h": "c"
     }
 }

@@ -31,6 +31,36 @@ ui_item_t error_box[] = {
         .type = UI_LABEL,
         .label = {.text = "test"},
     },
+    {
+        .type = UI_LINE,
+    },
+    {
+        .type = UI_LABEL,
+        .label = {.text = "test a"},
+    },
+    {
+        .type = UI_BOOL,
+        .toggle = {.value = 0},
+    },
+    {
+        .type = UI_LABEL,
+        .label = {.text = "test b"},
+    },
+    {
+        .type = UI_LINE,
+    },
+    {
+        .type = UI_LABEL,
+        .label = {.text = "test b"},
+    },
+    {
+        .type = UI_BOOL,
+        .toggle = {.value = 0},
+    },
+    {
+        .type = UI_BOOL,
+        .toggle = {.value = 1},
+    },
     {.type = UI_END}};
 
 int main(void)
@@ -41,10 +71,6 @@ int main(void)
     vdp1_init();
     vdp2_init();
 
-    dbgio_init();
-    dbgio_dev_default_init(DBGIO_DEV_VDP2_ASYNC);
-    dbgio_dev_font_load();
-
     // slave cpu setup
     cpu_dual_comm_mode_set(CPU_DUAL_ENTRY_ICI);
 
@@ -53,12 +79,19 @@ int main(void)
     sd_dir_entries = (sd_dir_entry_t *)zalloc(sizeof(sd_dir_entry_t) * 2500);
 
     screens_init();
+    ui_init();
+    
+
+    dbgio_init();
+    dbgio_dev_default_init(DBGIO_DEV_VDP2_ASYNC);
+    dbgio_dev_font_load();
 
     // read status
     fenrir_read_configuration(sd_dir);
 
     switch (sd_dir->hdr.sd_card_status)
     {
+
     case FENRIR_SD_CARD_STATUS_CARD_PRESENT:
         screens_select(screen_gamelist);
         break;
@@ -70,10 +103,12 @@ int main(void)
         break;
     }
 
+    uint8_t *ui_shadow = (uint8_t *)malloc(512 * 256);
+    ui_render(error_box, ui_shadow, VDP2_VRAM_ADDR(0, 0x00000), VDP2_CRAM_ADDR(0));
+
     while (1)
     {
-        ui_render(error_box);
-
+        ui_update(error_box);
         vdp1_sync_render();
         vdp1_sync();
         vdp2_sync();

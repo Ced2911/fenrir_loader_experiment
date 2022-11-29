@@ -34,7 +34,7 @@ struct ui_item_s
         } label;
 
         struct {
-            char ** values;
+            char ** content;
             uint8_t value;
             uint8_t count; 
         } list;
@@ -47,9 +47,11 @@ struct ui_item_s
         // todo
     };
 
-    void (*handler)(void *user, ui_item_t *item);
+    void (*handler)(void *user, struct ui_item_s *item);
 };
 
 typedef struct ui_item_s ui_item_t;
 
-void ui_render(ui_item_t *);
+void ui_init();
+void ui_render(ui_item_t *diag, uint8_t * shadow, uint8_t *vram, uint16_t * cram);
+void ui_update(ui_item_t *diag);
