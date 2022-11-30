@@ -42,55 +42,55 @@ static ui_item_t options_items[] = {
     _UI_BREAK,
 
     _UI_LABEL_W("Bios", SCREEN_W / 2),
-    _UI_LABEL("BIOS_TODO"),
+    _UI_LABEL_ID("BIOS_TODO", UI_SYS_BIOS_ID),
     _UI_BREAK,
 
     _UI_LABEL_W("Region", SCREEN_W / 2),
-    _UI_LABEL("BIOS_TODO"),
+    _UI_LABEL_ID("BIOS_TODO", UI_SYS_SMPC_REGION),
     _UI_BREAK,
 
     _UI_LABEL_W("Video frequency", SCREEN_W / 2),
-    _UI_LABEL("BIOS_TODO"),
+    _UI_LABEL_ID("BIOS_TODO", UI_SYS_VIDEO_FREQ),
     _UI_BREAK,
 
     _UI_LABEL_W("Region flags", SCREEN_W / 2),
-    _UI_LABEL("BIOS_TODO"),
+    _UI_LABEL_ID("BIOS_TODO", UI_SYS_REGION_FLAGS),
     _UI_BREAK,
 
     _UI_LABEL_W("Firmware version", SCREEN_W / 2),
-    _UI_LABEL("BIOS_TODO"),
+    _UI_LABEL_ID("BIOS_TODO", UI_SYS_HW_FW_REV),
     _UI_BREAK,
 
     _UI_LABEL_W("Hardware version", SCREEN_W / 2),
-    _UI_LABEL("BIOS_TODO"),
+    _UI_LABEL_ID("BIOS_TODO", UI_SYS_HW_REV),
     _UI_BREAK,
 
     _UI_LABEL_W("Hardware UID", SCREEN_W / 2),
-    _UI_LABEL("BIOS_TODO"),
+    _UI_LABEL_ID("BIOS_TODO", UI_SYS_HW_UID),
     _UI_BREAK,
 
     _UI_LABEL_W("Firmware date", SCREEN_W / 2),
-    _UI_LABEL("BIOS_TODO"),
+    _UI_LABEL_ID("BIOS_TODO", UI_SYS_HW_FW_DATE),
     _UI_BREAK,
 
     _UI_LABEL_W("Wifi status", SCREEN_W / 2),
-    _UI_LABEL("BIOS_TODO"),
+    _UI_LABEL_ID("BIOS_TODO", UI_SYS_HW_WIFI_STATE),
     _UI_BREAK,
 
     _UI_LABEL_W("Wifi Ip addr.", SCREEN_W / 2),
-    _UI_LABEL("BIOS_TODO"),
+    _UI_LABEL_ID("BIOS_TODO", UI_SYS_HW_IP_ADDR),
     _UI_BREAK,
 
     _UI_LABEL_W("SD Name", SCREEN_W / 2),
-    _UI_LABEL("BIOS_TODO"),
+    _UI_LABEL_ID("BIOS_TODO", UI_SYS_HW_SD_NAME),
     _UI_BREAK,
 
     _UI_LABEL_W("SD Type", SCREEN_W / 2),
-    _UI_LABEL("BIOS_TODO"),
+    _UI_LABEL_ID("BIOS_TODO", UI_SYS_HW_SD_TYPE),
     _UI_BREAK,
 
     _UI_LABEL_W("SD Size", SCREEN_W / 2),
-    _UI_LABEL("BIOS_TODO"),
+    _UI_LABEL_ID("BIOS_TODO", UI_SYS_HW_SD_SIZE),
     _UI_BREAK,
 
     _UI_END};

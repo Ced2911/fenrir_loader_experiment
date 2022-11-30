@@ -20,10 +20,17 @@
     {                                             \
         .type = UI_LABEL, .label = {.text = STR}, \
     }
+
+#define _UI_LABEL_ID(STR, ID)                              \
+    {                                                      \
+        .type = UI_LABEL, .label = {.text = STR}, .id = ID \
+    }
+
 #define _UI_LABEL_W(STR, WIDTH)                              \
     {                                                        \
         .type = UI_LABEL, .label = {.text = STR}, .w = WIDTH \
     }
+
 #define _UI_BOOL(ID, VAL, HANDLER)                                               \
     {                                                                            \
         .id = ID, .type = UI_BOOL, .number = {.value = VAL}, .handler = HANDLER, \
