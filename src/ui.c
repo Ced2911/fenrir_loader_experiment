@@ -369,11 +369,14 @@ void ui_update(ui_item_t *diag)
     ui_reset_colors();
     ui_update_values(diag);
     ui_update_focused(diag);
+
+    /*
     static int i = 0;
 
     dbgio_printf("[H[2J");
     dbgio_printf("s: %d %d\n", ui_ctx.cur_item, i++);
     dbgio_flush();
+    */
 }
 
 static void
@@ -420,6 +423,7 @@ void ui_render(ui_item_t *diag)
             break;
         case UI_BREAK:
             ui_ctx.cur_item_x = 0;
+            ui_ctx.cur_item_y += 10;
             break;
         case UI_BOOL:
             ui_render_switch(item);

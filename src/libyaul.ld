@@ -52,6 +52,16 @@ SECTIONS
      *(.rodata.*)
      *(.gnu.linkonce.r.*)
   }
+   /*
+   Allow to reserve some space without making an huge binary
+   */
+  .noload(NOLOAD) : 
+  {
+     . = ALIGN (16);
+      *(.noload)
+      *(.noload.*)
+  }
+
 
   .data :
   {
@@ -64,16 +74,6 @@ SECTIONS
      *(.sdata)
      *(.sdata.*)
      *(.gnu.linkonce.s.*)
-  }
-
-   /*
-   Allow to reserve some space without making an huge binary
-   */
-  .noload(NOLOAD) : 
-  {
-     . = ALIGN (16);
-      *(.noload)
-      *(.noload.*)
   }
 
   .bss :

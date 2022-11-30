@@ -12,6 +12,7 @@
 #define RESOLUTION_WIDTH (352)
 #define RESOLUTION_HEIGHT (224)
 
+
 sd_dir_t *sd_dir;
 status_sector_t *status_sector;
 sd_dir_entry_t *sd_dir_entries;
