@@ -53,6 +53,10 @@ static struct ui_ctx
     uint8_t *shadow;
     uint8_t *vram;
     uint16_t *cram;
+
+    int padding_top;
+    int padding_left;
+
     int cur_item_x;
     int cur_item_y;
     int pal_nb;
@@ -134,14 +138,15 @@ static int ui_item_is_inline(uint8_t item_type)
     return 0;
 }
 
-static void ui_render_label(ui_item_t *item)
+static int ui_render_label(ui_item_t *item)
 {
     ui_render_text_param_t param = {.dst = ui_ctx.shadow, .pitch = 512, .text = item->label.text, .x = ui_ctx.cur_item_x, .y = ui_ctx.cur_item_y};
-    ui_ctx.cur_item_x += ui_render_text(&param);
+
+    return ui_render_text(&param);
 }
 
 /** mock **/
-static void ui_render_switch(ui_item_t *item)
+static int ui_render_bool(ui_item_t *item)
 {
     int len = 8;
 
@@ -153,12 +158,12 @@ static void ui_render_switch(ui_item_t *item)
         }
     }
 
-    ui_ctx.cur_item_x += 12;
+    return 12;
 }
 
 static void ui_render_line(ui_item_t *item)
 {
-    ui_ctx.cur_item_x = 0;
+    ui_ctx.cur_item_x = ui_ctx.padding_left;
     ui_ctx.cur_item_y += LINE_HEIGHT + LINE_HEIGHT / 2;
 
     for (int x = 0; x < SCREEN_W; x++)
@@ -172,7 +177,7 @@ static void ui_render_line(ui_item_t *item)
 static void ui_blit(uint8_t *shadow, uint8_t *vram)
 {
     // scu_dma_transfer(0, (void *)shadow, vram, 512 * 256);
-    //memcpy(vram, shadow, 512 * 256);
+    // memcpy(vram, shadow, 512 * 256);
     vdp_dma_enqueue(vram, shadow, 512 * 256);
 }
 
@@ -293,7 +298,7 @@ static void ui_update_values(ui_item_t *diag)
         switch (item->type)
         {
         case UI_BOOL:
-            if (item->toggle.value)
+            if (item->number.value)
                 ui_ctx.cram[pal] = highlight_color.raw;
 
             break;
@@ -409,30 +414,40 @@ void ui_render(ui_item_t *diag)
 
     ui_ctx.pal_nb = 10;
 
-    ui_ctx.cur_item_x = 0;
-    ui_ctx.cur_item_y = 0;
+    ui_ctx.cur_item_x = ui_ctx.padding_left;
+    ui_ctx.cur_item_y = ui_ctx.padding_top;
 
     ui_ctx.cur_item = -1;
 
     while (item->type != UI_END)
     {
+        int w = 0;
         switch (item->type)
         {
         case UI_LABEL:
-            ui_render_label(item);
+            w = ui_render_label(item);
             break;
         case UI_BREAK:
-            ui_ctx.cur_item_x = 0;
+            ui_ctx.cur_item_x = ui_ctx.padding_left;
             ui_ctx.cur_item_y += 10;
             break;
         case UI_BOOL:
-            ui_render_switch(item);
+            w = ui_render_bool(item);
             break;
         case UI_LINE:
             ui_render_line(item);
             break;
         default:
             break;
+        }
+
+        if (item->w == 0 && w)
+        {
+            ui_ctx.cur_item_x += w;
+        }
+        if (item->w > 0)
+        {
+            ui_ctx.cur_item_x += item->w;
         }
 
         // select first item
@@ -453,6 +468,9 @@ void ui_render(ui_item_t *diag)
 
 void ui_init(ui_item_init_t *param)
 {
+    ui_ctx.padding_top = 24;
+    ui_ctx.padding_left = 16;
+
     ui_ctx.cram = param->cram;
     ui_ctx.vram = param->vram;
 

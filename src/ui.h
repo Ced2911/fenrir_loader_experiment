@@ -20,10 +20,13 @@
     {                                             \
         .type = UI_LABEL, .label = {.text = STR}, \
     }
-
+#define _UI_LABEL_W(STR, WIDTH)                              \
+    {                                                        \
+        .type = UI_LABEL, .label = {.text = STR}, .w = WIDTH \
+    }
 #define _UI_BOOL(ID, VAL, HANDLER)                                               \
     {                                                                            \
-        .id = ID, .type = UI_BOOL, .toggle = {.value = VAL}, .handler = HANDLER, \
+        .id = ID, .type = UI_BOOL, .number = {.value = VAL}, .handler = HANDLER, \
     }
 
 struct ui_item_s;
@@ -51,6 +54,9 @@ struct ui_item_s
     uint8_t id;
     uint8_t enabled;
 
+    // 0: auto, >0 fixed
+    int w;
+
     union
     {
         struct
@@ -67,8 +73,8 @@ struct ui_item_s
 
         struct
         {
-            uint8_t value;
-        } toggle;
+            int value;
+        } number;
 
         // todo
     };
@@ -82,6 +88,8 @@ typedef struct
 {
     uint8_t *vram;
     uint16_t *cram;
+    int padding_top;
+    int padding_left;
 } ui_item_init_t;
 
 void ui_init(ui_item_init_t *p);

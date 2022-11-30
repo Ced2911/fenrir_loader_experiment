@@ -3,6 +3,8 @@
 #include "screen.h"
 #include "../ui.h"
 
+#define SCREEN_W (352)
+
 enum
 {
     UI_OPTIONS_IGR = 1,
@@ -23,69 +25,71 @@ enum
 
 static void enable_igr(ui_item_t *i)
 {
-    i->toggle.value = !i->toggle.value;
+    i->number.value = !i->number.value;
 }
 
 static ui_item_t options_items[] = {
     _UI_LABEL("Settings"),
     _UI_BREAK,
+    _UI_BREAK,
     //
-    _UI_LABEL("Enable IGR"),
+    _UI_LABEL_W("Enable IGR", SCREEN_W / 2),
     _UI_BOOL(UI_OPTIONS_IGR, 0, enable_igr),
     // =======================
     _UI_LINE,
     _UI_LABEL("System informations"),
     _UI_BREAK,
-    
-    _UI_LABEL("Bios"),
-    _UI_LABEL("BIOS_TODO"),
     _UI_BREAK,
-    
-    _UI_LABEL("Region"),
-    _UI_LABEL("BIOS_TODO"),
-    _UI_BREAK,
-    
-    _UI_LABEL("Video frequency"),
-    _UI_LABEL("BIOS_TODO"),
-    _UI_BREAK,
-    
-    _UI_LABEL("Region flags"),
+
+    _UI_LABEL_W("Bios", SCREEN_W / 2),
     _UI_LABEL("BIOS_TODO"),
     _UI_BREAK,
 
-    _UI_LABEL("Firmware version"),
+    _UI_LABEL_W("Region", SCREEN_W / 2),
     _UI_LABEL("BIOS_TODO"),
     _UI_BREAK,
 
-    _UI_LABEL("Hardware version"),
+    _UI_LABEL_W("Video frequency", SCREEN_W / 2),
     _UI_LABEL("BIOS_TODO"),
     _UI_BREAK,
 
-    _UI_LABEL("Hardware UID"),
+    _UI_LABEL_W("Region flags", SCREEN_W / 2),
     _UI_LABEL("BIOS_TODO"),
     _UI_BREAK,
 
-    _UI_LABEL("Firmware date"),
+    _UI_LABEL_W("Firmware version", SCREEN_W / 2),
     _UI_LABEL("BIOS_TODO"),
     _UI_BREAK,
 
-    _UI_LABEL("Wifi status"),
+    _UI_LABEL_W("Hardware version", SCREEN_W / 2),
     _UI_LABEL("BIOS_TODO"),
     _UI_BREAK,
-    
-    _UI_LABEL("Wifi Ip addr."),
+
+    _UI_LABEL_W("Hardware UID", SCREEN_W / 2),
     _UI_LABEL("BIOS_TODO"),
     _UI_BREAK,
-    
-    _UI_LABEL("SD Name"),
+
+    _UI_LABEL_W("Firmware date", SCREEN_W / 2),
     _UI_LABEL("BIOS_TODO"),
     _UI_BREAK,
-    
-    _UI_LABEL("SD Type"),
+
+    _UI_LABEL_W("Wifi status", SCREEN_W / 2),
     _UI_LABEL("BIOS_TODO"),
     _UI_BREAK,
-    
-    _UI_LABEL("SD Size"),
+
+    _UI_LABEL_W("Wifi Ip addr.", SCREEN_W / 2),
+    _UI_LABEL("BIOS_TODO"),
+    _UI_BREAK,
+
+    _UI_LABEL_W("SD Name", SCREEN_W / 2),
+    _UI_LABEL("BIOS_TODO"),
+    _UI_BREAK,
+
+    _UI_LABEL_W("SD Type", SCREEN_W / 2),
+    _UI_LABEL("BIOS_TODO"),
+    _UI_BREAK,
+
+    _UI_LABEL_W("SD Size", SCREEN_W / 2),
     _UI_LABEL("BIOS_TODO"),
     _UI_BREAK,
 
@@ -96,7 +100,7 @@ static void options_init()
     ui_item_t *it = ui_get_item_by_id(options_items, UI_OPTIONS_IGR);
     if (it)
     {
-        it->toggle.value = 1;
+        it->number.value = 1;
     }
 
     ui_render(options_items);
