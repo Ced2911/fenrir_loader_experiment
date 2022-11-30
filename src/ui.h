@@ -47,11 +47,17 @@ struct ui_item_s
         // todo
     };
 
-    void (*handler)(void *user, struct ui_item_s *item);
+    void (*handler)(struct ui_item_s *item);
 };
 
 typedef struct ui_item_s ui_item_t;
 
-void ui_init();
-void ui_render(ui_item_t *diag, uint8_t * shadow, uint8_t *vram, uint16_t * cram);
+typedef struct 
+{
+    uint8_t *vram; uint16_t * cram;
+} ui_item_init_t;
+
+
+void ui_init(ui_item_init_t * p);
+void ui_render(ui_item_t *diag);
 void ui_update(ui_item_t *diag);

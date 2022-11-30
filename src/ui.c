@@ -1,6 +1,24 @@
 #include <yaul.h>
 #include <string.h>
 #include "ui.h"
+#include "./themes/demo/font.sfa.h"
+
+// @todo move to somewhere else
+// uint8_t *ui_shadow = (uint8_t *)malloc(512 * 256);
+__attribute__((section(".noload"))) static uint8_t ui_shadow[512 * 256];
+
+#define align_8(addr) (((addr) + 7) & (~7))
+
+// #define THEME_FONT (&theme_get_ui_config()->main_font)
+typedef struct
+{
+    int char_width;
+    int char_height;
+    uint8_t *data;
+    uint8_t *char_spacing;
+} __font_t;
+static const __font_t sfa = {.char_width = 8, .char_height = 9, .data = sfa_font_bitmap, .char_spacing = sfa_font_width};
+#define THEME_FONT (&sfa)
 
 static vdp2_scrn_bitmap_format_t rbg0 = {
     .bitmap_size = VDP2_SCRN_BITMAP_SIZE_512X256,
@@ -51,9 +69,50 @@ const uint8_t ui_block_type[] = {
 const uint8_t ui_ctrl_type[] = {
     UI_BOOL, UI_LIST, 0};
 
+typedef struct
+{
+    uint8_t *dst;
+    char *text;
+    int x;
+    int y;
+    int pitch;
+    int pal;
+} ui_render_text_param_t;
+
+static int ui_render_text(ui_render_text_param_t *param)
+{
+    int len = strlen(param->text);
+    int text_size = 0;
+    uint8_t *font = (uint8_t *)(THEME_FONT->data);
+    const uint32_t h = THEME_FONT->char_height;
+    const uint32_t w = THEME_FONT->char_width;
+
+    for (int i = 0; i < len; i++)
+    {
+        const uint8_t letter_w = THEME_FONT->char_spacing[param->text[i]];
+        uint8_t *src = &font[(param->text[i] - 32) * ((w * h / 2))];
+
+        // do font
+        for (int y0 = 0; y0 < h; y0++)
+        {
+            for (int x0 = 0; x0 < w; x0 += 2)
+            {
+                uint8_t *dst = &param->dst[(y0 + param->y) * param->pitch + param->x + x0 + text_size];
+                dst[0] = ((*src) >> 4) & 1;
+                dst[1] = ((*src) & 0xf) & 1;
+                *src++;
+            }
+        }
+
+        text_size += letter_w;
+    }
+
+    return text_size;
+}
+
 static int ui_item_is_ctrl(uint8_t item_type)
 {
-    for (uint8_t *type = ui_ctrl_type; *type; type++)
+    for (const uint8_t *type = ui_ctrl_type; *type; type++)
     {
         if (*type == item_type)
         {
@@ -65,7 +124,7 @@ static int ui_item_is_ctrl(uint8_t item_type)
 
 static int ui_item_is_inline(uint8_t item_type)
 {
-    for (uint8_t *type = ui_inline_type; *type; type++)
+    for (const uint8_t *type = ui_inline_type; *type; type++)
     {
         if (*type == item_type)
         {
@@ -75,21 +134,10 @@ static int ui_item_is_inline(uint8_t item_type)
     return 0;
 }
 
-/** mock **/
 static void ui_render_label(ui_item_t *item)
 {
-    // mock...
-    int len = strlen(item->label.text);
-
-    for (int y = 0; y < LINE_HEIGHT; y++)
-    {
-        for (int x = 0; x < (len * 8); x++)
-        {
-            *V_ADDR(ui_ctx.cur_item_x + x, y + ui_ctx.cur_item_y) = COLOR_DEFAULT;
-        }
-    }
-
-    ui_ctx.cur_item_x += len * 8;
+    ui_render_text_param_t param = {.dst = ui_ctx.shadow, .pitch = 512, .text = item->label.text, .x = ui_ctx.cur_item_x, .y = ui_ctx.cur_item_y};
+    ui_ctx.cur_item_x += ui_render_text(&param);
 }
 
 /** mock **/
@@ -124,16 +172,8 @@ static void ui_render_line(ui_item_t *item)
 static void ui_blit(uint8_t *shadow, uint8_t *vram)
 {
     // scu_dma_transfer(0, (void *)shadow, vram, 512 * 256);
-    memcpy(vram, shadow, 512 * 256);
-}
-
-void ui_init()
-{
-    vdp2_scrn_bitmap_format_set(&rbg0);
-    vdp2_scrn_priority_set(VDP2_SCRN_NBG0, 1);
-    vdp2_scrn_display_set(VDP2_SCRN_DISPTP_NBG0);
-
-    vdp2_cram_offset_set(VDP2_SCRN_NBG0, 0);
+    //memcpy(vram, shadow, 512 * 256);
+    vdp_dma_enqueue(vram, shadow, 512 * 256);
 }
 
 static int ui_get_next_item_in_row(ui_item_t *diag, int cur_item)
@@ -318,34 +358,48 @@ void ui_update(ui_item_t *diag)
     {
         ui_ctx.cur_item = ui_get_bottom_item(diag, ui_ctx.cur_item);
     }
+    else if (digital.held.button.a)
+    {
+        if (ui_ctx.cur_item >= 0 && diag[ui_ctx.cur_item].handler)
+        {
+            diag[ui_ctx.cur_item].handler(&diag[ui_ctx.cur_item]);
+        }
+    }
 
     ui_reset_colors();
     ui_update_values(diag);
     ui_update_focused(diag);
+    static int i = 0;
 
     dbgio_printf("[H[2J");
-    dbgio_printf("s: %d\n", ui_ctx.cur_item);
+    dbgio_printf("s: %d %d\n", ui_ctx.cur_item, i++);
     dbgio_flush();
 }
 
-void ui_render(ui_item_t *diag, uint8_t *shadow, uint8_t *vram, uint16_t *cram)
+static void
+_vblank_out_handler(void *work __unused)
+{
+    smpc_peripheral_intback_issue();
+}
+
+void ui_render(ui_item_t *diag)
 {
     int n = 0;
-    cram[COLOR_BACKGROUND] = bg_color.raw;
-    cram[COLOR_DEFAULT] = default_color.raw;
-    cram[COLOR_HIGHLIGHT] = highlight_color.raw;
-    cram[COLOR_ACTIVE] = active_color.raw;
+    ui_ctx.cram[COLOR_BACKGROUND] = bg_color.raw;
+    ui_ctx.cram[COLOR_DEFAULT] = default_color.raw;
+    ui_ctx.cram[COLOR_HIGHLIGHT] = highlight_color.raw;
+    ui_ctx.cram[COLOR_ACTIVE] = active_color.raw;
 
     // palettes...
     for (int i = 10; i < 255; i++)
     {
-        cram[i] = default_color.raw;
+        ui_ctx.cram[i] = default_color.raw;
     }
 
     // erase screen
     for (int i = 0; i < (512 * 256); i++)
     {
-        shadow[i] = COLOR_BACKGROUND;
+        ui_shadow[i] = COLOR_BACKGROUND;
     }
 
     ui_item_t *item = diag;
@@ -354,9 +408,6 @@ void ui_render(ui_item_t *diag, uint8_t *shadow, uint8_t *vram, uint16_t *cram)
 
     ui_ctx.cur_item_x = 0;
     ui_ctx.cur_item_y = 0;
-
-    ui_ctx.shadow = shadow;
-    ui_ctx.cram = cram;
 
     ui_ctx.cur_item = -1;
 
@@ -390,6 +441,23 @@ void ui_render(ui_item_t *diag, uint8_t *shadow, uint8_t *vram, uint16_t *cram)
         item++;
     }
 
-    ui_blit(shadow, vram);
+    ui_blit(ui_shadow, ui_ctx.vram);
     ui_update(diag);
+
+    vdp_sync_vblank_out_set(_vblank_out_handler, NULL);
+}
+
+void ui_init(ui_item_init_t *param)
+{
+    ui_ctx.cram = param->cram;
+    ui_ctx.vram = param->vram;
+
+    ui_ctx.shadow = ui_shadow;
+    ui_ctx.cram = ui_ctx.cram;
+
+    vdp2_scrn_bitmap_format_set(&rbg0);
+    vdp2_scrn_priority_set(VDP2_SCRN_NBG0, 1);
+    vdp2_scrn_display_set(VDP2_SCRN_DISPTP_NBG0);
+
+    vdp2_cram_offset_set(VDP2_SCRN_NBG0, 0);
 }

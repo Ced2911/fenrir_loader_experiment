@@ -35,6 +35,7 @@ set(FENRIR_SRC
 	src/screens/browser.c 
 	src/screens/error.c 
 	src/screens/screen.c 
+	src/screens/options.c 
 	src/theme.c 
 	src/ui.c 
 	src/sound_driver/pcm.c 
@@ -44,6 +45,9 @@ add_executable(${PROJECT_NAME} ${FENRIR_SRC})
 
 target_link_libraries(${PROJECT_NAME} ${YAUL_LIBS})
 target_include_directories(${PROJECT_NAME} PRIVATE src)
+set_target_properties(${PROJECT_NAME} PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/libyaul.ld)
+
+
 
 set(LOADER_IP_BIN	${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bin)
 

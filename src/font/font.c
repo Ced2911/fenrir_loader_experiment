@@ -3,7 +3,7 @@
 #include <assert.h>
 #include "font.h"
 #include "theme.h"
-#include "./themes/demo/font.sfa.h"
+//#include "./themes/demo/font.sfa.h"
 
 #define align_8(addr) (((addr) + 7) & (~7))
 
@@ -15,7 +15,7 @@ typedef struct
     uint8_t *data;
     uint8_t *char_spacing;
 } __font_t;
-const __font_t sfa = {.char_width = 8, .char_height = 9, .data = sfa_font_bitmap, .char_spacing = sfa_font_width};
+static const __font_t sfa = {.char_width = 8, .char_height = 9, .data = NULL, .char_spacing = NULL};
 #define THEME_FONT (&sfa)
 
 static inline void memcpy4bpp(uint8_t *d, uint8_t *s, uint32_t nb, int off)

@@ -40,6 +40,7 @@
         "screen.h": "c",
         "theme.config.h": "c",
         "ui.h": "c",
-        "scrn_shared.h": "c"
+        "scrn_shared.h": "c",
+        "options.h": "c"
     }
 }

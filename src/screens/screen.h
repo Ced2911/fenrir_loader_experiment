@@ -15,6 +15,8 @@ typedef enum screens
     screen_gamelist,
     screen_error_no_sd,
     screen_error_bad_filesystem,
+    screen_options,
+    screen_diagnostic,
     screen_max
 } screens_type_t;
 

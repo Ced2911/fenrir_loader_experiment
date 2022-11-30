@@ -1,6 +1,8 @@
 #include "screen.h"
 #include "gamelist.h"
 #include "error.h"
+#include "options.h"
+#include "diagnostic.h"
 
 void theme_update();
 void theme_set_background(screens_type_t scr);
@@ -18,6 +20,11 @@ static screen_t *get(screens_type_t scr)
     case screen_error_bad_filesystem:
         return &error_bad_filesystem;
         break;
+    case screen_options:
+        return &options_screen;
+        break;
+    case screen_diagnostic:
+        return &diagnostics_screen;
     case screen_gamelist:
     default:
         return &gamelist_screen;
@@ -32,8 +39,8 @@ screen_t *get_screen()
 
 void screens_init()
 {
-    //next_screen = screen_error_no_sd;
-     next_screen = screen_gamelist;
+    // next_screen = screen_error_no_sd;
+    next_screen = screen_gamelist;
     current_screen = screen_max;
 }
 
@@ -50,10 +57,10 @@ void screens_update()
         get(next_screen)->init();
         current_screen = next_screen;
 
-        theme_set_background(current_screen);
+       // theme_set_background(current_screen);
     }
     screen_t *s = get_screen();
-    theme_update();
+   // theme_update();
     s->update();
 }
 
