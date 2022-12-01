@@ -17,29 +17,42 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/yaul.cmake)
 PROJECT(FenrirYaul)
 
 set(FENRIR_SRC 
-   # src/crt0.S 
+   # assets
     assets/army12.c 
 	assets/bitmap.c 
+
+	src/bram.c 
 	src/main.c 
 	src/noise.c 
 	src/reset.c 
 	src/vdp1.config.c 
 	src/vdp2.config.c 
+	src/theme.c 
+	src/ui.c 
 	src/font/font.c 
+
+	# fenrir
 	src/fenrir/fenrir.c 
 	src/fenrir/fenrir.dir_op.c 
 	src/fenrir/fenrir.asserts.c 
 	src/fenrir/region.c 
+	src/fenrir/fileio/fileio.c
+
+	# screens
+	src/screens/bram_backup.c 
 	src/screens/gamelist.c 
 	src/screens/gamelist_theme.c 
 	src/screens/browser.c 
 	src/screens/error.c 
 	src/screens/screen.c 
 	src/screens/options.c 
-	src/theme.c 
-	src/ui.c 
+
 	src/sound_driver/pcm.c 
-	src/lz4/lz4.c)
+
+	# compression
+	src/lz4/lz4.c
+	src/fastlz/fastlz.c
+	)
 
 add_executable(${PROJECT_NAME} ${FENRIR_SRC})
 

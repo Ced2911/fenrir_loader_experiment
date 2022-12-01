@@ -3,6 +3,7 @@
 #include "error.h"
 #include "options.h"
 #include "diagnostic.h"
+#include "bram_backup.h"
 
 void theme_update();
 void theme_set_background(screens_type_t scr);
@@ -25,6 +26,10 @@ static screen_t *get(screens_type_t scr)
         break;
     case screen_diagnostic:
         return &diagnostics_screen;
+    case screen_backup_bram:
+        return &bram_backup;
+    case screen_restore_bram:
+        return &bram_backup;
     case screen_gamelist:
     default:
         return &gamelist_screen;
@@ -57,10 +62,10 @@ void screens_update()
         get(next_screen)->init();
         current_screen = next_screen;
 
-       // theme_set_background(current_screen);
+        // theme_set_background(current_screen);
     }
     screen_t *s = get_screen();
-   // theme_update();
+    // theme_update();
     s->update();
 }
 

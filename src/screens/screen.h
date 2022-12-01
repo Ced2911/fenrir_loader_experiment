@@ -17,6 +17,8 @@ typedef enum screens
     screen_error_bad_filesystem,
     screen_options,
     screen_diagnostic,
+    screen_backup_bram,
+    screen_restore_bram,
     screen_max
 } screens_type_t;
 
