@@ -17,7 +17,7 @@
         cpu_sync_spinlock_clear(0); \
     } while (0);
 
-extern sd_dir_t *sd_dir;
+extern fenrir_config_t *fenrir_config;
 extern status_sector_t *status_sector;
 extern sd_dir_entry_t *sd_dir_entries;
 
@@ -60,8 +60,8 @@ static void browser_get_item(browser_t *browser, uint32_t item, char *dst, int m
 static void browser_change_dir(browser_t *browser, int16_t id)
 {
     fenrir_select_direntry(id);
-    fenrir_refresh_entries(sd_dir, sd_dir_entries);
-    browser->count = sd_dir->hdr.count;
+    fenrir_refresh_entries(fenrir_config, sd_dir_entries);
+    browser->count = fenrir_config->hdr.count;
     browser->page = 0;
     browser->selected = 0;
     browser->old_page = -1;
@@ -145,9 +145,9 @@ static void gamelist_init()
      * Read gamelist
      ****************************************************/
     fenrir_read_status_sector(status_sector);
-    fenrir_refresh_entries(sd_dir, sd_dir_entries);
+    fenrir_refresh_entries(fenrir_config, sd_dir_entries);
 
-    browser.count = sd_dir->hdr.count;
+    browser.count = fenrir_config->hdr.count;
 
     /*****************************************************
      * themes

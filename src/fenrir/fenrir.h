@@ -3,10 +3,6 @@
 // Check if running in yabause with hle enabled...
 #define EMU_BUILD (1 || (*(uint16_t *)0x800) == 0) // BTR
 
-// smpc value cached by bios
-#define bios_get_region_flag() (*(volatile uint32_t *)0x06000248)
-#define bios_get_smpc_region() (bios_get_region_flag() >> 12)
-
 #define DIR_ENTRY_ROOT (-1)
 #define PARENT_DIRECTORY (3000)
 
@@ -80,9 +76,9 @@ enum
 /*****************************************************
  * fenrir main functions
  ****************************************************/
-void fenrir_read_configuration(sd_dir_t *sd_dir);
+void fenrir_read_configuration(fenrir_config_t *fenrir_config);
 void fenrir_read_status_sector(status_sector_t *status_sector);
-void fenrir_refresh_entries(sd_dir_t *sd_dir, sd_dir_entry_t *sd_dir_entries);
+void fenrir_refresh_entries(fenrir_config_t *fenrir_config, sd_dir_entry_t *sd_dir_entries);
 void fenrir_set_gamelist_source(uint8_t source);
 void fenrir_launch_game(uint32_t id, int boot_method);
 void fenrir_call(uint32_t sector_addr);
@@ -93,7 +89,7 @@ void fenrir_get_cover(uint32_t id, uint8_t *cover);
     static inline void fenrir_toggle_##func_name()               \
     {                                                            \
         fenrir_call(sector_addr);                                \
-        /*sd_dir->hdr.##header_field ^= 1;*/                     \
+        /*fenrir_config->hdr.##header_field ^= 1;*/                     \
     }
 
 FENRIR_TOGGLE_FUNC(auto_reload, FENRIR_EVENT_TOGGLE_AUTO_RELOAD, auto_reload)
@@ -118,3 +114,28 @@ int fenrir_readfile_packet(void *buffer);
 
 // Look for a file
 fenrir_dir_entry_t *fenrir_find_entry(fenrir_dir_data_t *fenrir_dir_data, char *name);
+
+
+
+/*****************************************************
+ * fenrir hw revision
+ ****************************************************/
+
+#define FENRIR_HW_REV_0_STR "20"
+#define FENRIR_HW_REV_1_STR "21"
+#define FENRIR_HW_REV_2_STR "DUO"
+
+static inline char *fenrir_hw_rev_str(uint8_t rev)
+{
+    switch (rev)
+    {
+    case 1:
+        return FENRIR_HW_REV_1_STR;
+    case 2:
+        return FENRIR_HW_REV_2_STR;
+    case 0:
+    default:
+        return FENRIR_HW_REV_0_STR;
+    }
+}
+

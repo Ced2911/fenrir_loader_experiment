@@ -29,3 +29,9 @@ bios_cd_boot(void)
 
     return ((int (*)(void)) * bios_address)();
 }
+
+
+// smpc value cached by bios
+#define bios_get_region_flag() (*(volatile uint32_t *)0x06000248)
+#define bios_get_smpc_region() (bios_get_region_flag() >> 12)
+

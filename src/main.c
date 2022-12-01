@@ -13,7 +13,7 @@
 #define RESOLUTION_HEIGHT (224)
 
 
-sd_dir_t *sd_dir;
+fenrir_config_t *fenrir_config;
 status_sector_t *status_sector;
 sd_dir_entry_t *sd_dir_entries;
 
@@ -37,7 +37,7 @@ int main(void)
     // slave cpu setup
     cpu_dual_comm_mode_set(CPU_DUAL_ENTRY_ICI);
 
-    sd_dir = (sd_dir_t *)zalloc(sizeof(sd_dir_t));
+    fenrir_config = (fenrir_config_t *)zalloc(sizeof(fenrir_config_t));
     status_sector = (status_sector_t *)zalloc(sizeof(status_sector_t));
     sd_dir_entries = (sd_dir_entry_t *)zalloc(sizeof(sd_dir_entry_t) * 2500);
 
@@ -54,10 +54,10 @@ int main(void)
     dbgio_dev_font_load();
 
     // read status
-    fenrir_read_configuration(sd_dir);
+    fenrir_read_configuration(fenrir_config);
 
 #if 0
-    switch (sd_dir->hdr.sd_card_status)
+    switch (fenrir_config->hdr.sd_card_status)
     {
 
     case FENRIR_SD_CARD_STATUS_CARD_PRESENT:

@@ -16,6 +16,8 @@
         .type = UI_END \
     }
 
+#define _UI_LABEL_NULL_ID(ID)  _UI_LABEL_ID(NULL, ID)
+
 #define _UI_LABEL(STR)                            \
     {                                             \
         .type = UI_LABEL, .label = {.text = STR}, \
@@ -57,13 +59,13 @@ enum
 
 struct ui_item_s
 {
-    uint8_t type;
-    uint8_t id;
-    uint8_t enabled;
+    int16_t type;
+    int16_t id;
 
     // 0: auto, >0 fixed
-    int w;
+    int16_t w;
 
+    uint8_t disabled;
     union
     {
         struct

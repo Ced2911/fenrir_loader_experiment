@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include "fenrir.h"
+#include "bios_ex.h"
 
 // https://github.com/mamedev/mame/blob/c90a16481de1d1c946e7e3e7d814028cd416d49d/src/mame/sega/saturn.cpp#L481
 
