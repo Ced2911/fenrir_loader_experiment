@@ -37,11 +37,6 @@ static const rgb1555_t default_color = RGB888_RGB1555_INITIALIZER(1, 0x1f, 0x1f,
 static const rgb1555_t highlight_color = RGB888_RGB1555_INITIALIZER(1, 0xfF, 0, 0x7f);
 static const rgb1555_t active_color = RGB888_RGB1555_INITIALIZER(1, 0, 0xfF, 0xff);
 
-#define COLOR_BACKGROUND (0)
-#define COLOR_DEFAULT (1)
-#define COLOR_HIGHLIGHT (2)
-#define COLOR_ACTIVE (3)
-
 #define LINE_HEIGHT (10)
 #define SCREEN_W (352)
 #define SCREEN_H (240)
@@ -102,8 +97,8 @@ static int ui_render_text(ui_render_text_param_t *param)
             for (int x0 = 0; x0 < w; x0 += 2)
             {
                 uint8_t *dst = &param->dst[(y0 + param->y) * param->pitch + param->x + x0 + text_size];
-                dst[0] = ((*src) >> 4) & 1;
-                dst[1] = ((*src) & 0xf) & 1;
+                dst[0] = ((*src) >> 4) ? ui_ctx.pal_nb : COLOR_BACKGROUND;
+                dst[1] = ((*src) & 0xf) ? ui_ctx.pal_nb : COLOR_BACKGROUND;
                 *src++;
             }
         }
@@ -332,10 +327,11 @@ static void ui_update_focused(ui_item_t *diag)
 
 static void ui_reset_colors()
 {
+    uint16_t def = ui_ctx.cram[COLOR_REF];
     // palettes...
-    for (int i = 10; i < 255; i++)
+    for (int i = 10; i < 250; i++)
     {
-        ui_ctx.cram[i] = default_color.raw;
+        ui_ctx.cram[i] = def;
     }
 }
 
@@ -370,39 +366,46 @@ void ui_update(ui_item_t *diag)
             diag[ui_ctx.cur_item].handler(&diag[ui_ctx.cur_item]);
         }
     }
-
-    ui_reset_colors();
-    ui_update_values(diag);
-    ui_update_focused(diag);
-
-    /*
-    static int i = 0;
-
-    dbgio_printf("[H[2J");
-    dbgio_printf("s: %d %d\n", ui_ctx.cur_item, i++);
-    dbgio_flush();
-    */
+    if (digital.held.raw)
+    {
+        ui_reset_colors();
+        ui_update_values(diag);
+        ui_update_focused(diag);
+    }
 }
 
-static void
-_vblank_out_handler(void *work __unused)
+static void _vblank_out_handler(void *work __unused)
 {
     smpc_peripheral_intback_issue();
+}
+
+void ui_set_color(int pal_nb, rgb1555_t color)
+{
+    if (pal_nb < 0)
+    {
+        uint16_t def = color.raw;
+        ui_ctx.cram[COLOR_REF] = def;
+        for (int i = 10; i < 250; i++)
+        {
+            ui_ctx.cram[i] = def;
+        }
+    }
+    else
+    {
+        ui_ctx.cram[pal_nb] = color.raw;
+    }
 }
 
 void ui_render(ui_item_t *diag)
 {
     int n = 0;
+    // palettes...
     ui_ctx.cram[COLOR_BACKGROUND] = bg_color.raw;
-    ui_ctx.cram[COLOR_DEFAULT] = default_color.raw;
     ui_ctx.cram[COLOR_HIGHLIGHT] = highlight_color.raw;
     ui_ctx.cram[COLOR_ACTIVE] = active_color.raw;
+    ui_ctx.cram[COLOR_REF] = default_color.raw;
 
-    // palettes...
-    for (int i = 10; i < 255; i++)
-    {
-        ui_ctx.cram[i] = default_color.raw;
-    }
+    ui_reset_colors();
 
     // erase screen
     for (int i = 0; i < (512 * 256); i++)
@@ -412,7 +415,7 @@ void ui_render(ui_item_t *diag)
 
     ui_item_t *item = diag;
 
-    ui_ctx.pal_nb = 10;
+    int pal_nb = 10;
 
     ui_ctx.cur_item_x = ui_ctx.padding_left;
     ui_ctx.cur_item_y = ui_ctx.padding_top;
@@ -422,6 +425,8 @@ void ui_render(ui_item_t *diag)
     while (item->type != UI_END)
     {
         int w = 0;
+        ui_ctx.pal_nb = item->pal ? item->pal : pal_nb;
+
         switch (item->type)
         {
         case UI_LABEL:
@@ -456,12 +461,12 @@ void ui_render(ui_item_t *diag)
             ui_ctx.cur_item = n;
         }
         n++;
-        ui_ctx.pal_nb++;
+        pal_nb++;
         item++;
     }
 
     ui_blit(ui_shadow, ui_ctx.vram);
-    ui_update(diag);
+    //  ui_update(diag);
 
     vdp_sync_vblank_out_set(_vblank_out_handler, NULL);
 }

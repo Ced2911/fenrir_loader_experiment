@@ -29,6 +29,7 @@ set(FENRIR_SRC
 	src/vdp2.config.c 
 	src/theme.c 
 	src/ui.c 
+	src/message_box.c 
 	src/font/font.c 
 
 	# fenrir

@@ -1,6 +1,14 @@
 #pragma once
 #include <stdint.h>
 
+#define COLOR_BACKGROUND (1)
+#define COLOR_HIGHLIGHT (2)
+#define COLOR_ACTIVE (3)
+#define COLOR_REF (4)
+#define COLOR_DEFAULT (-1)
+
+#define COLOR_ITEM(X) (10 + X)
+
 #define _UI_BREAK        \
     {                    \
         .type = UI_BREAK \
@@ -16,16 +24,26 @@
         .type = UI_END \
     }
 
-#define _UI_LABEL_NULL_ID(ID)  _UI_LABEL_ID(NULL, ID)
+#define _UI_LABEL_NULL_ID(ID) _UI_LABEL_ID(NULL, ID)
 
 #define _UI_LABEL(STR)                            \
     {                                             \
         .type = UI_LABEL, .label = {.text = STR}, \
     }
 
+#define _UI_TITLE(STR)                                                    \
+    {                                                                     \
+        .type = UI_LABEL, .pal = COLOR_HIGHLIGHT, .label = {.text = STR}, \
+    }
+
 #define _UI_LABEL_ID(STR, ID)                              \
     {                                                      \
         .type = UI_LABEL, .label = {.text = STR}, .id = ID \
+    }
+
+#define _UI_TITLE_ID(STR, ID)                                                      \
+    {                                                                              \
+        .type = UI_LABEL, .pal = COLOR_HIGHLIGHT, .label = {.text = STR}, .id = ID \
     }
 
 #define _UI_LABEL_W(STR, WIDTH)                              \
@@ -66,6 +84,9 @@ struct ui_item_s
     int16_t w;
 
     uint8_t disabled;
+
+    // 0: auto
+    uint8_t pal;
     union
     {
         struct
@@ -104,6 +125,7 @@ typedef struct
 void ui_init(ui_item_init_t *p);
 void ui_render(ui_item_t *diag);
 void ui_update(ui_item_t *diag);
+void ui_set_color(int pal_nb, rgb1555_t color);
 
 static inline ui_item_t *ui_get_item_by_id(ui_item_t *diag, int id)
 {

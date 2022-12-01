@@ -8,10 +8,10 @@
 #include "screens/screen.h"
 #include "sound_driver/pcm.h"
 #include "ui.h"
+#include "message_box.h"
 
 #define RESOLUTION_WIDTH (352)
 #define RESOLUTION_HEIGHT (224)
-
 
 fenrir_config_t *fenrir_config;
 status_sector_t *status_sector;
@@ -73,6 +73,12 @@ int main(void)
 #else
     screens_select(screen_options);
 #endif
+
+    message_box_t msg = {.type = message_box_error, .message = "Je suis la", .title = "titre"};
+    message_box(&msg);
+    msg.type = message_box_info;
+    msg.message = "Je suis encore la";
+    message_box(&msg);
 
     while (1)
     {
