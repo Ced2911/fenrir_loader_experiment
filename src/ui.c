@@ -2,6 +2,7 @@
 #include <string.h>
 #include "ui.h"
 #include "./themes/demo/font.sfa.h"
+#include "rexlia_16.c"
 
 // @todo move to somewhere else
 // uint8_t *ui_shadow = (uint8_t *)malloc(512 * 256);
@@ -17,8 +18,13 @@ typedef struct
     uint8_t *data;
     uint8_t *char_spacing;
 } __font_t;
-static const __font_t sfa = {.char_width = 8, .char_height = 9, .data = sfa_font_bitmap, .char_spacing = sfa_font_width};
+
+//static const __font_t sfa = {.char_width = 8, .char_height = 9, .data = sfa_font_bitmap, .char_spacing = sfa_font_width};
+//#define THEME_FONT (&sfa)
+
+static const __font_t sfa = {.char_width = 16, .char_height = 16, .data = rexlia_16_font_bitmap, .char_spacing = rexlia_16_font_width};
 #define THEME_FONT (&sfa)
+
 
 static vdp2_scrn_bitmap_format_t rbg0 = {
     .bitmap_size = VDP2_SCRN_BITMAP_SIZE_512X256,
@@ -173,7 +179,7 @@ static void ui_blit(uint8_t *shadow, uint8_t *vram)
 {
     // scu_dma_transfer(0, (void *)shadow, vram, 512 * 256);
     // memcpy(vram, shadow, 512 * 256);
-    vdp_dma_enqueue(vram, shadow, 512 * 256);
+    vdp_dma_enqueue(vram, shadow, 512 * 240);
 }
 
 static int ui_get_next_item_in_row(ui_item_t *diag, int cur_item)
@@ -465,8 +471,10 @@ void ui_render(ui_item_t *diag)
         item++;
     }
 
+    ui_reset_colors();
+    ui_update_values(diag);
+    ui_update_focused(diag);
     ui_blit(ui_shadow, ui_ctx.vram);
-    //  ui_update(diag);
 
     vdp_sync_vblank_out_set(_vblank_out_handler, NULL);
 }

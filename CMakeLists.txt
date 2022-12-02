@@ -58,7 +58,7 @@ set(FENRIR_SRC
 add_executable(${PROJECT_NAME} ${FENRIR_SRC})
 
 target_link_libraries(${PROJECT_NAME} ${YAUL_LIBS})
-target_include_directories(${PROJECT_NAME} PRIVATE src)
+target_include_directories(${PROJECT_NAME} PRIVATE src assets)
 set_target_properties(${PROJECT_NAME} PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/libyaul.ld)
 
 

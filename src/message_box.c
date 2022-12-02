@@ -43,7 +43,7 @@ static void wait_for_btn()
 
     while (!digital.held.button.a)
     {
-        ui_update(dialog);
+        smpc_peripheral_process();
         smpc_peripheral_digital_port(1, &digital);
 
         vdp1_sync_render();
@@ -76,6 +76,7 @@ void message_box(message_box_t *box)
         break;
     }
 
+    ui_update(dialog);
     wait_for_btn();
 }
 
