@@ -156,8 +156,8 @@ static void ui_render_line(ui_item_t *item)
 static void ui_blit(uint8_t *shadow, uint8_t *vram)
 {
     // scu_dma_transfer(0, (void *)shadow, vram, 512 * 256);
-    memcpy(vram, shadow, 512 * 256);
-    // vdp_dma_enqueue(vram, shadow, 512 * 240);
+    // memcpy(vram, shadow, 512 * 256);
+    vdp_dma_enqueue(vram, shadow, 512 * 240);
 }
 
 static int ui_get_next_item_in_row(ui_item_t *diag, int cur_item)

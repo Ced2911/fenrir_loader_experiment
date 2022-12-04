@@ -15,8 +15,8 @@ static noise_cfg_t noise_cfg = {};
 void gamelist_theme_update(browser_t *browser)
 {
     ui_config_t *theme = theme_get_ui_config();
-    if (theme->screens.gamelist.cover.enabled)
-        noise_update(&noise_cfg);
+    // if (theme->screens.gamelist.cover.enabled)
+    //    noise_update(&noise_cfg);
 }
 
 void gamelist_theme_apply(browser_t *browser)
@@ -103,19 +103,22 @@ void gamelist_theme_apply(browser_t *browser)
 
         vdp1_cmdt_param_char_base_set(cmdt, COVER_TEXTURE_ADDR);
 
-        noise_init(&noise_cfg);
+        // noise_init(&noise_cfg);
     }
 
     if (!theme->screens.gamelist.cover.enabled)
     {
         // vdp2_scrn_display_unset(VDP2_SCRN_DISP_NBG0);
     }
+
+    rgb1555_t black = RGB1555_INITIALIZER(1, 0, 0, 0);
+    vdp2_scrn_back_color_set(VDP2_VRAM_ADDR(3, 0x01FFFE), black);
 }
 
 void gamelist_theme_destroy(browser_t *browser)
 {
     ui_config_t *theme = theme_get_ui_config();
 
-    if (theme->screens.gamelist.cover.enabled)
-        noise_destroy(&noise_cfg);
+    // if (theme->screens.gamelist.cover.enabled)
+    //     noise_destroy(&noise_cfg);
 }
