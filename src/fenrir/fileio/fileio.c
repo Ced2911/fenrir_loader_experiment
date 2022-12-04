@@ -125,8 +125,6 @@ int fenrir_special_cmd_continue_mem(void *data, int len)
     return 0;
 }
 
-extern void display_error(const char *err);
-
 #define FENRIR_SPC_CHECK(x)                   \
     do                                        \
     {                                         \

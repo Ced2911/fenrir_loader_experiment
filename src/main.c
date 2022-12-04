@@ -44,8 +44,8 @@ int main(void)
     screens_init();
 
     ui_item_init_t ui_param = {
-        .vram = VDP2_VRAM_ADDR(0, 0x00000),
-        .cram = VDP2_CRAM_ADDR(0),
+        .vram = (uint8_t *)VDP2_VRAM_ADDR(3, 0x00000),
+        .cram = (uint16_t *)VDP2_CRAM_ADDR(0),
     };
     ui_init(&ui_param);
 
@@ -56,7 +56,7 @@ int main(void)
     // read status
     fenrir_read_configuration(fenrir_config);
 
-#if 0
+#if 1
     switch (fenrir_config->hdr.sd_card_status)
     {
 
@@ -73,12 +73,12 @@ int main(void)
 #else
     screens_select(screen_options);
 #endif
-
     message_box_t msg = {.type = message_box_error, .message = "Je suis la", .title = "titre"};
-    message_box(&msg);
+ //   message_box(&msg);
+
     msg.type = message_box_info;
     msg.message = "Je suis encore la";
-    message_box(&msg);
+   // message_box(&msg);
 
     while (1)
     {

@@ -1,8 +1,7 @@
 #include <yaul.h>
 #include <string.h>
 #include "ui.h"
-#include "./themes/demo/font.sfa.h"
-#include "rexlia_16.c"
+#include "ui_font.h"
 
 // @todo move to somewhere else
 // uint8_t *ui_shadow = (uint8_t *)malloc(512 * 256);
@@ -10,28 +9,8 @@ __attribute__((section(".noload"))) static uint8_t ui_shadow[512 * 256];
 
 #define align_8(addr) (((addr) + 7) & (~7))
 
-// #define THEME_FONT (&theme_get_ui_config()->main_font)
-typedef struct
-{
-    int char_width;
-    int char_height;
-    uint8_t *data;
-    uint8_t *char_spacing;
-} __font_t;
+#define THEME_FONT (&small_fonts_12)
 
-//static const __font_t sfa = {.char_width = 8, .char_height = 9, .data = sfa_font_bitmap, .char_spacing = sfa_font_width};
-//#define THEME_FONT (&sfa)
-
-static const __font_t sfa = {.char_width = 16, .char_height = 16, .data = rexlia_16_font_bitmap, .char_spacing = rexlia_16_font_width};
-#define THEME_FONT (&sfa)
-
-
-static vdp2_scrn_bitmap_format_t rbg0 = {
-    .bitmap_size = VDP2_SCRN_BITMAP_SIZE_512X256,
-    .bitmap_base = VDP2_VRAM_ADDR(0, 0x00000),
-    .palette_base = VDP2_CRAM_ADDR(0),
-    .ccc = VDP2_SCRN_CCC_PALETTE_256,
-    .scroll_screen = VDP2_SCRN_NBG0};
 
 // to avoid complete redraw,
 // each interactive item will use a new pallete number
@@ -399,6 +378,10 @@ void ui_set_color(int pal_nb, rgb1555_t color)
     else
     {
         ui_ctx.cram[pal_nb] = color.raw;
+        if (pal_nb == COLOR_BACKGROUND)
+        {
+            vdp2_scrn_back_color_set(VDP2_VRAM_ADDR(3, 0x01FFFE), color);
+        }
     }
 }
 
@@ -477,6 +460,8 @@ void ui_render(ui_item_t *diag)
     ui_blit(ui_shadow, ui_ctx.vram);
 
     vdp_sync_vblank_out_set(_vblank_out_handler, NULL);
+
+    vdp2_scrn_back_color_set(VDP2_VRAM_ADDR(3, 0x01FFFE), bg_color);
 }
 
 void ui_init(ui_item_init_t *param)
@@ -490,9 +475,4 @@ void ui_init(ui_item_init_t *param)
     ui_ctx.shadow = ui_shadow;
     ui_ctx.cram = ui_ctx.cram;
 
-    vdp2_scrn_bitmap_format_set(&rbg0);
-    vdp2_scrn_priority_set(VDP2_SCRN_NBG0, 1);
-    vdp2_scrn_display_set(VDP2_SCRN_DISPTP_NBG0);
-
-    vdp2_cram_offset_set(VDP2_SCRN_NBG0, 0);
 }

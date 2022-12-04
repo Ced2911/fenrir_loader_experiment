@@ -135,7 +135,7 @@ int convert_font(const char *filename, menu_font_t *menu_font, FontFileHeader *f
     memcpy(ffh, font, sizeof(FontFileHeader));
 
     // shadow
-    convert_font_8bpp(pixel_buff, buff + (1 + (font->CellWidth)), 2, font->ImageWidth, font->ImageHeight, font->CellWidth, font->CellHeight);
+    // convert_font_8bpp(pixel_buff, buff + (1 + (font->CellWidth)), 2, font->ImageWidth, font->ImageHeight, font->CellWidth, font->CellHeight);
 
     // normal
     convert_font_8bpp(pixel_buff, buff, 1, font->ImageWidth, font->ImageHeight, font->CellWidth, font->CellHeight);
@@ -181,7 +181,13 @@ void bin2c(FILE *f_output, const char *name, menu_font_t *buf, FontFileHeader *f
     }
     fprintf(f_output, "\n};\n\n");
 
-    fprintf(f_output, "const ui_config_font_t %s = {.char_width=%d, .char_height=%d, .data=%s_font_bitmap, .char_spacing=%s_font_width};",
+    fprintf(f_output, "#ifndef FONT_STRUCT\n");
+
+    fprintf(f_output, "typedef struct {int char_width;int char_height;const uint8_t *data;const uint8_t *char_spacing;} ui_font_t;\n");
+    fprintf(f_output, "#define FONT_STRUCT\n");
+    fprintf(f_output, "#endif\n");
+
+    fprintf(f_output, "const ui_font_t %s = {.char_width=%d, .char_height=%d, .data=%s_font_bitmap, .char_spacing=%s_font_width};",
             name, ffh->CellWidth, ffh->CellHeight, name, name);
 }
 

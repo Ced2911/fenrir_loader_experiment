@@ -1,10 +1,9 @@
-#pragma once
-
 #include <yaul.h>
 #include <stdlib.h>
 #include "screen.h"
 #include "fenrir/fenrir.h"
 #include "fenrir/fileio/fileio.h"
+#include "message_box.h"
 #include "bram.h"
 
 #define BRAM_SIZE (32 * 1024)
@@ -58,13 +57,11 @@ static void bram_backup_update()
 {
     if (bck_ctx.bram_offset > BRAM_SIZE)
     {
-        info_set_title("Backup ram");
-        info_set_message("Write complete");
-        info_wait_for_btn();
+        message_box_t msg = {.type = message_box_info, .message = "Backup ram", .title = "Write complete"};
+        message_box(&msg);
     }
     else
     {
-
         bram_read_u8(bck_ctx.data, SP_CMD_CHUNK_SIZE, bck_ctx.bram_offset);
         bck_ctx.bram_offset += SP_CMD_CHUNK_SIZE;
 
@@ -74,9 +71,8 @@ static void bram_backup_update()
         if (fenrir_writefile(bck_ctx.data, SP_CMD_CHUNK_SIZE) != 0)
         {
             // Display error...
-            error_set_title("Backup ram");
-            error_set_message("Failed to write to sd card");
-            error_wait_for_btn();
+            message_box_t msg = {.type = message_box_error, .message = "Backup ram", .title = "Failed to write to sd card"};
+            message_box(&msg);
 
             // close
             screens_select(screen_options);

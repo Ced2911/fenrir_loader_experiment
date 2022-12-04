@@ -1,10 +1,10 @@
 #pragma once
 #include <stdint.h>
 
-#define COLOR_BACKGROUND (1)
-#define COLOR_HIGHLIGHT (2)
-#define COLOR_ACTIVE (3)
-#define COLOR_REF (4)
+#define COLOR_BACKGROUND (0)
+#define COLOR_HIGHLIGHT (1)
+#define COLOR_ACTIVE (2)
+#define COLOR_REF (3)
 #define COLOR_DEFAULT (-1)
 
 #define COLOR_ITEM(X) (10 + X)

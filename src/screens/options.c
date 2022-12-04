@@ -38,14 +38,12 @@ static void enable_igr(ui_item_t *i)
 static ui_item_t options_items[] = {
     _UI_TITLE("Settings"),
     _UI_BREAK,
-    _UI_BREAK,
     //
     _UI_LABEL_W("Enable IGR", SCREEN_W / 2),
     _UI_BOOL(UI_OPTIONS_IGR, 0, enable_igr),
     // =======================
     _UI_LINE,
     _UI_TITLE("System informations"),
-    _UI_BREAK,
     _UI_BREAK,
 
     _UI_LABEL_W("Bios", SCREEN_W / 2),
