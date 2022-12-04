@@ -11,7 +11,7 @@ Use [Libyaul](https://github.com/ijacquez/libyaul)
 - [ ] BRAM dump screen
 - [ ] BRAM restore screen
 - [ ] Credits screen
-- [-] Custom backgrounds (not all screen)
+- [ ] Custom backgrounds (needs rewrite...)
 - [-] Sound effect
 - [ ] VGM Player
 
