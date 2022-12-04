@@ -89,7 +89,6 @@ static void browser_input_callback(browser_t *browser)
     }
 }
 
-
 static void _slave_entry(void)
 {
     const uintptr_t addr = COVER_TEXTURE_ADDR;
@@ -107,7 +106,6 @@ static void gamelist_vbk()
 }
 static void gamelist_update()
 {
-
     // render browser
     browser_update(&browser);
 

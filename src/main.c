@@ -31,10 +31,6 @@ int main(void)
     vdp1_vram_partitions_t vdp1_vram_partitions;
     vdp1_vram_partitions_get(&vdp1_vram_partitions);
 
-    dbgio_init();
-    dbgio_dev_default_init(DBGIO_DEV_VDP2_ASYNC);
-    dbgio_dev_font_load();
-
     vdp1_init();
     vdp2_init();
 
@@ -45,21 +41,29 @@ int main(void)
     status_sector = (status_sector_t *)zalloc(sizeof(status_sector_t));
     sd_dir_entries = (sd_dir_entry_t *)zalloc(sizeof(sd_dir_entry_t) * 2500);
 
-    screens_init();
-
     ui_item_init_t ui_param = {
-        .vram = (uint8_t *)VDP2_VRAM_ADDR(0, 0x00000),
+        .vram = (uint8_t *)VDP2_VRAM_ADDR(3, 0x00000),
         .cram = (uint16_t *)VDP2_CRAM_ADDR(0),
     };
+
+    // hack
+    vdp2_scrn_display_set(VDP2_SCRN_DISPTP_NBG1);
+
     ui_init(&ui_param);
     message_box_t msg = {.type = message_box_error, .message = "Je suis la", .title = "titre"};
     message_box(&msg);
 
-    msg.type = message_box_info;
-    msg.message = "Je suis encore la";
+    // hack
+    vdp2_scrn_display_set(VDP2_SCRN_DISPTP_NBG0 | VDP2_SCRN_DISPTP_NBG2);
+
+    dbgio_init();
+    dbgio_dev_default_init(DBGIO_DEV_VDP2_ASYNC);
+    dbgio_dev_font_load();
 
     // read status
     fenrir_read_configuration(fenrir_config);
+
+    screens_init();
 
 #if 1
     switch (fenrir_config->hdr.sd_card_status)
@@ -83,6 +87,7 @@ int main(void)
     while (1)
     {
         screens_update();
+        dbgio_flush();
 
         vdp1_sync_render();
         vdp1_sync();

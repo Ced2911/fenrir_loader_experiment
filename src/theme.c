@@ -59,12 +59,12 @@ vdp2_scrn_cell_format_t format_nbg1 = {
     //.palette_base = NBG1_COLOR_ADDR
 };
 
-vdp2_scrn_bitmap_format_t format_rbg0 = {
+vdp2_scrn_bitmap_format_t format_ui = {
     .bitmap_size = VDP2_SCRN_BITMAP_SIZE_512X256,
-    .bitmap_base = VDP2_VRAM_ADDR(0, 0x00000),
+    .bitmap_base = VDP2_VRAM_ADDR(3, 0x00000),
     .palette_base = VDP2_CRAM_ADDR(0),
     .ccc = VDP2_SCRN_CCC_PALETTE_256,
-    .scroll_screen = VDP2_SCRN_NBG0};
+    .scroll_screen = VDP2_SCRN_NBG1};
 
 static void vdp2_set_plane_addr(vdp2_scrn_normal_map_t *planes, uintptr_t plan_a_addr, size_t pattern_sz)
 {
@@ -114,7 +114,6 @@ static void vdp2_ngb1_init()
 
 static void vdp2_ngb2_init()
 {
-
     vdp2_scrn_normal_map_t nbg2_map;
     vdp2_set_plane_addr(&nbg2_map,
                         ui_config->vdp2.nbg2.pal_addr,
@@ -129,12 +128,12 @@ static void vdp2_ngb2_init()
     vdp2_cram_offset_set(VDP2_SCRN_NBG2, format_nbg2.palette_base);
 }
 
-static void vdp2_rbg0_init()
+static void vdp2_ui_init()
 {
 
-    vdp2_scrn_bitmap_format_set(&format_rbg0);
-    vdp2_scrn_priority_set(format_rbg0.scroll_screen, 1);
-    vdp2_cram_offset_set(format_rbg0.scroll_screen, 0);
+    vdp2_scrn_bitmap_format_set(&format_ui);
+    vdp2_scrn_priority_set(format_ui.scroll_screen, 4);
+    vdp2_cram_offset_set(format_ui.scroll_screen, 0);
 }
 
 static void vdp2_setup_vram()
@@ -184,13 +183,13 @@ static void vdp2_setup_vram()
  ****************************************************/
 void theme_init_vdp()
 {
-   // MEMORY_WRITE(16, VDP2(RAMCTL), 0x1301);
+    MEMORY_WRITE(16, VDP2(RAMCTL), 0x1301);
     vdp2_setup_vram();
 
-    vdp2_rbg0_init();
-   // vdp2_ngb0_init();
-   // vdp2_ngb1_init();
+    //vdp2_ngb0_init();
+    // vdp2_ngb1_init();
    // vdp2_ngb2_init();
+    vdp2_ui_init();
 
 #if 0
     uint8_t *ressources = ((uint8_t *)ui_config) + 512;
@@ -206,12 +205,11 @@ void theme_init_vdp()
         }
     }
 #endif
-   // vdp2_scrn_display_set(VDP2_SCRN_DISPTP_RBG0 | VDP2_SCRN_DISPTP_NBG0 | VDP2_SCRN_DISPTP_NBG1 | VDP2_SCRN_DISPTP_NBG2);
-    vdp2_scrn_display_set(VDP2_SCRN_DISPTP_NBG0);
 }
 
 void theme_set_pattern(theme_scr_t scr, uint32_t pattern_offset)
 {
+#if 0
     vdp2_scrn_normal_map_t map;
     ui_config_t *ui_config = theme_get_ui_config();
 
@@ -232,6 +230,7 @@ void theme_set_pattern(theme_scr_t scr, uint32_t pattern_offset)
     default:
         break;
     }
+#endif
 }
 
 void theme_background_config_set(ui_config_background_t *b)
@@ -243,6 +242,7 @@ void theme_background_config_set(ui_config_background_t *b)
 
 void theme_set_background(screens_type_t scr)
 {
+#if 0
     ui_config_t *ui_config = theme_get_ui_config();
 
     vdp2_scrn_scroll_x_set(VDP2_SCRN_NBG0, 0);
@@ -267,10 +267,12 @@ void theme_set_background(screens_type_t scr)
         break;
     }
     dbgio_flush();
+#endif
 }
 
 void theme_update()
 {
+#if 0
     ui_config_t *ui_config = theme_get_ui_config();
     ui_config_background_t *background = current_theme_config.background;
     ui_config_background_t *foreground = current_theme_config.foreground;
@@ -285,6 +287,7 @@ void theme_update()
         vdp2_scrn_scroll_x_update(VDP2_SCRN_NBG2, foreground->velocity_x);
     if (foreground && foreground->velocity_y)
         vdp2_scrn_scroll_y_update(VDP2_SCRN_NBG2, foreground->velocity_y);
+#endif
 }
 
 void theme_init_bgm()
