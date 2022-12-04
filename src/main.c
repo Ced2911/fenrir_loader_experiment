@@ -31,6 +31,10 @@ int main(void)
     vdp1_vram_partitions_t vdp1_vram_partitions;
     vdp1_vram_partitions_get(&vdp1_vram_partitions);
 
+    dbgio_init();
+    dbgio_dev_default_init(DBGIO_DEV_VDP2_ASYNC);
+    dbgio_dev_font_load();
+
     vdp1_init();
     vdp2_init();
 
@@ -44,14 +48,15 @@ int main(void)
     screens_init();
 
     ui_item_init_t ui_param = {
-        .vram = (uint8_t *)VDP2_VRAM_ADDR(3, 0x00000),
+        .vram = (uint8_t *)VDP2_VRAM_ADDR(0, 0x00000),
         .cram = (uint16_t *)VDP2_CRAM_ADDR(0),
     };
     ui_init(&ui_param);
+    message_box_t msg = {.type = message_box_error, .message = "Je suis la", .title = "titre"};
+    message_box(&msg);
 
-    dbgio_init();
-    dbgio_dev_default_init(DBGIO_DEV_VDP2_ASYNC);
-    dbgio_dev_font_load();
+    msg.type = message_box_info;
+    msg.message = "Je suis encore la";
 
     // read status
     fenrir_read_configuration(fenrir_config);
@@ -73,12 +78,7 @@ int main(void)
 #else
     screens_select(screen_options);
 #endif
-    message_box_t msg = {.type = message_box_error, .message = "Je suis la", .title = "titre"};
- //   message_box(&msg);
-
-    msg.type = message_box_info;
-    msg.message = "Je suis encore la";
-   // message_box(&msg);
+    // message_box(&msg);
 
     while (1)
     {

@@ -56,7 +56,6 @@ static void wait_for_btn()
 
 void message_box(message_box_t *box)
 {
-
     strcpy(GET_LABEL_BY_ID(DIA_TITLE), box->title);
     strcpy(GET_LABEL_BY_ID(DIA_MESSAGE), box->message);
 
