@@ -93,7 +93,8 @@ static void bram_backup_destroy()
     }
 }
 
-screen_t bram_backup = {
+screen_t bram_backup_screen = {
+    .type = screen_backup_bram,
     .init = bram_backup_init,
     .update = bram_backup_update,
     .destroy = bram_backup_destroy,

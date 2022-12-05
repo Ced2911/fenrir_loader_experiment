@@ -41,6 +41,8 @@
         "theme.config.h": "c",
         "ui.h": "c",
         "scrn_shared.h": "c",
-        "options.h": "c"
+        "options.h": "c",
+        "bram_backup.h": "c",
+        "error.h": "c"
     }
 }

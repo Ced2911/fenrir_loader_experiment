@@ -319,7 +319,7 @@ static void ui_reset_colors()
     }
 }
 
-void ui_update(ui_item_t *diag)
+void ui_update(ui_item_t *diag, void (*input_handler)(smpc_peripheral_digital_t *, void *), void * user_data)
 {
     smpc_peripheral_digital_t digital;
 
@@ -350,6 +350,12 @@ void ui_update(ui_item_t *diag)
             diag[ui_ctx.cur_item].handler(&diag[ui_ctx.cur_item]);
         }
     }
+
+    if (input_handler)
+    {
+        input_handler(&digital, user_data);
+    }
+
     if (digital.held.raw)
     {
         ui_reset_colors();

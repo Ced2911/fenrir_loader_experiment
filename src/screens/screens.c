@@ -4,6 +4,7 @@
 #include "options.h"
 #include "diagnostic.h"
 #include "bram_backup.h"
+#include "credits.h"
 
 void theme_update();
 void theme_set_background(screens_type_t scr);
@@ -11,30 +12,25 @@ void theme_set_background(screens_type_t scr);
 static screens_type_t next_screen;
 static screens_type_t current_screen;
 
+static screen_t *screens[] = {
+    &gamelist_screen,
+    &error_no_sd_screen,
+    &error_bad_filesystem_screen,
+    &options_screen,
+    &diagnostics_screen,
+    &bram_backup_screen,
+    &credits_screen};
+
 static screen_t *get(screens_type_t scr)
 {
-    switch (scr)
+    for (int i = 0; i < screen_max; i++)
     {
-    case screen_error_no_sd:
-        return &error_no_sd;
-        break;
-    case screen_error_bad_filesystem:
-        return &error_bad_filesystem;
-        break;
-    case screen_options:
-        return &options_screen;
-        break;
-    case screen_diagnostic:
-        return &diagnostics_screen;
-    case screen_backup_bram:
-        return &bram_backup;
-    case screen_restore_bram:
-        return &bram_backup;
-    case screen_gamelist:
-    default:
-        return &gamelist_screen;
-        break;
+        if (screens[i]->type == scr)
+            return screens[i];
     }
+
+    // fallback
+    return &gamelist_screen;
 }
 
 screen_t *get_screen()

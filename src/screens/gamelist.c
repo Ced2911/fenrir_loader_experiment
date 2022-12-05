@@ -87,6 +87,10 @@ static void browser_input_callback(browser_t *browser)
     {
         browser_change_dir(browser, PARENT_DIRECTORY);
     }
+    else if (browser->digital.held.button.start)
+    {
+        screens_select(screen_options);
+    }
 }
 
 static void _slave_entry(void)
@@ -182,6 +186,7 @@ static void gamelist_destroy()
 }
 
 screen_t gamelist_screen = {
+    .type = screen_gamelist,
     .init = gamelist_init,
     .update = gamelist_update,
     .destroy = gamelist_destroy,

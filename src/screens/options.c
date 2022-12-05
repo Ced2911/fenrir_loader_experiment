@@ -148,14 +148,14 @@ static void options_init()
     strncpy(GET_LABEL_BY_ID(UI_SYS_SMPC_REGION), region_get_smpc_string(), 24);
     snprintf(GET_LABEL_BY_ID(UI_SYS_VIDEO_FREQ), 24, "%s Hz", region_flag & 0x800 ? "50" : "60");
     snprintf(GET_LABEL_BY_ID(UI_SYS_REGION_FLAGS), 24, "%08lx", region_flag);
-    
+
     strncpy(GET_LABEL_BY_ID(UI_SYS_HW_FW_REV), fenrir_config->hdr.firmware_version, 24);
     strncpy(GET_LABEL_BY_ID(UI_SYS_HW_REV), hw_rev, 24);
     snprintf(GET_LABEL_BY_ID(UI_SYS_HW_UID), 24, "%02x%02x%02x%02x", fenrir_config->hdr.card_uid[0], fenrir_config->hdr.card_uid[1], fenrir_config->hdr.card_uid[2], fenrir_config->hdr.card_uid[3]);
     strncpy(GET_LABEL_BY_ID(UI_SYS_HW_FW_DATE), fenrir_config->hdr.build_date, 24);
-    strncpy(GET_LABEL_BY_ID(UI_SYS_HW_WIFI_STATE), wifi_state_str[fenrir_config->hdr.wifi_state & 0b11], 24);    
+    strncpy(GET_LABEL_BY_ID(UI_SYS_HW_WIFI_STATE), wifi_state_str[fenrir_config->hdr.wifi_state & 0b11], 24);
     snprintf(GET_LABEL_BY_ID(UI_SYS_HW_IP_ADDR), 24, "%d.%d.%d.%d", fenrir_config->hdr.local_ip[0], fenrir_config->hdr.local_ip[1], fenrir_config->hdr.local_ip[2], fenrir_config->hdr.local_ip[3]);
-    
+
     strncpy(GET_LABEL_BY_ID(UI_SYS_HW_SD_NAME), fenrir_config->hdr.sd_name, 24);
     strncpy(GET_LABEL_BY_ID(UI_SYS_HW_SD_TYPE), fenrir_config->hdr.sd_type, 24);
     snprintf(GET_LABEL_BY_ID(UI_SYS_HW_SD_SIZE), 24, "%ldMB", fenrir_config->hdr.sd_size);
@@ -171,7 +171,7 @@ static void options_init()
 
 static void options_update()
 {
-    ui_update(options_items);
+    ui_update(options_items, NULL, NULL);
 }
 
 static void options_destroy()
@@ -180,6 +180,7 @@ static void options_destroy()
 }
 
 screen_t options_screen = {
+    .type = screen_options,
     .init = options_init,
     .update = options_update,
     .destroy = options_destroy,
@@ -187,6 +188,7 @@ screen_t options_screen = {
 
 // @ todo
 screen_t diagnostics_screen = {
+    .type = screen_diagnostic,
     .init = options_init,
     .update = options_update,
     .destroy = options_destroy,

@@ -37,14 +37,22 @@ static void set_title(const char *str)
     strcpy(GET_LABEL_BY_ID(DIA_TITLE), str);
 }
 
+static void __end(smpc_peripheral_digital_t *digital, int *end)
+{
+    if (digital->held.button.a)
+    {
+        *end = 1;
+    }
+}
+
 static void wait_for_btn()
 {
+    int end = 0;
     smpc_peripheral_digital_t digital = {.held.raw = 0};
 
-    while (!digital.held.button.a)
+    while (end == 0)
     {
-        smpc_peripheral_process();
-        smpc_peripheral_digital_port(1, &digital);
+        ui_update(dialog, __end, &end);
 
         vdp1_sync_render();
         vdp1_sync();
@@ -75,7 +83,7 @@ void message_box(message_box_t *box)
         break;
     }
 
-    ui_update(dialog);
+    ui_update(dialog, NULL, NULL);
     wait_for_btn();
 }
 
