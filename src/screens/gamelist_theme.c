@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "browser.h"
-#include "screen.h"
+#include "screens.h"
 #include "fenrir/fenrir.h"
 #include "vdp1.config.h"
 #include "vdp2.config.h"

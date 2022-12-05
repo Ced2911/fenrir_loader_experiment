@@ -1,6 +1,6 @@
 #include <yaul.h>
 #include "options.h"
-#include "screen.h"
+#include "screens.h"
 #include "../ui.h"
 #include "bios_ex.h"
 #include "fenrir/fenrir.h"

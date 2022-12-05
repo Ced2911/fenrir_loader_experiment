@@ -5,7 +5,7 @@
 #include "vdp1.config.h"
 #include "vdp2.config.h"
 #include "font/font.h"
-#include "screens/screen.h"
+#include "screens/screens.h"
 #include "sound_driver/pcm.h"
 #include "ui.h"
 #include "message_box.h"

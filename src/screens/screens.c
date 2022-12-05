@@ -1,4 +1,4 @@
-#include "screen.h"
+#include "screens.h"
 #include "gamelist.h"
 #include "error.h"
 #include "options.h"

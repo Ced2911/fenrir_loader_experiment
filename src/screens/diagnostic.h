@@ -1,4 +1,4 @@
 #pragma once
 
-#include "screens/screen.h"
+#include "screens/screens.h"
 extern screen_t diagnostics_screen;

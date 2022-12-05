@@ -1,6 +1,6 @@
 #pragma once
 #include "ui.config.h"
-#include "screens/screen.h"
+#include "screens/screens.h"
 
 #define THEME_UI (theme_get_ui_config())
 

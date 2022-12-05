@@ -40,13 +40,14 @@ set(FENRIR_SRC
 	src/fenrir/fileio/fileio.c
 
 	# screens
+	src/screens/screens.c 
+	src/screens/error.c 
 	src/screens/bram_backup.c 
 	src/screens/gamelist.c 
 	src/screens/gamelist_theme.c 
 	src/screens/browser.c 
-	src/screens/error.c 
-	src/screens/screen.c 
 	src/screens/options.c 
+	src/screens/credits.c 
 
 	src/sound_driver/pcm.c 
 

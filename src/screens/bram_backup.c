@@ -1,6 +1,6 @@
 #include <yaul.h>
 #include <stdlib.h>
-#include "screen.h"
+#include "screens.h"
 #include "fenrir/fenrir.h"
 #include "fenrir/fileio/fileio.h"
 #include "message_box.h"
