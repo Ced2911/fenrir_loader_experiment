@@ -167,6 +167,8 @@ static void gamelist_init()
 
     // setup slave
     cpu_dual_slave_set(_slave_entry);
+
+    vdp2_scrn_display_set(VDP2_SCRN_DISPTP_NBG0 | VDP2_SCRN_DISPTP_NBG2);
 }
 
 static void gamelist_destroy()
@@ -183,6 +185,8 @@ static void gamelist_destroy()
     // free ressources
     free((void *)gamelist_ctx.game_cover);
     free((void *)browser.texture_buffer);
+
+    browser_destroy(&browser);
 }
 
 screen_t gamelist_screen = {

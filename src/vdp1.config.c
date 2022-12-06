@@ -67,11 +67,14 @@ static const rgb1555_t palettes[] = {
     RGB1555(1, 0x0F, 0x1F, 0),
 };
 
-#define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 240
-
 static vdp1_cmdt_t *cmdt = NULL;
 vdp1_cmdt_list_t *cmdt_list = NULL;
+
+void vdp1_reset()
+{
+    vdp1_cmdt_end_set(cmdt_list->cmdts);
+    vdp1_sync_cmdt_list_put(cmdt_list, 0);
+}
 
 void vdp1_init()
 {
@@ -79,32 +82,14 @@ void vdp1_init()
     cmdt_list = vdp1_cmdt_list_alloc(ORDER_COUNT);
     memset(&cmdt_list->cmdts[0], 0x00, sizeof(vdp1_cmdt_t) * ORDER_COUNT);
 
-    vdp1_cmdt_t *cmdts;
-    cmdts = &cmdt_list->cmdts[0];
-
-    const int16_vec2_t system_clip_coord =
-        INT16_VEC2_INITIALIZER(SCREEN_WIDTH - 1,
-                               SCREEN_HEIGHT - 1);
-
-    const int16_vec2_t local_coord_center =
-        INT16_VEC2_INITIALIZER(0, 0);
-
-    vdp1_cmdt_system_clip_coord_set(&cmdts[ORDER_SYSTEM_CLIP_COORDS_INDEX]);
-    vdp1_cmdt_param_vertex_set(&cmdts[ORDER_SYSTEM_CLIP_COORDS_INDEX],
-                               CMDT_VTX_SYSTEM_CLIP, &system_clip_coord);
-
-    vdp1_cmdt_local_coord_set(&cmdts[ORDER_CLEAR_LOCAL_COORDS_INDEX]);
-    vdp1_cmdt_param_vertex_set(&cmdts[ORDER_CLEAR_LOCAL_COORDS_INDEX],
-                               CMDT_VTX_LOCAL_COORD, &local_coord_center);
-
     // upload colors
-
     vdp1_vram_partitions_t vdp1_vram_partitions;
     vdp1_vram_partitions_get(&vdp1_vram_partitions);
-    
+
     vdp_dma_enqueue(vdp1_vram_partitions.gouraud_base, (void *)color_, sizeof(color_) * sizeof(uint16_t));
     vdp_dma_enqueue(vdp1_vram_partitions.clut_base, (void *)palettes, sizeof(palettes) * sizeof(uint16_t));
 
-    
-        vdp2_sprite_priority_set(0, 2);
+    vdp2_sprite_priority_set(0, 2);
+
+    vdp1_reset();
 }

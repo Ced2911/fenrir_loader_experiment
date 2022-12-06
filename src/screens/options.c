@@ -25,14 +25,25 @@ enum
     UI_SYS_HW_FW_DATE,
     UI_SYS_HW_WIFI_STATE,
     UI_SYS_HW_IP_ADDR,
-    UI_SYS_HW_SD_NAME,
-    UI_SYS_HW_SD_TYPE,
-    UI_SYS_HW_SD_SIZE,
+    UI_SYS_HW_SD
 };
 
 static void enable_igr(ui_item_t *i)
 {
     i->number.value = !i->number.value;
+}
+
+void set_diag_screen(ui_item_t *item)
+{
+    screens_select(screen_diagnostic);
+}
+void set_backup_bram_screen(ui_item_t *item)
+{
+    screens_select(screen_backup_bram);
+}
+void set_restore_bram_screen(ui_item_t *item)
+{
+    screens_select(screen_restore_bram);
 }
 
 static ui_item_t options_items[] = {
@@ -41,6 +52,12 @@ static ui_item_t options_items[] = {
     //
     _UI_LABEL_W("Enable IGR", SCREEN_W / 2),
     _UI_BOOL(UI_OPTIONS_IGR, 0, enable_igr),
+    _UI_BREAK,
+    {.type = UI_LABEL, .label = {.text = "Diagnostics"}, .w = SCREEN_W / 2, .handler = set_diag_screen},
+    _UI_BREAK,
+    {.type = UI_LABEL, .label = {.text = "Backup BRAM"}, .w = SCREEN_W / 2, .handler = set_backup_bram_screen},
+    _UI_BREAK,
+    {.type = UI_LABEL, .label = {.text = "Restore BRAM"}, .w = SCREEN_W / 2, .handler = set_restore_bram_screen},
     // =======================
     _UI_LINE,
     _UI_TITLE("System informations"),
@@ -55,11 +72,11 @@ static ui_item_t options_items[] = {
     _UI_BREAK,
 
     _UI_LABEL_W("Region", SCREEN_W / 2),
-    _UI_LABEL_NULL_ID(UI_SYS_SMPC_REGION),
+    _UI_LABEL_ID_W(UI_SYS_SMPC_REGION, SCREEN_W / 4),    
     _UI_BREAK,
 
     _UI_LABEL_W("Region flags", SCREEN_W / 2),
-    _UI_LABEL_NULL_ID(UI_SYS_REGION_FLAGS),
+    _UI_LABEL_ID_W(UI_SYS_REGION_FLAGS, SCREEN_W / 4),
     _UI_BREAK,
 
     _UI_LABEL_W("Firmware version", SCREEN_W / 2),
@@ -86,16 +103,8 @@ static ui_item_t options_items[] = {
     _UI_LABEL_NULL_ID(UI_SYS_HW_IP_ADDR),
     _UI_BREAK,
 
-    _UI_LABEL_W("SD Name", SCREEN_W / 2),
-    _UI_LABEL_NULL_ID(UI_SYS_HW_SD_NAME),
-    _UI_BREAK,
-
-    _UI_LABEL_W("SD Type", SCREEN_W / 2),
-    _UI_LABEL_NULL_ID(UI_SYS_HW_SD_TYPE),
-    _UI_BREAK,
-
-    _UI_LABEL_W("SD Size", SCREEN_W / 2),
-    _UI_LABEL_NULL_ID(UI_SYS_HW_SD_SIZE),
+    _UI_LABEL_W("SD Card: ", SCREEN_W / 2),
+    _UI_LABEL_NULL_ID(UI_SYS_HW_SD),
     _UI_BREAK,
 
     _UI_END};
@@ -134,6 +143,14 @@ static const char *wifi_state_str[] = {
     "CONNECTING",
     "CONNECTED"};
 
+static void options_input_handler(smpc_peripheral_digital_t *digital, void *unused)
+{
+    if (digital->held.button.b)
+    {
+        screens_select(screen_gamelist);
+    }
+}
+
 static void options_init()
 {
     char *hw_rev = fenrir_hw_rev_str(fenrir_config->hdr.hw_rev);
@@ -156,9 +173,7 @@ static void options_init()
     strncpy(GET_LABEL_BY_ID(UI_SYS_HW_WIFI_STATE), wifi_state_str[fenrir_config->hdr.wifi_state & 0b11], 24);
     snprintf(GET_LABEL_BY_ID(UI_SYS_HW_IP_ADDR), 24, "%d.%d.%d.%d", fenrir_config->hdr.local_ip[0], fenrir_config->hdr.local_ip[1], fenrir_config->hdr.local_ip[2], fenrir_config->hdr.local_ip[3]);
 
-    strncpy(GET_LABEL_BY_ID(UI_SYS_HW_SD_NAME), fenrir_config->hdr.sd_name, 24);
-    strncpy(GET_LABEL_BY_ID(UI_SYS_HW_SD_TYPE), fenrir_config->hdr.sd_type, 24);
-    snprintf(GET_LABEL_BY_ID(UI_SYS_HW_SD_SIZE), 24, "%ldMB", fenrir_config->hdr.sd_size);
+    snprintf(GET_LABEL_BY_ID(UI_SYS_HW_SD), 24, "%s %s %ldMB", fenrir_config->hdr.sd_name, fenrir_config->hdr.sd_type, fenrir_config->hdr.sd_size);
 
     ui_item_t *it = ui_get_item_by_id(options_items, UI_OPTIONS_IGR);
     if (it)
@@ -171,7 +186,7 @@ static void options_init()
 
 static void options_update()
 {
-    ui_update(options_items, NULL, NULL);
+    ui_update(options_items, options_input_handler, NULL);
 }
 
 static void options_destroy()

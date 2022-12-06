@@ -246,8 +246,8 @@ void browser_update(browser_t *browser)
 
     cmdt = &cmdt_list->cmdts[ORDER_BUFFER_STARTING_INDEX];
 
-  //  if (browser->browser_ui_config.position_bar.enabled)
-  //      draw_selector(browser, browser->selected);
+    //  if (browser->browser_ui_config.position_bar.enabled)
+    //      draw_selector(browser, browser->selected);
 
     // Only draw items if page changed
     if (browser->old_page != browser->page)
@@ -269,6 +269,11 @@ void browser_update(browser_t *browser)
     vdp1_sync_cmdt_list_put(cmdt_list, 0);
 }
 
+void browser_destroy(browser_t *browser)
+{
+    vdp1_reset();
+}
+
 void browser_init(browser_t *browser)
 {
     /*****************************************************
@@ -277,4 +282,22 @@ void browser_init(browser_t *browser)
     browser->selected = 0;
     browser->page = 0;
     browser->old_page = -1;
+
+    vdp1_cmdt_t *cmdts;
+    cmdts = &cmdt_list->cmdts[0];
+
+    const int16_vec2_t system_clip_coord =
+        INT16_VEC2_INITIALIZER(SCREEN_WIDTH - 1,
+                               SCREEN_HEIGHT - 1);
+
+    const int16_vec2_t local_coord_center =
+        INT16_VEC2_INITIALIZER(0, 0);
+
+    vdp1_cmdt_system_clip_coord_set(&cmdts[ORDER_SYSTEM_CLIP_COORDS_INDEX]);
+    vdp1_cmdt_param_vertex_set(&cmdts[ORDER_SYSTEM_CLIP_COORDS_INDEX],
+                               CMDT_VTX_SYSTEM_CLIP, &system_clip_coord);
+
+    vdp1_cmdt_local_coord_set(&cmdts[ORDER_CLEAR_LOCAL_COORDS_INDEX]);
+    vdp1_cmdt_param_vertex_set(&cmdts[ORDER_CLEAR_LOCAL_COORDS_INDEX],
+                               CMDT_VTX_LOCAL_COORD, &local_coord_center);
 }

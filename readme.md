@@ -6,7 +6,7 @@ Use [Libyaul](https://github.com/ijacquez/libyaul)
 ## Status
 
 - [-] Game browser (wip - some crash when launching)
-- [-] Options (wip)
+- [*] Options
 - [ ] Diagnostics screen
 - [ ] BRAM dump screen
 - [ ] BRAM restore screen

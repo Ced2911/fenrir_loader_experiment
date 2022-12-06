@@ -46,15 +46,9 @@ int main(void)
         .cram = (uint16_t *)VDP2_CRAM_ADDR(0),
     };
 
-    // hack
-    vdp2_scrn_display_set(VDP2_SCRN_DISPTP_NBG1);
-
     ui_init(&ui_param);
     message_box_t msg = {.type = message_box_error, .message = "Je suis la", .title = "titre"};
     message_box(&msg);
-
-    // hack
-    vdp2_scrn_display_set(VDP2_SCRN_DISPTP_NBG0 | VDP2_SCRN_DISPTP_NBG2);
 
     dbgio_init();
     dbgio_dev_default_init(DBGIO_DEV_VDP2_ASYNC);
@@ -82,7 +76,6 @@ int main(void)
 #else
     screens_select(screen_options);
 #endif
-    // message_box(&msg);
 
     while (1)
     {

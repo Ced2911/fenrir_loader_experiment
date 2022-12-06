@@ -93,11 +93,14 @@ static int ui_render_text(ui_render_text_param_t *param)
     return text_size;
 }
 
-static int ui_item_is_ctrl(uint8_t item_type)
+static int ui_item_is_ctrl(ui_item_t *item)
 {
+    if (item->handler)
+        return 1;
+
     for (const uint8_t *type = ui_ctrl_type; *type; type++)
     {
-        if (*type == item_type)
+        if (*type == item->type)
         {
             return 1;
         }
@@ -105,11 +108,11 @@ static int ui_item_is_ctrl(uint8_t item_type)
     return 0;
 }
 
-static int ui_item_is_inline(uint8_t item_type)
+static int ui_item_is_inline(ui_item_t *item)
 {
     for (const uint8_t *type = ui_inline_type; *type; type++)
     {
-        if (*type == item_type)
+        if (*type == item->type)
         {
             return 1;
         }
@@ -169,9 +172,9 @@ static int ui_get_next_item_in_row(ui_item_t *diag, int cur_item)
     int n = cur_item + 1;
     ui_item_t *item = &diag[n];
 
-    while (item->type != UI_END && ui_item_is_inline(item->type))
+    while (item->type != UI_END && ui_item_is_inline(item))
     {
-        if (ui_item_is_ctrl(item->type))
+        if (ui_item_is_ctrl(item))
         {
             return n;
         }
@@ -191,9 +194,9 @@ static int ui_get_prev_item_in_row(ui_item_t *diag, int cur_item)
     int n = cur_item - 1;
     ui_item_t *item = &diag[n];
 
-    while (n >= 0 && ui_item_is_inline(item->type))
+    while (n >= 0 && ui_item_is_inline(item))
     {
-        if (ui_item_is_ctrl(item->type))
+        if (ui_item_is_ctrl(item))
         {
             return n;
         }
@@ -219,11 +222,11 @@ static int ui_get_bottom_item(ui_item_t *diag, int cur_item)
     //
     while (item->type != UI_END)
     {
-        if (line_break && ui_item_is_ctrl(item->type))
+        if (line_break && ui_item_is_ctrl(item))
         {
             return next_item;
         }
-        if (!ui_item_is_inline(item->type))
+        if (!ui_item_is_inline(item))
         {
             line_break = 1;
         }
@@ -250,11 +253,11 @@ static int ui_get_top_item(ui_item_t *diag, int cur_item)
     //
     while (next_item >= 0)
     {
-        if (line_break && ui_item_is_ctrl(item->type))
+        if (line_break && ui_item_is_ctrl(item))
         {
             return next_item;
         }
-        if (!ui_item_is_inline(item->type))
+        if (!ui_item_is_inline(item))
         {
             line_break = 1;
         }
@@ -319,7 +322,7 @@ static void ui_reset_colors()
     }
 }
 
-void ui_update(ui_item_t *diag, void (*input_handler)(smpc_peripheral_digital_t *, void *), void * user_data)
+void ui_update(ui_item_t *diag, void (*input_handler)(smpc_peripheral_digital_t *, void *), void *user_data)
 {
     smpc_peripheral_digital_t digital;
 
@@ -450,7 +453,7 @@ void ui_render(ui_item_t *diag)
         }
 
         // select first item
-        if ((ui_item_is_ctrl(item->type) && ui_ctx.cur_item == -1))
+        if ((ui_item_is_ctrl(item) && ui_ctx.cur_item == -1))
         {
             ui_ctx.cur_item = n;
         }
@@ -467,6 +470,8 @@ void ui_render(ui_item_t *diag)
     vdp_sync_vblank_out_set(_vblank_out_handler, NULL);
 
     vdp2_scrn_back_color_set(VDP2_VRAM_ADDR(3, 0x01FFFE), bg_color);
+
+    vdp2_scrn_display_set(VDP2_SCRN_DISPTP_NBG1);
 }
 
 void ui_init(ui_item_init_t *param)

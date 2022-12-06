@@ -43,3 +43,4 @@ typedef struct browser_s
 
 void browser_init(browser_t *);
 void browser_update(browser_t *);
+void browser_destroy(browser_t *);
