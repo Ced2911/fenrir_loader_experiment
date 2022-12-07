@@ -19,6 +19,7 @@ static screen_t *screens[] = {
     &options_screen,
     &diagnostics_screen,
     &bram_backup_screen,
+    &bram_restore_screen,
     &credits_screen};
 
 static screen_t *get(screens_type_t scr)

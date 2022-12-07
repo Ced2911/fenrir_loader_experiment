@@ -23,7 +23,6 @@ set(FENRIR_SRC
 
 	src/bram.c 
 	src/main.c 
-	src/noise.c 
 	src/reset.c 
 	src/vdp1.config.c 
 	src/vdp2.config.c 
@@ -43,6 +42,7 @@ set(FENRIR_SRC
 	src/screens/screens.c 
 	src/screens/error.c 
 	src/screens/bram_backup.c 
+	src/screens/bram_restore.c
 	src/screens/gamelist.c 
 	src/screens/gamelist_theme.c 
 	src/screens/browser.c 

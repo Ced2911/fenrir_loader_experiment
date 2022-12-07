@@ -39,7 +39,7 @@ static void set_title(const char *str)
 
 static void __end(smpc_peripheral_digital_t *digital, int *end)
 {
-    if (digital->held.button.a)
+    if (digital->held.button.a || digital->held.button.start)
     {
         *end = 1;
     }

@@ -47,7 +47,8 @@ int main(void)
     };
 
     ui_init(&ui_param);
-    message_box_t msg = {.type = message_box_error, .message = "Je suis la", .title = "titre"};
+
+    message_box_t msg = {.type = message_box_error, .message = "This is a wip build, all features are imcomplete", .title = "Fenrir loader"};
     message_box(&msg);
 
     dbgio_init();

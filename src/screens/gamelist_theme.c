@@ -6,11 +6,8 @@
 #include "vdp2.config.h"
 #include "../assets/vdp2.h"
 #include "theme.h"
-#include "noise.h"
 
 #define COVER_TEXTURE_ADDR (browser->texture_base + (FONT_CACHE_SIZE * 2))
-
-static noise_cfg_t noise_cfg = {};
 
 void gamelist_theme_update(browser_t *browser)
 {
@@ -21,23 +18,10 @@ void gamelist_theme_update(browser_t *browser)
 
 void gamelist_theme_apply(browser_t *browser)
 {
+    ui_config_t *theme = theme_get_ui_config();
     /*****************************************************
      * Apply theme configuration
      ****************************************************/
-    // noise theme
-    ui_config_t *theme = theme_get_ui_config();
-
-    noise_cfg.cell_addr = theme->vdp2.nbg1.cell_addr,
-    noise_cfg.pattern_addr = theme->vdp2.nbg1.pattern_addr,
-    noise_cfg.pal_addr = theme->vdp2.nbg1.pal_addr;
-
-    noise_cfg.noise_palette = (uintptr_t)theme->screens.gamelist.cover.noise_palettes;
-    noise_cfg.noise_palettes_sz = NOISE_PALETTE_SIZE * sizeof(int16_t);
-    noise_cfg.cell_x = theme->screens.gamelist.cover.x / 8;
-    noise_cfg.cell_y = theme->screens.gamelist.cover.y / 8;
-    noise_cfg.cell_w = theme->screens.gamelist.cover.w / 8;
-    noise_cfg.cell_h = theme->screens.gamelist.cover.h / 8;
-
     // palette colors
     rgb1555_t *pal = (rgb1555_t *)browser->pal_base;
     pal[BROWSER_ITEM_COLOR + 1] = theme->screens.gamelist.browser.item_colors.colors[0];

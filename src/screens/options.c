@@ -37,10 +37,12 @@ void set_diag_screen(ui_item_t *item)
 {
     screens_select(screen_diagnostic);
 }
+
 void set_backup_bram_screen(ui_item_t *item)
 {
     screens_select(screen_backup_bram);
 }
+
 void set_restore_bram_screen(ui_item_t *item)
 {
     screens_select(screen_restore_bram);
@@ -72,7 +74,7 @@ static ui_item_t options_items[] = {
     _UI_BREAK,
 
     _UI_LABEL_W("Region", SCREEN_W / 2),
-    _UI_LABEL_ID_W(UI_SYS_SMPC_REGION, SCREEN_W / 4),    
+    _UI_LABEL_ID_W(UI_SYS_SMPC_REGION, SCREEN_W / 4),
     _UI_BREAK,
 
     _UI_LABEL_W("Region flags", SCREEN_W / 2),
