@@ -113,24 +113,6 @@ static void browser_draw_items(browser_t *browser)
         size_t texture_size = font_texture_font_create(tex, entry);
 
         // build and enqueue the polygon
-        /*
-        // add shadow
-        cmdt->cmd_xa = menux + 1;
-        cmdt->cmd_ya = menuy + 1 + ((i - start) * BROWSER_LINE_HEIGHT);
-
-        vdp1_cmdt_normal_sprite_set(cmdt);
-        vdp1_cmdt_param_color_mode1_set(cmdt, pal);
-        vdp1_cmdt_param_draw_mode_set(cmdt, draw_mode_shadow);
-        vdp1_cmdt_param_size_set(cmdt, tex->w, tex->h);
-
-        vdp1_cmdt_param_char_base_set(cmdt, vdp_texture_base);
-        vdp1_cmdt_param_gouraud_base_set(cmdt, gouraud);
-
-        vdp1_cmdt_jump_skip_next(cmdt);
-        cmdt++;
-        */
-
-        // add front
         cmdt->cmd_xa = menux;
         cmdt->cmd_ya = menuy + ((i - start) * BROWSER_LINE_HEIGHT);
 

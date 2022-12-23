@@ -12,8 +12,6 @@
 void gamelist_theme_update(browser_t *browser)
 {
     ui_config_t *theme = theme_get_ui_config();
-    // if (theme->screens.gamelist.cover.enabled)
-    //    noise_update(&noise_cfg);
 }
 
 void gamelist_theme_apply(browser_t *browser)
@@ -102,7 +100,4 @@ void gamelist_theme_apply(browser_t *browser)
 void gamelist_theme_destroy(browser_t *browser)
 {
     ui_config_t *theme = theme_get_ui_config();
-
-    // if (theme->screens.gamelist.cover.enabled)
-    //     noise_destroy(&noise_cfg);
 }

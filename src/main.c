@@ -32,7 +32,6 @@ int main(void)
     vdp1_vram_partitions_get(&vdp1_vram_partitions);
 
     vdp1_init();
-    vdp2_init();
 
     // slave cpu setup
     cpu_dual_comm_mode_set(CPU_DUAL_ENTRY_ICI);
@@ -42,7 +41,7 @@ int main(void)
     sd_dir_entries = (sd_dir_entry_t *)zalloc(sizeof(sd_dir_entry_t) * 2500);
 
     ui_item_init_t ui_param = {
-        .vram = (uint8_t *)VDP2_VRAM_ADDR(3, 0x00000),
+        .vram = (uint8_t *)NBG0_BITMAP_ADDR,
         .cram = (uint16_t *)VDP2_CRAM_ADDR(0),
     };
 
@@ -50,11 +49,11 @@ int main(void)
 
     message_box_t msg = {.type = message_box_error, .message = "This is a wip build, all features are imcomplete", .title = "Fenrir loader"};
     message_box(&msg);
-
+/*
     dbgio_init();
     dbgio_dev_default_init(DBGIO_DEV_VDP2_ASYNC);
     dbgio_dev_font_load();
-
+*/
     // read status
     fenrir_read_configuration(fenrir_config);
 
@@ -81,7 +80,7 @@ int main(void)
     while (1)
     {
         screens_update();
-        dbgio_flush();
+      //  dbgio_flush();
 
         vdp1_sync_render();
         vdp1_sync();
@@ -124,6 +123,8 @@ void user_init(void)
     vdp2_sprite_priority_set(0, 6);
     vdp1_env_set(&env);
     vdp1_sync_interval_set(0);
+
+    vdp2_init();
 
     vdp_sync_vblank_out_set(_vblank_out_handler, NULL);
     vdp_sync_vblank_in_set(_vblank_in_handler, NULL);

@@ -119,7 +119,7 @@ static void gamelist_update()
     {
         gamelist_ctx.last_selected_item = browser.selected;
         cover_selected = sd_dir_entries[browser.selected].id;
-        // cpu_dual_slave_notify();
+        cpu_dual_slave_notify();
     }
 }
 
@@ -168,7 +168,7 @@ static void gamelist_init()
     // setup slave
     cpu_dual_slave_set(_slave_entry);
 
-    vdp2_scrn_display_set(VDP2_SCRN_DISPTP_NBG0 | VDP2_SCRN_DISPTP_NBG2);
+    vdp2_scrn_display_set(VDP2_SCRN_DISPTP_NBG2);
 }
 
 static void gamelist_destroy()

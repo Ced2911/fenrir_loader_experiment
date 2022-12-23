@@ -471,7 +471,7 @@ void ui_render(ui_item_t *diag)
 
     vdp2_scrn_back_color_set(VDP2_VRAM_ADDR(3, 0x01FFFE), bg_color);
 
-    vdp2_scrn_display_set(VDP2_SCRN_DISPTP_NBG1);
+    vdp2_scrn_display_set(VDP2_SCRN_DISPTP_NBG0/*|VDP2_SCRN_DISPTP_NBG1|VDP2_SCRN_DISPTP_NBG2*/);
 }
 
 void ui_init(ui_item_init_t *param)
