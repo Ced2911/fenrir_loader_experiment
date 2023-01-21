@@ -44,5 +44,8 @@
         "options.h": "c",
         "bram_backup.h": "c",
         "error.h": "c"
-    }
+    },
+    "rust-analyzer.linkedProjects": [
+        "${workspaceFolder}/tools/themes/Cargo.toml"
+    ]
 }
