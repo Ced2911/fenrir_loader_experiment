@@ -5,7 +5,12 @@
 #include "theme.h"
 
 const vdp2_scrn_bitmap_format_t format_ngb0 = {
+#ifdef FENRIR_480i
+    .bitmap_size = VDP2_SCRN_BITMAP_SIZE_1024X512,
+#else
     .bitmap_size = VDP2_SCRN_BITMAP_SIZE_512X256,
+#endif
+
     .bitmap_base = NBG0_BITMAP_ADDR,
     .scroll_screen = VDP2_SCRN_NBG0,
     .palette_base = VDP2_CRAM_ADDR(0),
@@ -82,7 +87,7 @@ void vdp2_init()
     vdp2_scrn_bitmap_format_set(&format_ngb0);
     vdp2_scrn_priority_set(format_ngb0.scroll_screen, 4);
     vdp2_cram_offset_set(format_ngb0.scroll_screen, 0);
-    
+
     vdp2_scrn_bitmap_format_set(&format_nbg1);
     vdp2_scrn_priority_set(format_nbg1.scroll_screen, 5);
     vdp2_cram_offset_set(format_nbg1.scroll_screen, 0);

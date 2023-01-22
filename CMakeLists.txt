@@ -16,6 +16,14 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/yaul.cmake)
 # project...
 PROJECT(FenrirYaul)
 
+SET(FENRIR_DEF "")
+
+option(VIDEO_480i "Run in 480i mode" OFF)
+if (VIDEO_480i)
+	SET(FENRIR_DEF ${FENRIR_DEF} FENRIR_480i)
+endif()
+
+
 set(FENRIR_SRC 
    # assets
     assets/army12.c 
@@ -57,7 +65,7 @@ set(FENRIR_SRC
 	)
 
 add_executable(${PROJECT_NAME} ${FENRIR_SRC})
-
+target_compile_definitions(${PROJECT_NAME} PUBLIC ${FENRIR_DEF})
 target_link_libraries(${PROJECT_NAME} ${YAUL_LIBS})
 target_include_directories(${PROJECT_NAME} PRIVATE src assets)
 set_target_properties(${PROJECT_NAME} PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/libyaul.ld)

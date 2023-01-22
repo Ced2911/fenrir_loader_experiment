@@ -49,11 +49,11 @@ int main(void)
 
     message_box_t msg = {.type = message_box_error, .message = "This is a wip build, all features are imcomplete", .title = "Fenrir loader"};
     message_box(&msg);
-/*
-    dbgio_init();
-    dbgio_dev_default_init(DBGIO_DEV_VDP2_ASYNC);
-    dbgio_dev_font_load();
-*/
+    /*
+        dbgio_init();
+        dbgio_dev_default_init(DBGIO_DEV_VDP2_ASYNC);
+        dbgio_dev_font_load();
+    */
     // read status
     fenrir_read_configuration(fenrir_config);
 
@@ -80,7 +80,7 @@ int main(void)
     while (1)
     {
         screens_update();
-      //  dbgio_flush();
+        //  dbgio_flush();
 
         vdp1_sync_render();
         vdp1_sync();
@@ -101,21 +101,35 @@ static void _vblank_in_handler(void *work __unused)
 
 void user_init(void)
 {
+#ifdef FENRIR_480i
+    static const struct vdp1_env env = {
+        .bpp = VDP1_ENV_BPP_8,
+        .rotation = VDP1_ENV_ROTATION_0,
+        .color_mode = VDP1_ENV_COLOR_MODE_RGB_PALETTE,
+        .sprite_type = 0x0,
+        .erase_color = RGB1555(0, 0, 0, 0),
+        .erase_points = {
+            {0, 0},
+            {RESOLUTION_WIDTH * 2, RESOLUTION_HEIGHT * 2}}};
+#else
     static const struct vdp1_env env = {
         .bpp = VDP1_ENV_BPP_16,
         .rotation = VDP1_ENV_ROTATION_0,
         .color_mode = VDP1_ENV_COLOR_MODE_RGB_PALETTE,
-        .sprite_type = 0,
+        .sprite_type = 0x0,
         .erase_color = RGB1555(0, 0, 0, 0),
         .erase_points = {
             {0, 0},
             {RESOLUTION_WIDTH, RESOLUTION_HEIGHT}}};
+#endif
 
     smpc_peripheral_init();
     cd_block_init();
-
-    vdp2_tvmd_display_res_set(VDP2_TVMD_INTERLACE_NONE, VDP2_TVMD_HORZ_NORMAL_B,
-                              VDP2_TVMD_VERT_240);
+#ifdef FENRIR_480i
+    vdp2_tvmd_display_res_set(VDP2_TVMD_INTERLACE_DOUBLE, VDP2_TVMD_HORZ_HIRESO_A, VDP2_TVMD_VERT_240);
+#else
+    vdp2_tvmd_display_res_set(VDP2_TVMD_INTERLACE_NONE, VDP2_TVMD_HORZ_NORMAL_B, VDP2_TVMD_VERT_240);
+#endif
 
     vdp2_scrn_back_color_set(VDP2_VRAM_ADDR(3, 0x01FFFE),
                              RGB1555(0, 0, 0, 0));
