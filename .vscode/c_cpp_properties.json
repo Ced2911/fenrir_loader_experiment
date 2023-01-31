@@ -9,7 +9,7 @@
                 "/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/**"
             ],
             "defines": [
-                "FENRIR_LOADER"
+                "FENRIR_LOADER","UNIT_TEST"
             ],
             "compilerPath": "/opt/tool-chains/sh2eb-elf/bin/sh2eb-elf-gcc",
             "compilerArgs": [
@@ -20,7 +20,7 @@
             "cStandard": "gnu17",
             "cppStandard": "gnu++14",
             "intelliSenseMode": "linux-gcc-x64",
-            "compileCommands": "${workspaceFolder}/compile_commands.json",
+            "compileCommands": "${workspaceFolder}/buildcmake/compile_commands.json",
             "configurationProvider": "ms-vscode.makefile-tools"
         },
         {
@@ -28,7 +28,7 @@
             "includePath": [
                 "${workspaceFolder}/**"
             ],
-            "defines": [],
+            "defines": ["UNIT_TEST"],
             "compilerPath": "/usr/sbin/gcc",
             "cStandard": "gnu17",
             "cppStandard": "gnu++17",

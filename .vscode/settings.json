@@ -43,7 +43,9 @@
         "scrn_shared.h": "c",
         "options.h": "c",
         "bram_backup.h": "c",
-        "error.h": "c"
+        "error.h": "c",
+        "usb-cart.h": "c",
+        "odefs.h": "c"
     },
     "rust-analyzer.linkedProjects": [
         "${workspaceFolder}/tools/themes/Cargo.toml"
