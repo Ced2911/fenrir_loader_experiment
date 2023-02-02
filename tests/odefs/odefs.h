@@ -6,7 +6,7 @@
 #define ODEFS_FILENAME_LENGTH (32 - 2 - 2 - 1)
 
 // max number of entries per dir
-#define ODEFS_ENTRIES_MAX (5000)
+#define ODEFS_ENTRIES_MAX (4900)
 
 #define ODEFS_FAD (20000)
 #define ODEFS_PATH_INFO_FAD (20000)
@@ -14,9 +14,9 @@
 // change entry (file/dir)
 // 0 => root dir
 #define ODEFS_SELECT_PATH_FAD (25000)
-#define ODEFS_SELECT_PATH_FAD_MAX (ODEFS_SELECT_PATH_FAD + ODEFS_ENTRIES_MAX * 32)
+#define ODEFS_SELECT_PATH_FAD_MAX (ODEFS_SELECT_PATH_FAD + ODEFS_ENTRIES_MAX)
 #define ODEFS_SELECT_FILE_FAD (30000)
-#define ODEFS_SELECT_FILE_FAD_MAX (ODEFS_SELECT_FILE_FAD + ODEFS_ENTRIES_MAX * 32)
+#define ODEFS_SELECT_FILE_FAD_MAX (ODEFS_SELECT_FILE_FAD + ODEFS_ENTRIES_MAX)
 
 //=== file read / max read size 64MB per file ===/
 #define ODEFS_FILE_READ_FAD (40000)
@@ -51,5 +51,7 @@ static_assert(sizeof(odefs_entry_t) == 32, "Structure size error");
 
 void odefs_filelist_root_read(odefs_entry_t *entries, int *entries_count);
 void odefs_filelist_dir_read(odefs_entry_t *dir, odefs_entry_t *entries, int *entries_count);
+void odefs_file_read(odefs_entry_t * entry);
+odefs_entry_t * odefs_find_entry(const char * name, odefs_entry_t * entry);
 
 // void odefs_filelist_read(odefs_filelist_t *filelist, const odefs_filelist_entry_t root_entry);

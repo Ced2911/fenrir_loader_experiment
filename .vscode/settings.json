@@ -45,7 +45,8 @@
         "bram_backup.h": "c",
         "error.h": "c",
         "usb-cart.h": "c",
-        "odefs.h": "c"
+        "odefs.h": "c",
+        "numbers": "c"
     },
     "rust-analyzer.linkedProjects": [
         "${workspaceFolder}/tools/themes/Cargo.toml"
