@@ -34,7 +34,6 @@ function build_table() {
 
 function note_build_table() {
     let freq_noise = [clk_35 / 512, clk_35 / 1024, clk_35 / 2048]
-    console.log(freq_noise)
 
     const freq = freq_noise.map(hz => {
         hz = hz.toFixed(0)
@@ -62,3 +61,5 @@ const tone_map_str = `//tone\nsn_scsp_map_t sn_scsp_map[] = {\n ${build_table().
 const noise_map_str = `//noise\nsn_scsp_map_t sn_noise_scsp_map[] = {\n ${note_build_table().map(k => str_c(k)).join(',\n')}\n};`
 
 fs.writeFileSync("sn_map.h", tone_map_str + noise_map_str, () => { })
+
+console.log(freq_to_oct_fns(440))

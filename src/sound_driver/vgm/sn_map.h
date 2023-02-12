@@ -1026,7 +1026,7 @@ sn_scsp_map_t sn_scsp_map[] = {
 {/* freq: 109 */ -3, 1184}
 };//noise
 sn_scsp_map_t sn_noise_scsp_map[] = {
- {/* freq: 6991 */ -2, 1188},
-{/* freq: 3496 */ -3, 1188},
-{/* freq: 1748 */ -4, 1188}
+ {/* freq: 6991 */ 3, 1188},
+{/* freq: 3496 */ 2, 1188},
+{/* freq: 1748 */ 1, 1188}
 };
