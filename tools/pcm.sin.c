@@ -5,14 +5,14 @@
 // gcc pcm.sin.c -o pcm.sin -lm
 // https://pages.mtu.edu/~suits/notefreqs.html
 
-#if 0
-#define DURATION_SEC 2
-#define SAMPLE_RATE 44100
-#define NOTE_FREQ 261.63 // c4
+#if 1
+#define DURATION_SEC 4
+#define SAMPLE_RATE 44100.0
+#define NOTE_FREQ 440.0 // a4
 
-#define INCR ((NOTE_FREQ * 2 * M_PI) / SAMPLE_RATE)
+#define INCR ((NOTE_FREQ * 2.0 * M_PI) / SAMPLE_RATE)
 #define LEN (2 * SAMPLE_RATE / NOTE_FREQ * sizeof(int16_t))
-//#define LEN DURATION_SEC * SAMPLE_RATE * 2
+// #define LEN DURATION_SEC *SAMPLE_RATE * 2
 
 void main()
 {
@@ -24,9 +24,14 @@ void main()
     printf("len:%f\n", LEN);
     for (int i = 0; i < LEN / 2; i++)
     {
-        samples[i] = __builtin_bswap16(sin(v) * 32767);
-        printf("%d: %f\n", i, sin(v) * 32767);
-        v += inc;
+        double tonePeriodSeconds = 1.0 / NOTE_FREQ;
+        double radians = ((double)(i / SAMPLE_RATE)) / tonePeriodSeconds * (2 * M_PI);
+        double result = sin(radians);
+
+        // uint16_t s = result * (32767.0 / 2.0);
+        int16_t s = result < 0 ? 32767 : -32768;
+        samples[i] = __builtin_bswap16(s);
+        printf("%d: %04x\n",i,  (uint16_t)s);
     }
 
     fwrite(samples, LEN, 1, fd);

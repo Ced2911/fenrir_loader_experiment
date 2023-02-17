@@ -39,6 +39,19 @@
         "font.sfa.h": "c",
         "screen.h": "c",
         "theme.config.h": "c",
-        "ys.h": "c"
+        "ui.h": "c",
+        "scrn_shared.h": "c",
+        "options.h": "c",
+        "bram_backup.h": "c",
+        "error.h": "c",
+        "usb-cart.h": "c",
+        "odefs.h": "c",
+        "numbers": "c",
+        "cmath": "c",
+        "array": "c",
+        "string": "c",
+        "string_view": "c",
+        "compare": "cpp",
+        "random": "c"
     }
 }

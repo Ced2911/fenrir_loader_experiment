@@ -82,11 +82,7 @@ int main(void)
     pcm_sample_start(&hadoken);
 #else
 
-    void snd_init();
-    snd_init();
-    _vgm_init();
 #endif
-    int i = 0;
     while (1)
     {
         // screen->update();
@@ -97,22 +93,11 @@ int main(void)
             i = 0;
         }
 #endif
-        i++;
-
         vdp1_sync_render();
         vdp1_sync();
         vdp2_sync();
         vdp1_sync_wait();
         vdp2_sync_wait();
-
-        // if (i > 5)
-        {
-
-            // fm_test();
-            // dbgio_flush();
-            _vgm_test();
-            i = 0;
-        }
     }
     screen->destroy();
 }
@@ -125,6 +110,7 @@ static void _vblank_in_handler(void *work __unused)
 {
     // sdrv_vblank_rq();
     // fm_test();
+     _vgm_test();
 }
 
 void user_init(void)
@@ -151,6 +137,10 @@ void user_init(void)
     vdp2_sprite_priority_set(0, 6);
     vdp1_env_set(&env);
     vdp1_sync_interval_set(0);
+
+    void snd_init();
+    snd_init();
+    _vgm_init();
 
     vdp_sync_vblank_out_set(_vblank_out_handler, NULL);
     vdp_sync_vblank_in_set(_vblank_in_handler, NULL);
