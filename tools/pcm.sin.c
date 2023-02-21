@@ -10,19 +10,30 @@
 #define SAMPLE_RATE 44100.0
 #define NOTE_FREQ 440.0 // a4
 
-#define INCR ((NOTE_FREQ * 2.0 * M_PI) / SAMPLE_RATE)
-#define LEN (2 * SAMPLE_RATE / NOTE_FREQ * sizeof(int16_t))
-// #define LEN DURATION_SEC *SAMPLE_RATE * 2
+#define DIV_ROUND_CLOSEST(n, d) ((((n) < 0) ^ ((d) < 0)) ? (((n) - (d) / 2) / (d)) : (((n) + (d) / 2) / (d)))
 
-void main()
+#define INCR ((NOTE_FREQ * 2.0 * M_PI) / SAMPLE_RATE)
+#define _LEN (2 * SAMPLE_RATE / NOTE_FREQ * sizeof(int16_t))
+
+// #define LEN DURATION_SEC *SAMPLE_RATE * 2
+int _r(double v)
+{
+    return ((((int)round(_LEN)) + 1) << 1) >> 1;
+}
+
+#define LEN _r(_LEN)
+
+// sn76496 tune - square a4 - 440hz
+void __main()
 {
     FILE *fd = fopen("sample.pcm", "wb");
-    int16_t *samples = (int16_t *)malloc(LEN);
+    int16_t *samples = (int16_t *)malloc(LEN * 2);
     double inc = INCR;
     double v = 0;
+    int l = LEN;
     printf("inc:%f\n", INCR);
-    printf("len:%f\n", LEN);
-    for (int i = 0; i < LEN / 2; i++)
+    printf("len:%d\n", LEN);
+    for (int i = 0; i < (LEN) / 2; i++)
     {
         double tonePeriodSeconds = 1.0 / NOTE_FREQ;
         double radians = ((double)(i / SAMPLE_RATE)) / tonePeriodSeconds * (2 * M_PI);
@@ -31,10 +42,50 @@ void main()
         // uint16_t s = result * (32767.0 / 2.0);
         int16_t s = result < 0 ? 32767 : -32768;
         samples[i] = __builtin_bswap16(s);
-        printf("%d: %04x\n",i,  (uint16_t)s);
+        printf("%d: %04x\n", i, (uint16_t)s);
     }
 
     fwrite(samples, LEN, 1, fd);
+    fclose(fd);
+}
+
+// sn76496 tune - periodique noise a4 - 440hz
+void main()
+{
+    FILE *fd = fopen("sample.noise.per.pcm", "wb");
+
+    uint32_t len = 400;
+    uint32_t sample_size = len / 2;
+    double v_l = (double)sample_size / 16.0;
+    // not so periodic noise
+    // 0 1 2 3 4 5 6 7 8 9 A B C D E F
+    // 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+    uint32_t n = 64;
+
+    int16_t *samples = (int16_t *)malloc(6 * n * 2);
+    int16_t *samples_ptr = samples;
+
+    printf("v_l:%f\n", v_l);
+
+    uint16_t lfs = 0x8000;
+    for (int j = 0; j < n; j++)
+    {
+        uint16_t feedback = lfs & 1;
+        for (int i = 0; i < 1; i++)
+        {
+
+            int16_t s = !feedback ? 0x8000 : 0x7fff;
+            *samples_ptr++ = __builtin_bswap16(s);
+            // printf("%d %d: %04x\n", j, i, (uint16_t)s);
+        }
+
+        lfs = (lfs >> 1) | (feedback << 15);
+
+        printf("lfs:%4x\n", lfs);
+    }
+
+    fwrite(samples, n * 6 * 2, 1, fd);
     fclose(fd);
 }
 #elif 0
