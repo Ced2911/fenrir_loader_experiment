@@ -182,7 +182,7 @@ void sn76496_init()
     }
 
     // periodic noise
-    if (1)
+    if (0)
     {
         // use periodic noise
         sn76496_w(0b11100110); // 0b1_11_0_0000
@@ -237,7 +237,7 @@ void sn76496_w(uint8_t dd)
         if ((dd & 0x80) == 0)
             chip->registers[r] = (chip->registers[r] & 0x3f0) | (dd & 0x0f);
         // N/512,N/1024,N/2048,Tone #3 output
-        chip->period[3] = ((n & 3) == 3) ? (chip->period[2] <<1): (1 << (5 + (n & 3)));
+        chip->period[3] = ((n & 3) == 3) ? (chip->period[2] >> 1) : (1 << (5 + (n & 3)));
         break;
         // tone/noise: volume
     case 1:
@@ -256,32 +256,45 @@ void sn76496_w(uint8_t dd)
         // restart chan 3
         if (chan == 3)
         {
-            scsp_slot_regs_t *slot_noise = &slots[3];
-            scsp_slot_regs_t *slot_per = &slots[4];
-            scsp_slot_regs_t *slot = chip->noise_type ? slot_noise : slot_per;
+          //  return;
+            volatile scsp_slot_regs_t *slot_noise = &slots[3];
+            volatile scsp_slot_regs_t *slot_per = &slots[4];
+            volatile scsp_slot_regs_t *slot = chip->noise_type ? slot_noise : slot_per;
+
+            slot->kyonb = 0;
+            slot->kyonex = 0;
 
             if (chip->noise_type)
             {
                 slot_per->total_l = 0;
+                slot_per->kyonb = 0;
+                slot_per->kyonex = 0;
             }
             else
             {
                 slot_noise->total_l = 0;
+                slot_noise->kyonb = 0;
+                slot_noise->kyonex = 0;
             }
 
             slot->fns = sn_scsp_map[chip->period[chan]].fns;
             slot->oct = sn_scsp_map[chip->period[chan]].oct;
-            slot->total_l = volume_map[chip->vol[chan]];
+            slot->total_l = volume_map[chip->vol[chan]];// << 1; // boost noise
+
+            asm("nop");
+            asm("nop");
+            asm("nop");
+            asm("nop");
 
             slot->kyonb = 1;
             slot->kyonex = 1;
             // slot->total_l = 7;
 
-            emu_printf("sn76496_w %d %02x\n", chip->noise_type, chip->period[chan]);
+            // emu_printf("sn76496_w %d %02x\n", chip->noise_type, chip->period[chan]);
         }
         else
         {
-            // return;
+           //* return;
             slots[chan].fns = sn_scsp_map[chip->period[chan]].fns;
             slots[chan].oct = sn_scsp_map[chip->period[chan]].oct;
             slots[chan].total_l = volume_map[chip->vol[chan]];
