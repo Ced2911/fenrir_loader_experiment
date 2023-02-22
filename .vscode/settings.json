@@ -52,6 +52,7 @@
         "string": "c",
         "string_view": "c",
         "compare": "cpp",
-        "random": "c"
+        "random": "c",
+        "*.tcc": "c"
     }
 }

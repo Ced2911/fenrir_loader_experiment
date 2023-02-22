@@ -80,6 +80,8 @@ uint8_t volume_map[] = {
 
 #include "tone_func.h"
 
+void sn76496_w(uint8_t dd);
+
 void sn76496_init()
 {
     snd_init();
@@ -110,6 +112,22 @@ void sn76496_init()
         slot.sa = sn_square_addr;
         slot.lsa = 0;
         slot.lea = (sizeof(SN_NOTE) / 2);
+
+        // chan 3 => noise
+        if (i == 3)
+        {
+
+            slot.sa = sn_white_noise_addr;
+            slot.lea = (sizeof(SN_NOISE_NOTE) / 2);
+        }
+
+        // chan 4 => per
+        if (i == 4)
+        {
+            slot.sa = sn_periodic_addr;
+            slot.lea = (sizeof(SN_PER_NOTE) / 2);
+        }
+
         // uned 16 bit
         slot.pcm8b = 0;
         slot.sbctl = 0;
@@ -152,6 +170,25 @@ void sn76496_init()
     }
 
     // __dbg_tuneA5(&slots[0]);
+
+    // dbg...
+    if (0)
+    {
+        // channel 0 tone 0xfe 440hz
+        sn76496_w(0b10001110); // 0b1_00_0_1110
+        sn76496_w(0b00001111); // 0b0_00_0_1111
+        // set vol to max
+        sn76496_w(0b10010000); // 0b1_00_1_0000
+    }
+
+    // periodic noise
+    if (1)
+    {
+        // use periodic noise
+        sn76496_w(0b11100110); // 0b1_11_0_0000
+        // set vol to max
+        sn76496_w(0b11110000); // 0b1_11_1_0000
+    }
 }
 
 void sn76496_w(uint8_t dd)
@@ -200,7 +237,7 @@ void sn76496_w(uint8_t dd)
         if ((dd & 0x80) == 0)
             chip->registers[r] = (chip->registers[r] & 0x3f0) | (dd & 0x0f);
         // N/512,N/1024,N/2048,Tone #3 output
-        chip->period[3] = ((n & 3) == 3) ? chip->period[2] : (1 << (5 + (n & 3)));
+        chip->period[3] = ((n & 3) == 3) ? (chip->period[2] <<1): (1 << (5 + (n & 3)));
         break;
         // tone/noise: volume
     case 1:
@@ -219,27 +256,32 @@ void sn76496_w(uint8_t dd)
         // restart chan 3
         if (chan == 3)
         {
-            // stop it
-            slots[chan].kyonb = 0;
-            slots[chan].kyonex = 0;
+            scsp_slot_regs_t *slot_noise = &slots[3];
+            scsp_slot_regs_t *slot_per = &slots[4];
+            scsp_slot_regs_t *slot = chip->noise_type ? slot_noise : slot_per;
 
-            // set correct sample
-            slots[chan].sa = (chip->noise_type) ? sn_white_noise_addr : sn_periodic_addr;
-            slots[chan].lsa = 0;
-            slots[chan].lea = (chip->noise_type) ? (sizeof(SN_NOISE_NOTE) / 2) : (sizeof(SN_NOTE) / 2);
+            if (chip->noise_type)
+            {
+                slot_per->total_l = 0;
+            }
+            else
+            {
+                slot_noise->total_l = 0;
+            }
 
-            slots[chan].fns = sn_scsp_map[chip->period[chan]].fns;
-            slots[chan].oct = sn_scsp_map[chip->period[chan]].oct;
-            slots[chan].total_l = volume_map[chip->vol[chan]];
+            slot->fns = sn_scsp_map[chip->period[chan]].fns;
+            slot->oct = sn_scsp_map[chip->period[chan]].oct;
+            slot->total_l = volume_map[chip->vol[chan]];
 
-            // emu_printf("sn76496_w %02x\n", dd);
+            slot->kyonb = 1;
+            slot->kyonex = 1;
+            // slot->total_l = 7;
 
-            slots[chan].kyonb = 1;
-            slots[chan].kyonex = 1;
+            emu_printf("sn76496_w %d %02x\n", chip->noise_type, chip->period[chan]);
         }
         else
         {
-            //return;
+            // return;
             slots[chan].fns = sn_scsp_map[chip->period[chan]].fns;
             slots[chan].oct = sn_scsp_map[chip->period[chan]].oct;
             slots[chan].total_l = volume_map[chip->vol[chan]];
