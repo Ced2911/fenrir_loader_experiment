@@ -116,6 +116,7 @@ uint16_t vgm_parse(vgm_player_t *vgm_player)
       break;
 
       // SN76489/SN76496
+   case 0x4f: // Game Gear PSG stereo, write dd to port 0x06
    case 0x50: // 0x50	dd	PSG (SN76489/SN76496) write value dd
       dat = get_vgm_ui8(vgm_player);
       sn76496_w(dat);
@@ -234,7 +235,7 @@ uint16_t vgm_parse(vgm_player_t *vgm_player)
       vgm_player->pcmoffset = 0;
       break;
    default:
-      dbgio_printf("unknown cmd at 0x%x: 0x%x\n", vgm_player->vgmpos, command);
+      emu_printf("unknown cmd at 0x%x: 0x%x\n", vgm_player->vgmpos, command);
       vgm_player->vgmpos++;
       vgm_restart(vgm_player);
       break;
@@ -332,7 +333,8 @@ int vgm_init(vgm_player_t *vgm_player)
    // vgm_player->vgm = ys_vgm;
    // vgm_player->vgm = sf2_ryu;
    // vgm_player->vgm = sf2_title;
-   vgm_player->vgm = mj_smooth_sn;
+   // vgm_player->vgm = mj_smooth_sn;
+   vgm_player->vgm = alexkidd_sn;
    // vgm_player->vgm = a4_sms;
    vgm_parse_header(vgm_player);
 

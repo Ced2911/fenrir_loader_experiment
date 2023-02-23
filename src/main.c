@@ -23,20 +23,19 @@ void _vgm_init()
 {
     vgm_init(&vgm_player);
     vgm_player.sample_count = 0;
+    vgm_player.cycles_played = 0;
 }
 
 #define SAMPLE_PER_VBK (44100 / 60)
 void _vgm_test()
 {
     uint16_t s;
-    vgm_player.cycles_played += SAMPLE_PER_VBK;
 
-    while (vgm_player.cycles_played > vgm_player.cycles)
-
+    while (vgm_player.cycles_played < SAMPLE_PER_VBK)
     {
-        vgm_player.sample_count += vgm_parse(&vgm_player);
+        vgm_player.cycles_played += vgm_parse(&vgm_player);
     }
-    // vgm_player.sample_count -= SAMPLE_PER_VBK;
+    vgm_player.cycles_played -= SAMPLE_PER_VBK;
     dbgio_flush();
 }
 
@@ -93,6 +92,7 @@ int main(void)
             i = 0;
         }
 #endif
+     _vgm_test();
         vdp1_sync_render();
         vdp1_sync();
         vdp2_sync();
@@ -110,7 +110,6 @@ static void _vblank_in_handler(void *work __unused)
 {
     // sdrv_vblank_rq();
     // fm_test();
-     _vgm_test();
 }
 
 void user_init(void)
