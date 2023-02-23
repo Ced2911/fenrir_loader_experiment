@@ -116,7 +116,6 @@ void sn76496_init()
         // chan 3 => noise
         if (i == 3)
         {
-
             slot.sa = sn_white_noise_addr;
             slot.lea = (sizeof(SN_NOISE_NOTE) / 2);
         }
@@ -256,7 +255,7 @@ void sn76496_w(uint8_t dd)
         // restart chan 3
         if (chan == 3)
         {
-          //  return;
+            // return;
             volatile scsp_slot_regs_t *slot_noise = &slots[3];
             volatile scsp_slot_regs_t *slot_per = &slots[4];
             volatile scsp_slot_regs_t *slot = chip->noise_type ? slot_noise : slot_per;
@@ -279,8 +278,9 @@ void sn76496_w(uint8_t dd)
 
             slot->fns = sn_scsp_map[chip->period[chan]].fns;
             slot->oct = sn_scsp_map[chip->period[chan]].oct;
-            slot->total_l = volume_map[chip->vol[chan]];// << 1; // boost noise
+            slot->total_l = volume_map[chip->vol[chan]]<<1; // >> 1; // boost noise
 
+            // need to wait for reset ?
             asm("nop");
             asm("nop");
             asm("nop");
@@ -288,13 +288,12 @@ void sn76496_w(uint8_t dd)
 
             slot->kyonb = 1;
             slot->kyonex = 1;
-            // slot->total_l = 7;
 
-            // emu_printf("sn76496_w %d %02x\n", chip->noise_type, chip->period[chan]);
+            emu_printf("sn76496_w noise vol %d\n", chip->vol[chan]);
         }
         else
         {
-           //* return;
+            //* return;
             slots[chan].fns = sn_scsp_map[chip->period[chan]].fns;
             slots[chan].oct = sn_scsp_map[chip->period[chan]].oct;
             slots[chan].total_l = volume_map[chip->vol[chan]];
