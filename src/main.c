@@ -51,8 +51,8 @@ int main(void)
     vdp1_vram_partitions_t vdp1_vram_partitions;
     vdp1_vram_partitions_get(&vdp1_vram_partitions);
 
-    vdp1_init();
-    vdp2_init();
+    // vdp1_init();
+    // vdp2_init();
 
     // slave cpu setup
     cpu_dual_comm_mode_set(CPU_DUAL_ENTRY_ICI);
@@ -61,8 +61,10 @@ int main(void)
     status_sector = (status_sector_t *)zalloc(sizeof(status_sector_t));
     sd_dir_entries = (sd_dir_entry_t *)zalloc(sizeof(sd_dir_entry_t) * 2500);
 
-    screen_t *screen = &gamelist_screen;
-    screen->init();
+    // screen_t *screen = &gamelist_screen;
+    // screen->init();
+
+    dbgio_printf("vgm player...");
 #if 0
 #include "../assets/hado.h"
     load_drv(sdrv_bin, sdrv_bin_len, 11520);
@@ -92,14 +94,14 @@ int main(void)
             i = 0;
         }
 #endif
-     _vgm_test();
+        _vgm_test();
         vdp1_sync_render();
         vdp1_sync();
         vdp2_sync();
         vdp1_sync_wait();
         vdp2_sync_wait();
     }
-    screen->destroy();
+    //screen->destroy();
 }
 
 static void _vblank_out_handler(void *work __unused)

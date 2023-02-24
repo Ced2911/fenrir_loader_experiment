@@ -24,7 +24,7 @@ int _r(double v)
 #define LEN _r(_LEN)
 
 // sn76496 tune - square a4 - 440hz
-void __main()
+void main()
 {
     FILE *fd = fopen("sample.pcm", "wb");
     int16_t *samples = (int16_t *)malloc(LEN * 2);
@@ -50,7 +50,7 @@ void __main()
 }
 
 // sn76496 tune - periodique noise a4 - 440hz
-void main()
+void ___main()
 {
     FILE *fd = fopen("sample.noise.per.pcm", "wb");
 

@@ -333,8 +333,9 @@ int vgm_init(vgm_player_t *vgm_player)
    // vgm_player->vgm = ys_vgm;
    // vgm_player->vgm = sf2_ryu;
    // vgm_player->vgm = sf2_title;
-   // vgm_player->vgm = mj_smooth_sn;
-   vgm_player->vgm = alexkidd_sn;
+   vgm_player->vgm = mj_smooth_sn;
+   vgm_player->vgm = sonic_sn76496;
+   // vgm_player->vgm = alexkidd_sn;
    // vgm_player->vgm = a4_sms;
    vgm_parse_header(vgm_player);
 
