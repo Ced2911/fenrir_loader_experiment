@@ -53,17 +53,17 @@ void gamelist_theme_apply(browser_t *browser)
         // build and enqueue the polygon
         const vdp1_cmdt_draw_mode_t draw_mode = {
             .raw = 0x0000,
-            .bits.cc_mode = 0,
-            .bits.color_mode = CMDT_PMOD_CM_RGB_32768_COLORS,
-            .bits.trans_pixel_disable = false,
-            .bits.pre_clipping_disable = true,
-            .bits.end_code_disable = true};
+            .cc_mode = 0,
+            .color_mode = VDP1_ENV_COLOR_MODE_RGB_PALETTE,
+            .trans_pixel_disable = false,
+            .pre_clipping_disable = true,
+            .end_code_disable = true};
 
         const int tex_w = 128;
         const int tex_h = 96;
 
         const vdp1_cmdt_color_bank_t color_bank = {
-            .type_0.data.dc = 0};
+            .type_0.dc = 0};
 
         cmdt->cmd_xa = theme->screens.gamelist.cover.x;
         cmdt->cmd_ya = theme->screens.gamelist.cover.y;
@@ -78,12 +78,12 @@ void gamelist_theme_apply(browser_t *browser)
         cmdt->cmd_yd = theme->screens.gamelist.cover.y + tex_h;
 
         vdp1_cmdt_scaled_sprite_set(cmdt);
-        vdp1_cmdt_param_color_mode1_set(cmdt, 0);
-        vdp1_cmdt_param_gouraud_base_set(cmdt, 0);
-        vdp1_cmdt_param_draw_mode_set(cmdt, draw_mode);
-        vdp1_cmdt_param_size_set(cmdt, tex_w, tex_h);
+        vdp1_cmdt_color_mode1_set(cmdt, 0);
+        vdp1_cmdt_gouraud_base_set(cmdt, 0);
+        vdp1_cmdt_draw_mode_set(cmdt, draw_mode);
+        vdp1_cmdt_char_size_set(cmdt, tex_w, tex_h);
 
-        vdp1_cmdt_param_char_base_set(cmdt, COVER_TEXTURE_ADDR);
+        vdp1_cmdt_char_base_set(cmdt, COVER_TEXTURE_ADDR);
 
         // noise_init(&noise_cfg);
     }

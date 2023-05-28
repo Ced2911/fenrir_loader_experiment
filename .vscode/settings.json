@@ -46,7 +46,8 @@
         "error.h": "c",
         "usb-cart.h": "c",
         "odefs.h": "c",
-        "numbers": "c"
+        "numbers": "c",
+        "vdp2.config.h": "c"
     },
     "rust-analyzer.linkedProjects": [
         "${workspaceFolder}/tools/themes/Cargo.toml"

@@ -26,12 +26,31 @@ void *zalloc(size_t l)
     return ptr;
 }
 
+void test_vdp2()
+{
+    extern void tx_vdp2_cell();
+    tx_vdp2_cell();
+    vdp2_scrn_display_set(VDP2_SCRN_DISPTP_NBG1);
+
+    while (1) {
+        
+        vdp1_sync_render();
+        vdp1_sync();
+        vdp2_sync();
+        vdp1_sync_wait();
+        vdp2_sync_wait();
+    }
+        
+}
+
 int main(void)
 {
     vdp1_vram_partitions_t vdp1_vram_partitions;
     vdp1_vram_partitions_get(&vdp1_vram_partitions);
 
     vdp1_init();
+
+    //test_vdp2();
 
     // slave cpu setup
     cpu_dual_comm_mode_set(CPU_DUAL_ENTRY_ICI);

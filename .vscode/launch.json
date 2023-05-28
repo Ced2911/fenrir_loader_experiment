@@ -2,6 +2,30 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "(gdb) Yabause Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/buildcmake/",
+            "program": "${workspaceFolder}/buildcmake/FenrirYaul",
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb-multiarch",
+            "miDebuggerServerAddress": "host.docker.internal:43434",
+            //"sourceFileMap"
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set SH2 mode",
+                    "text": "-gdb-set architecture sh2",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        
+        {
             "name": "C/C++: odefs tests",
             "type": "cppdbg",
             "request": "launch",
