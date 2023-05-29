@@ -68,7 +68,7 @@ class DVBuffer {
     const palettes = []
     const colors = []
 
-    const image = await Jimp.read("/workspaces/loader_yaul/assets/map.png")
+    const image = await Jimp.read("/workspaces/loader_yaul/assets/aurelie.png")
 
     // extract the palettes
     image.scan(0, 0, image.bitmap.width, image.bitmap.height, function (x, y, idx) {

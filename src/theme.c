@@ -57,7 +57,7 @@ void theme_set_pattern(theme_scr_t scr, uint32_t pattern_offset)
 
 void theme_background_config_set(ui_config_background_t *b)
 {
-   // theme_set_pattern(b->screen, b->pattern_offset);
+    // theme_set_pattern(b->screen, b->pattern_offset);
 
     // dbgio_printf("unknow %d-%d\n", b->screen, b->pattern_offset);
 }
@@ -119,8 +119,46 @@ void theme_init_bgm()
 /*****************************************************
  * theme loader
  ****************************************************/
-#include "themes/demo/theme.demo.h"
-static ui_config_t *ui_config = (ui_config_t *)theme;
+
+static ui_config_t theme = {
+    // browser
+    .screens.gamelist.browser.line_height = 10,
+    .screens.gamelist.browser.x = 20,
+    .screens.gamelist.browser.y = 18,
+    .screens.gamelist.browser.w = 172,
+    .screens.gamelist.browser.h = 200,
+
+    .screens.gamelist.browser.item_colors.colors = {
+        RGB1555_INITIALIZER(1, 17, 17, 17),
+        RGB1555_INITIALIZER(1, 1, 1, 1),
+    },
+    .screens.gamelist.browser.item_colors.gouraud = {
+        {.raw = 51794},
+        {.raw = 51794},
+        {.raw = 41224},
+        {.raw = 41224}
+    },
+
+    .screens.gamelist.browser.item_focused_colors.colors = {
+        RGB1555_INITIALIZER(1, 15, 15, 15),
+        RGB1555_INITIALIZER(1, 3, 3, 3),
+    },
+    .screens.gamelist.browser.item_focused_colors.gouraud = {
+        {.raw = 51794},
+        {.raw = 51794},
+        {.raw = 41224},
+        {.raw = 41224}
+    },
+
+    // cover
+    .screens.gamelist.cover.enabled = 1,
+    .screens.gamelist.cover.x = 200,
+    .screens.gamelist.cover.y = 24,
+    .screens.gamelist.cover.w = 128,
+    .screens.gamelist.cover.h = 96,
+};
+
+static ui_config_t *ui_config = (ui_config_t *)&theme;
 ui_config_t *theme_get_ui_config()
 {
     return ui_config;

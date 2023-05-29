@@ -26,23 +26,6 @@ void *zalloc(size_t l)
     return ptr;
 }
 
-void test_vdp2()
-{
-    extern void tx_vdp2_cell();
-    vdp2_scrn_display_set(VDP2_SCRN_DISPTP_NBG1);
-    tx_vdp2_cell();
-
-    while (1) {
-        
-        vdp1_sync_render();
-        vdp1_sync();
-        vdp2_sync();
-        vdp1_sync_wait();
-        vdp2_sync_wait();
-    }
-        
-}
-
 int main(void)
 {
     vdp1_vram_partitions_t vdp1_vram_partitions;
@@ -50,7 +33,7 @@ int main(void)
 
     vdp1_init();
 
-    test_vdp2();
+    // test_vdp2();
 
     // slave cpu setup
     cpu_dual_comm_mode_set(CPU_DUAL_ENTRY_ICI);
@@ -66,13 +49,9 @@ int main(void)
 
     ui_init(&ui_param);
 
-    message_box_t msg = {.type = message_box_error, .message = "This is a wip build, all features are imcomplete", .title = "Fenrir loader"};
+    message_box_t msg = {.type = message_box_info, .message = "This is a wip build, some features are imcomplete", .title = "Fenrir loader"};
     message_box(&msg);
-    /*
-        dbgio_init();
-        dbgio_dev_default_init(DBGIO_DEV_VDP2_ASYNC);
-        dbgio_dev_font_load();
-    */
+    
     // read status
     fenrir_read_configuration(fenrir_config);
 
@@ -145,7 +124,7 @@ void user_init(void)
     smpc_peripheral_init();
     cd_block_init();
 #ifdef FENRIR_480i
-    vdp2_tvmd_display_res_set(VDP2_TVMD_INTERLACE_DOUBLE, VDP2_TVMD_HORZ_HIRESO_A, VDP2_TVMD_VERT_240);
+    vdp2_tvmd_display_res_set(VDP2_TVMD_INTERLACE_SINGLE, VDP2_TVMD_HORZ_HIRESO_A, VDP2_TVMD_VERT_240);
 #else
     vdp2_tvmd_display_res_set(VDP2_TVMD_INTERLACE_NONE, VDP2_TVMD_HORZ_NORMAL_B, VDP2_TVMD_VERT_240);
 #endif

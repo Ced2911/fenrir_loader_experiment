@@ -54,7 +54,7 @@ void gamelist_theme_apply(browser_t *browser)
         const vdp1_cmdt_draw_mode_t draw_mode = {
             .raw = 0x0000,
             .cc_mode = 0,
-            .color_mode = VDP1_ENV_COLOR_MODE_RGB_PALETTE,
+            .color_mode = VDP1_CMDT_CM_RGB_32768,
             .trans_pixel_disable = false,
             .pre_clipping_disable = true,
             .end_code_disable = true};
@@ -95,6 +95,12 @@ void gamelist_theme_apply(browser_t *browser)
 
     rgb1555_t black = RGB1555_INITIALIZER(1, 0, 0, 0);
     vdp2_scrn_back_color_set(VDP2_VRAM_ADDR(3, 0x01FFFE), black);
+
+    browser->item_w = theme->screens.gamelist.browser.w;
+    browser->file_per_page = theme->screens.gamelist.browser.h / theme->screens.gamelist.browser.line_height;
+
+    extern void tx_vdp2_cell();
+    tx_vdp2_cell();
 }
 
 void gamelist_theme_destroy(browser_t *browser)

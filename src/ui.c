@@ -160,7 +160,12 @@ static void ui_blit(uint8_t *shadow, uint8_t *vram)
 {
     // scu_dma_transfer(0, (void *)shadow, vram, 512 * 256);
     // memcpy(vram, shadow, 512 * 256);
+#ifdef FENRIR_480i
+    vdp_dma_enqueue(vram, shadow, 1024 * 240);
+
+#else
     vdp_dma_enqueue(vram, shadow, 512 * 240);
+#endif
 }
 
 static int ui_get_next_item_in_row(ui_item_t *diag, int cur_item)
@@ -471,7 +476,17 @@ void ui_render(ui_item_t *diag)
 
     vdp2_scrn_back_color_set(VDP2_VRAM_ADDR(3, 0x01FFFE), bg_color);
 
-    vdp2_scrn_display_set(VDP2_SCRN_DISPTP_NBG0/*|VDP2_SCRN_DISPTP_NBG1|VDP2_SCRN_DISPTP_NBG2*/);
+    vdp2_scrn_display_set(VDP2_SCRN_DISPTP_NBG0 /*|VDP2_SCRN_DISPTP_NBG1|VDP2_SCRN_DISPTP_NBG2*/);
+
+#if 1 && defined(FENRIR_480i)
+    // setup draw window
+    vdp2_ioregs_t *const vdp2_regs = vdp2_regs_get();
+    vdp2_regs->wpsx0 = 0;
+    vdp2_regs->wpsy0 = 0;
+    vdp2_regs->wpex0 = 512;
+    vdp2_regs->wpey0 = 256;
+    vdp2_regs->wctla = 3;
+#endif
 }
 
 void ui_init(ui_item_init_t *param)

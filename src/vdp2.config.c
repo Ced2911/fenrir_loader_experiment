@@ -7,7 +7,7 @@
 #include "/workspaces/loader_yaul/tools/image/vdp2.h"
 
 const vdp2_scrn_bitmap_format_t format_ngb0 = {
-#ifdef FENRIR_480i
+#if 0 && defined(FENRIR_480i)
 	.bitmap_size = VDP2_SCRN_BITMAP_SIZE_1024X512,
 #else
 	.bitmap_size = VDP2_SCRN_BITMAP_SIZE_512X256,
@@ -81,7 +81,6 @@ void tx_vdp2_cell()
 			cram[i] = *ptr++;
 		}
 	}
-
 	{
 		uint16_t *ptr = (uint16_t *)(vdp2_dat + 0x100);
 		// upload map
@@ -172,6 +171,6 @@ void vdp2_init()
 	*/
 
 	vdp2_scrn_cell_format_set(&format_cell_nbg1, &normal_cell_nbg1);
-	vdp2_scrn_priority_set(format_cell_nbg1.scroll_screen, 4);
+	vdp2_scrn_priority_set(format_cell_nbg1.scroll_screen, 2);
 	vdp2_cram_offset_set(format_cell_nbg1.scroll_screen, 0);
 }

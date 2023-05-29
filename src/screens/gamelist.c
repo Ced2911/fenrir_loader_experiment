@@ -42,7 +42,7 @@ static int cover_selected __uncached = -1;
 
 static browser_t browser = {
     .count = 0,
-    .file_per_page = 12,
+    .file_per_page = 16,
     .input_handler = browser_input_callback,
     .get_item = browser_get_item};
 
@@ -168,7 +168,8 @@ static void gamelist_init()
     // setup slave
     cpu_dual_slave_set(_slave_entry);
 
-    vdp2_scrn_display_set(VDP2_SCRN_DISPTP_NBG2);
+    vdp2_scrn_priority_set(VDP2_SCRN_NBG1, 2);
+    vdp2_scrn_display_set(VDP2_SCRN_DISPTP_NBG1);
 }
 
 static void gamelist_destroy()

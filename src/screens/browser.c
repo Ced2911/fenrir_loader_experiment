@@ -79,6 +79,7 @@ static void browser_draw_items(browser_t *browser)
         .trans_pixel_disable = false,
         .pre_clipping_disable = true,
         .end_code_disable = true};
+
     const vdp1_cmdt_draw_mode_t draw_mode_shadow = {
         .raw = 0x0000,
         .cc_mode = VDP1_CMDT_CC_REPLACE,
@@ -86,6 +87,7 @@ static void browser_draw_items(browser_t *browser)
         .trans_pixel_disable = false,
         .pre_clipping_disable = true,
         .end_code_disable = true};
+
     const vdp1_cmdt_color_bank_t color_bank = {
         .type_0.dc = 0};
 
@@ -107,6 +109,15 @@ static void browser_draw_items(browser_t *browser)
         // get item text
         browser->get_item(browser, i, entry, sizeof(entry));
 
+        uint32_t item_wsz = 0;
+        int item_char_sz = strlen(entry);
+        do
+        {
+            entry[item_char_sz] = 0;
+            item_char_sz--;
+            item_wsz = font_get_text_len(entry);
+        } while (item_wsz > browser->item_w);
+
         // create texture in ram buffer
         font_texture_t *tex = &browser->font_textures[i - start];
         tex->addr = texture_buffer;
@@ -117,7 +128,7 @@ static void browser_draw_items(browser_t *browser)
         cmdt->cmd_ya = menuy + ((i - start) * BROWSER_LINE_HEIGHT);
 
         vdp1_cmdt_normal_sprite_set(cmdt);
-        vdp1_cmdt_color_mode1_set(cmdt, pal);
+        vdp1_cmdt_color_mode0_set(cmdt, color_bank);
         vdp1_cmdt_draw_mode_set(cmdt, draw_mode);
         vdp1_cmdt_char_size_set(cmdt, tex->w, tex->h);
 
@@ -264,6 +275,9 @@ void browser_init(browser_t *browser)
     browser->selected = 0;
     browser->page = 0;
     browser->old_page = -1;
+
+    if (browser->item_w == 0)
+        browser->item_w = 200;
 
     vdp1_cmdt_t *cmdts;
     cmdts = &cmdt_list->cmdts[0];
