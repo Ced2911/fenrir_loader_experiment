@@ -29,8 +29,8 @@ void *zalloc(size_t l)
 void test_vdp2()
 {
     extern void tx_vdp2_cell();
-    tx_vdp2_cell();
     vdp2_scrn_display_set(VDP2_SCRN_DISPTP_NBG1);
+    tx_vdp2_cell();
 
     while (1) {
         
@@ -50,7 +50,7 @@ int main(void)
 
     vdp1_init();
 
-    //test_vdp2();
+    test_vdp2();
 
     // slave cpu setup
     cpu_dual_comm_mode_set(CPU_DUAL_ENTRY_ICI);

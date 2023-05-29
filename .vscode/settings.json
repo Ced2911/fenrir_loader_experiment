@@ -47,7 +47,10 @@
         "usb-cart.h": "c",
         "odefs.h": "c",
         "numbers": "c",
-        "vdp2.config.h": "c"
+        "vdp2.config.h": "c",
+        "scrn_cell.h": "c",
+        "scrn_funcs.h": "c",
+        "scrn_macros.h": "c"
     },
     "rust-analyzer.linkedProjects": [
         "${workspaceFolder}/tools/themes/Cargo.toml"

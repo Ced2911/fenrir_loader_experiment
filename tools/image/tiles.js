@@ -50,8 +50,8 @@ class DVBuffer {
     const vdp_config = {
         map_sz: 1,
         plane: 1,
-        page: 32,
-        tile: 16, // 8 or 16,
+        page: 64,
+        tile: 8, // 8 or 16,
         bpp: 4
     }
 
@@ -72,7 +72,6 @@ class DVBuffer {
 
     // extract the palettes
     image.scan(0, 0, image.bitmap.width, image.bitmap.height, function (x, y, idx) {
-        const color8888 = image.getPixelColor(x, y);
         const color = RGB8888To555Number(this.bitmap.data[idx + 3], this.bitmap.data[idx + 2], this.bitmap.data[idx + 1], this.bitmap.data[idx + 0])
         colors.push(color)
     })
@@ -151,10 +150,10 @@ class DVBuffer {
     unik_tiles.forEach((t, idx) => { t.tile.write(`tmp/u_${idx}.png`); })
 
     unik_tiles.forEach((ut, id) => {
-        hashm[ut.hash] = 0 << 10 | id * 2;
-        hashm[ut.hash_x] = 1 << 10 | id * 2;
-        hashm[ut.hash_y] = 2 << 10 | id * 2;
-        hashm[ut.hash_xy] = 3 << 10 | id * 2;
+        hashm[ut.hash] = (0 << 10) | (id << 0);
+        hashm[ut.hash_x] = (1 << 10) | (id << 0);
+        hashm[ut.hash_y] = (2 << 10) | (id << 0);
+        hashm[ut.hash_xy] = (3 << 10) | (id << 0);
     })
 
     // create map
@@ -175,7 +174,7 @@ class DVBuffer {
             const pos_x = (p * vdp_config.tile) % 512
             const pos_y = Math.trunc((p * vdp_config.tile) / 512) * vdp_config.tile
 
-            const id = (mapData.getUint16(i) & 0x1ff) / 2
+            const id = (mapData.getUint16(i) & 0x3ff) >> 0
             const tile = unik_tiles[id].tile
             await dbg.blit(tile, pos_x, pos_y);
         }
@@ -186,15 +185,21 @@ class DVBuffer {
 
     // tiles to palette
     unik_tiles.forEach(({ tile }) => {
-        const uint4b = []
-        tile.scan(0, 0, tile.bitmap.width, tile.bitmap.height, function (x, y, idx) {
-            const color = RGB8888To555Number(this.bitmap.data[idx + 3], this.bitmap.data[idx + 2], this.bitmap.data[idx + 1], this.bitmap.data[idx + 0])
-            uint4b.push(color)
-        })
+        if (1) {
+            const uint4b = []
+            tile.scan(0, 0, tile.bitmap.width, tile.bitmap.height, function (x, y, idx) {
+                const color = RGB8888To555Number(this.bitmap.data[idx + 3], this.bitmap.data[idx + 2], this.bitmap.data[idx + 1], this.bitmap.data[idx + 0])
+                uint4b.push(palette_flip[color])
+            })
 
-
-        for (let i = 0; i < uint4b.length; i+=2) {
-            tileData.addUint8(uint4b[i]<<8 | uint4b[i+1])
+            for (let i = 0; i < uint4b.length; i += 2) {
+                tileData.addUint8((uint4b[i + 0] << 4) | uint4b[i + 1])
+            }
+        } else {
+            tile.scan(0, 0, tile.bitmap.width, tile.bitmap.height, function (x, y, idx) {
+                const color = RGB8888To555Number(this.bitmap.data[idx + 3], this.bitmap.data[idx + 2], this.bitmap.data[idx + 1], this.bitmap.data[idx + 0])
+                tileData.addUint8(palette_flip[color])
+            })
         }
     })
 
@@ -209,6 +214,10 @@ class DVBuffer {
     header.addUint8(vdp_config.bpp)
     header.addUint8(0) /* pad */
     header.addUint16(unik_tiles.length)
+
+
+    header.seek(0x80)
+    palData.seek(0x80)
 
 
     const towrite = Buffer.concat([
