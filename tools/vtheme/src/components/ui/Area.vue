@@ -1,5 +1,4 @@
 <script lang="ts">
-import { ref } from 'vue'
 import VueResizable from '@/components/Resizable.vue'
 
 import { Area } from '@/models/screens'
@@ -14,7 +13,11 @@ export default {
   },
 
   props: {
-    area: Area
+    area: {
+      type: Object,
+      required: true
+    },
+    active: Boolean
   },
 
   emits: ['update'],
@@ -30,7 +33,12 @@ export default {
       minHeight: 10
     }
     return {
-        area_rs
+      area_rs
+    }
+  },
+  computed: {
+    ractive() {
+      return this.active ? ['r', 'rb', 'b', 'lb', 'l', 'lt', 't', 'rt'] : []
     }
   },
   methods: {
@@ -49,21 +57,23 @@ export default {
 
 <template>
   <div class="fenrir-ui-browser">
-    <VueResizable v-bind="area_rs" @resize:end="eHandler" @drag:end="eHandler">
-      <div class="resizable-content">
-      <slot></slot>
-    </div>
+    <VueResizable v-bind="area_rs" @resize:end="eHandler" @drag:end="eHandler" :active="ractive">
+      <div class="resizable-content" :class="{ active: active }">
+        <slot></slot>
+      </div>
     </VueResizable>
   </div>
 </template>
-<style scoped>
+<style lang="scss" scoped>
 .fenrir-ui-browser {
   position: relative;
 }
 .resizable-content {
   height: 100%;
   width: 100%;
-  background-color: aqua;
-  opacity: 0.4;
+  &.active {
+    background-color: aqua;
+    opacity: 0.4;
+  }
 }
 </style>

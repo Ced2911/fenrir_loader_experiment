@@ -5,6 +5,12 @@ import AreaUI from '@/components/ui/Area.vue'
 import ItemColor from '@/components/ui/ItemColor.vue'
 import { fenrirDefaultConfig } from '@/models/screens'
 import UploadContent from '@/components/image/UploadContent.vue'
+import ImageTiler from '@/services/VDP2Tiler'
+import { downloadBuffer, saveToLocalStorage, getFromLocalStorage } from '@/services/Utils'
+import { ThemeExport, ThemeConfigToBuffer, THEME_ID } from '@/services/ExportFenrirThemeConfig'
+
+import type {FenrirConfig} from '@/models/screens'
+import { plainToClass } from 'class-transformer'
 
 export default {
   components: {
@@ -18,19 +24,44 @@ export default {
   },
   mounted() {
     this.intervalAnim = setInterval(() => {
-      this.browserBgX += this.config.screens.gamelist.backgound.x_inc
-      this.browserBgY += this.config.screens.gamelist.backgound.y_inc
+      this.browserBgX -= this.config.screens.gamelist.backgound.x_inc
+      this.browserBgY -= this.config.screens.gamelist.backgound.y_inc
 
       document.documentElement.style.setProperty('--browser-bg-x', '' + this.browserBgX + 'px')
       document.documentElement.style.setProperty('--browser-bg-y', '' + this.browserBgY + 'px')
     }, 16)
+
+    this.restoreFromLocalStorage()
   },
   beforeUnmount() {
     clearInterval(this.intervalAnim)
   },
   methods: {
-    async browserBackgroundDropped(blobUrl: string) {
-      console.log(blobUrl)
+    restoreFromLocalStorage() {
+      // try to get data from ls
+      const config_ls = getFromLocalStorage('theme-config')
+      console.log(config_ls)
+      if (config_ls) {
+        const config = JSON.parse(config_ls)
+        this.config = config as FenrirConfig
+      }
+
+      const gl_bg = getFromLocalStorage('gamelist-bg')
+
+      if (gl_bg) {
+        const ii = Uint8Array.from(gl_bg, (c) => c.charCodeAt(0))
+        const blobUrl = URL.createObjectURL(new Blob([ii]))
+
+        const img = document.createElement('img')
+        img.src = blobUrl
+
+        this.browserBackgroundImage = blobUrl
+      }
+    },
+
+    async browserBackgroundDropped(blob: Blob) {
+      const blobUrl = URL.createObjectURL(blob)
+
       const img: HTMLImageElement = await new Promise((resolve, reject) => {
         const img = document.createElement('img')
         img.onload = () => resolve(img)
@@ -38,8 +69,20 @@ export default {
         img.src = blobUrl
       })
 
+      const imgB64 = await new Promise((resolve, _) => {
+        const reader = new FileReader()
+        reader.onloadend = () => resolve(reader.result)
+        reader.readAsDataURL(blob)
+      })
+
       console.log(img.width)
       this.browserBackgroundImage = blobUrl
+
+      if (imgB64) {
+        const d = imgB64.split(',')
+
+        saveToLocalStorage('gamelist-bg', atob(d[1]))
+      }
     },
     updateGamelistFocusColors(c: any) {
       this.config.screens.gamelist.browser.focused_color = c
@@ -56,9 +99,34 @@ export default {
     updateBackgroundAnimation() {
       this.browserBgX = 0
       this.browserBgY = 0
+    },
+    async buildImage() {
+      const b = await ImageTiler(this.browserBackgroundImage)
+      downloadBuffer(b, 'vdp2.dat')
+    },
+    async buildTheme() {
+      const vdpbg = await ImageTiler(this.browserBackgroundImage)
+      const th = ThemeConfigToBuffer(this.config)
+
+      const expt = new ThemeExport()
+      expt.addRessource(THEME_ID.VDP2_BG, vdpbg)
+      expt.addRessource(THEME_ID.THEME_CONFIG_V0, th)
+
+      downloadBuffer(expt.build(), 'theme.bin')
+
+      saveToLocalStorage('theme-config', JSON.stringify(this.config))
     }
   },
   computed: {
+    configJson: {
+      get(): string {
+        return JSON.stringify(this.config, null, 2)
+      },
+      set(v: string) {
+        this.config = JSON.parse(v)
+      }
+    },
+
     fakeGamesList() {
       const max_g = Math.floor(
         this.config.screens.gamelist.browser.h / this.config.screens.gamelist.browser.line_height
@@ -111,8 +179,9 @@ export default {
   <div class="fenrir-config">
     <div class="columns">
       <div class="column is-two-thirds min-512">
-        <div>
+        <div class="notification is-primary">
           <UploadContent class="upload-area" @files-dropped="browserBackgroundDropped">
+            <div class="is-size-7">File must be 512x512 with less than 16 colors</div>
           </UploadContent>
         </div>
         <div
@@ -121,7 +190,7 @@ export default {
         >
           <div class="fenrir-config-user-area-img-preview"></div>
           <AreaUI
-            v-if="displayAreaGuide"
+            :active="displayAreaGuide"
             @update="updateAreaGamelistBrowser"
             :area="config.screens.gamelist.browser"
           >
@@ -132,10 +201,11 @@ export default {
             </div>
           </AreaUI>
           <AreaUI
-            v-if="displayAreaGuide"
+            :active="displayAreaGuide"
             @update="updateAreaGamelistCover"
             :area="config.screens.gamelist.cover"
-          />
+            ><div class="cover-area"></div>
+          </AreaUI>
         </div>
       </div>
       <div class="fenrir-config-gamelist-browsercolumn"></div>
@@ -143,6 +213,13 @@ export default {
 
       <div class="column box is-one-third">
         <div class="">
+          <button class="button is-primary" @click="buildTheme">
+            <span class="icon">
+              <font-awesome-icon icon="fa-solid fa-bolt" />
+            </span>
+            <span>Build</span>
+          </button>
+
           <div class="field">
             <ItemColor
               @update:colors="updateGamelistItemColors"
@@ -168,53 +245,63 @@ export default {
               </template>
             </ItemColor>
 
-            <label>Line height </label>
-            <div class="control">
-              <input
-                v-model.number="config.screens.gamelist.browser.line_height"
-                type="range"
-                max="50"
-                min="8"
-              />
+            <div class="field">
+              <div class="control">
+                <label class="label">Line height </label>
+                <input
+                  class="input"
+                  v-model.number="config.screens.gamelist.browser.line_height"
+                  type="number"
+                  max="50"
+                  min="8"
+                />
+              </div>
             </div>
 
-            <label>Area </label>
-            <div class="control">
-              <input type="checkbox" v-model="displayAreaGuide" />
+            <div class="field is-horizontal">
+              <div class="control">
+                <label class="label"> Display/Move area helpers</label>
+              </div>
+              <div class="control">
+                <label class="checkbox"
+                  >&nbsp;
+                  <input type="checkbox" v-model="displayAreaGuide" />
+                </label>
+              </div>
             </div>
 
-            <label>Background </label>
-            <div class="control">
-              <input
-                @change="updateBackgroundAnimation"
-                v-model.number="config.screens.gamelist.backgound.x_inc"
-                type="range"
-                max="512"
-                step="0.25"
-                min="-512"
-              />
-              <input
-                @change="updateBackgroundAnimation"
-                step="0.25"
-                type="number"
-                v-model.number="config.screens.gamelist.backgound.x_inc"
-              />
-            </div>
-            <div class="control">
-              <input
-                @change="updateBackgroundAnimation"
-                v-model.number="config.screens.gamelist.backgound.y_inc"
-                type="range"
-                step="0.25"
-                max="512"
-                min="-512"
-              />
-              <input
-                @change="updateBackgroundAnimation"
-                step="0.25"
-                type="number"
-                v-model.number="config.screens.gamelist.backgound.y_inc"
-              />
+            <label class="label">Background scrolling</label>
+            <div class="field is-horizontal">
+              <div class="field-body">
+                <div class="field has-addons">
+                  <div class="control">
+                    <span class="button is-static"> X </span>
+                  </div>
+                  <div class="control">
+                    <input
+                      @change="updateBackgroundAnimation"
+                      step="0.25"
+                      type="number"
+                      class="input"
+                      v-model.number="config.screens.gamelist.backgound.x_inc"
+                    />
+                  </div>
+                </div>
+                <div class="field has-addons">
+                  <div class="control">
+                    <span class="button is-static"> Y </span>
+                  </div>
+                  <div class="control">
+                    <input
+                      @change="updateBackgroundAnimation"
+                      step="0.25"
+                      type="number"
+                      class="input"
+                      v-model.number="config.screens.gamelist.backgound.y_inc"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -222,7 +309,7 @@ export default {
     </div>
     <div class="columns">
       <div class="column">
-        {{ config }}
+        <textarea class="textarea" v-model="configJson"></textarea>
       </div>
     </div>
   </div>
@@ -284,7 +371,7 @@ export default {
   }
 }
 .upload-area {
-  width: 512px;
+  //width: 512px;
 }
 .fenrir-config-user-area-img-preview {
   position: absolute;
@@ -300,5 +387,9 @@ export default {
     white-space: nowrap;
     overflow: hidden;
   }
+}
+.cover-area {
+  background-color: #333;
+  height: 100%;
 }
 </style>

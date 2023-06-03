@@ -1,35 +1,40 @@
 <script lang="ts">
-import { ref } from 'vue'
-import { BrowserItemColor, RgbColor } from '@/models/screens'
+import { RGBFunc } from '@/services/Utils'
+
 
 export default {
   props: {
     label_color: String,
-    colors: BrowserItemColor
+    colors: {
+      type: Object,
+      required: true
+    }
   },
   emits: ['update:colors'],
   methods: {
     update() {
-      const o = new BrowserItemColor()
+      const o = Object.assign({}, this.colors)
+
+      o.main_colors.color = RGBFunc.fromHexString(this.itemColor.color)
+      o.main_colors.shadow = RGBFunc.fromHexString(this.itemColor.shadow)
+      o.gradient_colors.tl = RGBFunc.fromHexString(this.itemColor.tl)
+      o.gradient_colors.tr = RGBFunc.fromHexString(this.itemColor.tr)
+      o.gradient_colors.br = RGBFunc.fromHexString(this.itemColor.br)
+      o.gradient_colors.bl = RGBFunc.fromHexString(this.itemColor.bl)
       
-      o.main_colors.color.rgb32 = RgbColor.fromHexString(this.itemColor.color).rgb32
-      o.main_colors.shadow.rgb32 = RgbColor.fromHexString(this.itemColor.shadow).rgb32
-      o.gradient_colors.tl.rgb32 = RgbColor.fromHexString(this.itemColor.tl).rgb32
-      o.gradient_colors.tr.rgb32 = RgbColor.fromHexString(this.itemColor.tr).rgb32
-      o.gradient_colors.br.rgb32 = RgbColor.fromHexString(this.itemColor.br).rgb32
-      o.gradient_colors.bl.rgb32 = RgbColor.fromHexString(this.itemColor.bl).rgb32
+      console.log(o, this.colors)
 
       this.$emit('update:colors', o)
     }
   },
   data() {
     const itemColor = {
-      color: RgbColor.toHexString(this.colors?.main_colors.color),
-      shadow: RgbColor.toHexString(this.colors?.main_colors.shadow),
-      tl: RgbColor.toHexString(this.colors?.gradient_colors.tl),
-      tr: RgbColor.toHexString(this.colors?.gradient_colors.tr),
-      br: RgbColor.toHexString(this.colors?.gradient_colors.br),
-      bl: RgbColor.toHexString(this.colors?.gradient_colors.bl)
+      color: RGBFunc.toHexString(this.colors.main_colors.color),
+      shadow: RGBFunc.toHexString(this.colors.main_colors.shadow),
+      tl: RGBFunc.toHexString(this.colors.gradient_colors.tl),
+      tr: RGBFunc.toHexString(this.colors.gradient_colors.tr),
+      br: RGBFunc.toHexString(this.colors.gradient_colors.br),
+      bl: RGBFunc.toHexString(this.colors.gradient_colors.bl)
     }
     return { itemColor }
   }
