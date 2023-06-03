@@ -26,6 +26,11 @@ void *zalloc(size_t l)
     return ptr;
 }
 
+#define VDP2_REG_SCXIN1 (*(volatile uint16_t *)0x25F80080)
+#define VDP2_REG_SCXDN1 (*(volatile uint16_t *)0x25F80082)
+#define VDP2_REG_SCYIN1 (*(volatile uint16_t *)0x25F80084)
+#define VDP2_REG_SCYDN1 (*(volatile uint16_t *)0x25F80086)
+
 int main(void)
 {
     vdp1_vram_partitions_t vdp1_vram_partitions;
@@ -51,7 +56,7 @@ int main(void)
 
     message_box_t msg = {.type = message_box_info, .message = "This is a wip build, some features are imcomplete", .title = "Fenrir loader"};
     message_box(&msg);
-    
+
     // read status
     fenrir_read_configuration(fenrir_config);
 
@@ -74,11 +79,14 @@ int main(void)
 #else
     screens_select(screen_options);
 #endif
-
+    int x = 256;
     while (1)
     {
         screens_update();
         //  dbgio_flush();
+       // vdp2_scrn_scroll_x_update(VDP2_SCRN_NBG1, x += 16);
+        //VDP2_REG_SCXIN1 = x;
+       // x+=5;
 
         vdp1_sync_render();
         vdp1_sync();

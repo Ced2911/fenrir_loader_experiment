@@ -4,8 +4,6 @@
 #include "vdp2.h"
 #include "theme.h"
 
-#include "/workspaces/loader_yaul/tools/image/vdp2.h"
-
 const vdp2_scrn_bitmap_format_t format_ngb0 = {
 #if 0 && defined(FENRIR_480i)
 	.bitmap_size = VDP2_SCRN_BITMAP_SIZE_1024X512,
@@ -54,8 +52,17 @@ const vdp2_scrn_normal_map_t normal_cell_nbg1 = {
 	.plane_d = NBG1_BITMAP_ADDR,
 };
 
+extern unsigned char theme_bin[];
+
 void tx_vdp2_cell()
 {
+	uint32_t sz;
+	uint8_t *vdp2_dat = theme_get_ressource(theme_bin, THEME_ID_VDP2_BG, &sz);
+	if (vdp2_dat == NULL)
+	{
+		return;
+	}
+
 	uint8_t map_sz = vdp2_dat[0];
 	uint8_t plane = vdp2_dat[1];
 	uint8_t page = vdp2_dat[2];

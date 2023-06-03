@@ -11,12 +11,12 @@
 
 void gamelist_theme_update(browser_t *browser)
 {
-    ui_config_t *theme = theme_get_ui_config();
+    ui_config_t *theme = THEME_UI;
 }
 
 void gamelist_theme_apply(browser_t *browser)
 {
-    ui_config_t *theme = theme_get_ui_config();
+    ui_config_t *theme = THEME_UI;
     /*****************************************************
      * Apply theme configuration
      ****************************************************/
@@ -68,14 +68,14 @@ void gamelist_theme_apply(browser_t *browser)
         cmdt->cmd_xa = theme->screens.gamelist.cover.x;
         cmdt->cmd_ya = theme->screens.gamelist.cover.y;
 
-        cmdt->cmd_xb = theme->screens.gamelist.cover.x + tex_w;
+        cmdt->cmd_xb = theme->screens.gamelist.cover.x + theme->screens.gamelist.cover.w;
         cmdt->cmd_yb = theme->screens.gamelist.cover.y;
 
-        cmdt->cmd_xc = theme->screens.gamelist.cover.x + tex_w;
-        cmdt->cmd_yc = theme->screens.gamelist.cover.y + tex_h;
+        cmdt->cmd_xc = theme->screens.gamelist.cover.x + theme->screens.gamelist.cover.w;
+        cmdt->cmd_yc = theme->screens.gamelist.cover.y + theme->screens.gamelist.cover.h;
 
         cmdt->cmd_xd = theme->screens.gamelist.cover.x;
-        cmdt->cmd_yd = theme->screens.gamelist.cover.y + tex_h;
+        cmdt->cmd_yd = theme->screens.gamelist.cover.y + theme->screens.gamelist.cover.h;
 
         vdp1_cmdt_scaled_sprite_set(cmdt);
         vdp1_cmdt_color_mode1_set(cmdt, 0);
@@ -98,12 +98,9 @@ void gamelist_theme_apply(browser_t *browser)
 
     browser->item_w = theme->screens.gamelist.browser.w;
     browser->file_per_page = theme->screens.gamelist.browser.h / theme->screens.gamelist.browser.line_height;
-
-    extern void tx_vdp2_cell();
-    tx_vdp2_cell();
 }
 
 void gamelist_theme_destroy(browser_t *browser)
 {
-    ui_config_t *theme = theme_get_ui_config();
+    ui_config_t *theme = THEME_UI;
 }

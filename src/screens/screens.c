@@ -44,6 +44,9 @@ void screens_init()
     // next_screen = screen_error_no_sd;
     next_screen = screen_gamelist;
     current_screen = screen_max;
+
+    extern void tx_vdp2_cell();
+    tx_vdp2_cell();
 }
 
 void screens_select(screens_type_t scr)
@@ -62,7 +65,7 @@ void screens_update()
         // theme_set_background(current_screen);
     }
     screen_t *s = get_screen();
-    // theme_update();
+    theme_update();
     s->update();
 }
 
