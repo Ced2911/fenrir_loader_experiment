@@ -55,8 +55,8 @@ export const fenrirDefaultConfig = (() => {
         screens: {
             gamelist: {
                 backgound: {
-                    x_inc: 0,
-                    y_inc: 0
+                    x_inc: 0.25,
+                    y_inc: 0.25
                 },
                 cover: {
                     x: 200,

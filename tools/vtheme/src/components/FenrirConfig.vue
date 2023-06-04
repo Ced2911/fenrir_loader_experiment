@@ -9,7 +9,7 @@ import ImageTiler from '@/services/VDP2Tiler'
 import { downloadBuffer, saveToLocalStorage, getFromLocalStorage } from '@/services/Utils'
 import { ThemeExport, ThemeConfigToBuffer, THEME_ID } from '@/services/ExportFenrirThemeConfig'
 
-import type {FenrirConfig} from '@/models/screens'
+import type { FenrirConfig } from '@/models/screens'
 import { plainToClass } from 'class-transformer'
 
 export default {
@@ -178,40 +178,36 @@ export default {
 <template>
   <div class="fenrir-config">
     <div class="columns">
-      <div class="column is-two-thirds min-512">
-        <div class="notification is-primary">
-          <UploadContent class="upload-area" @files-dropped="browserBackgroundDropped">
-            <div class="is-size-7">File must be 512x512 with less than 16 colors</div>
-          </UploadContent>
-        </div>
-        <div
-          class="fenrir-config-user-area"
-          :style="{ backgroundImage: `url(${browserBackgroundImage})` }"
-        >
-          <div class="fenrir-config-user-area-img-preview"></div>
-          <AreaUI
-            :active="displayAreaGuide"
-            @update="updateAreaGamelistBrowser"
-            :area="config.screens.gamelist.browser"
+      <div class="column is-one-fifth has-background-dark">is-one-fifth</div>
+      <div class="column  has-background-black">
+        <div class="fenrir-config-preview-area">
+          <div
+            class="fenrir-config-user-area my-0 mx-auto"
+            :style="{ backgroundImage: `url(${browserBackgroundImage})` }"
           >
-            <div class="game-list">
-              <ul :style="{ lineHeight: config.screens.gamelist.browser.line_height + 'px' }">
-                <li :key="g" v-for="g in fakeGamesList">{{ g }}</li>
-              </ul>
-            </div>
-          </AreaUI>
-          <AreaUI
-            :active="displayAreaGuide"
-            @update="updateAreaGamelistCover"
-            :area="config.screens.gamelist.cover"
-            ><div class="cover-area"></div>
-          </AreaUI>
+            <div class="fenrir-config-user-area-img-preview"></div>
+            <AreaUI
+              :active="displayAreaGuide"
+              @update="updateAreaGamelistBrowser"
+              :area="config.screens.gamelist.browser"
+            >
+              <div class="game-list">
+                <ul :style="{ lineHeight: config.screens.gamelist.browser.line_height + 'px' }">
+                  <li :key="g" v-for="g in fakeGamesList">{{ g }}</li>
+                </ul>
+              </div>
+            </AreaUI>
+            <AreaUI
+              :active="displayAreaGuide"
+              @update="updateAreaGamelistCover"
+              :area="config.screens.gamelist.cover"
+              ><div class="cover-area"></div>
+            </AreaUI>
+          </div>
         </div>
       </div>
-      <div class="fenrir-config-gamelist-browsercolumn"></div>
-      <div class="fenrir-config-gamelist-cover column"></div>
 
-      <div class="column box is-one-third">
+      <div class="column is-one-fifth has-background-dark">
         <div class="">
           <button class="button is-primary" @click="buildTheme">
             <span class="icon">
@@ -307,8 +303,14 @@ export default {
         </div>
       </div>
     </div>
+
     <div class="columns">
       <div class="column">
+        
+        <UploadContent class="upload-area" @files-dropped="browserBackgroundDropped">
+            <div class="is-size-7">File must be 512x512 with less than 16 colors</div>
+          </UploadContent>
+
         <textarea class="textarea" v-model="configJson"></textarea>
       </div>
     </div>

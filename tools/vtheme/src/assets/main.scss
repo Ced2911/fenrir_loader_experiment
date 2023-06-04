@@ -6,3 +6,8 @@
   --browser-bg-x: 5px;
   --browser-bg-y: 10px;
 }
+
+
+$scheme-main: rgb(30, 30, 30);
+$text: rgb(219, 219, 219);
+@import "/node_modules/bulma/bulma.sass"

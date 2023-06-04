@@ -1,5 +1,4 @@
 import './assets/main.scss'
-import "../node_modules/bulma/bulma.sass"
 import 'verte/dist/verte.css'
 
 
