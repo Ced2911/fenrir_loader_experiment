@@ -101,5 +101,27 @@ export const RGBFunc = {
         else {
             return `#${(0).toString(16).padStart(6, '0')}`
         }
+    },
+    multiplyColor(color: number, factor: number) {
+        function getRGB(c: number) {
+            const r = (c >> (16)) & 0xff
+            const g = (c >> (8)) & 0xff
+            const b = (c >> (0)) & 0xff
+
+            return { r, g, b }
+        }
+        function m(a: number, b: number) {
+            const fa = a / 255
+            const fb = (((b / 255) * 2) - 1) / 2
+            const r = (fa + fb)
+            const v = Math.round(r * 255)
+            return  Math.min( Math.max(v, 0), 255)
+        }
+
+        const cc = getRGB(color)
+        const cfactor = getRGB(factor)
+
+        const out = ((m(cc.r, cfactor.r) << 16) | (m(cc.g, cfactor.g) << 8) | (m(cc.b, cfactor.b)))
+        return out
     }
 }

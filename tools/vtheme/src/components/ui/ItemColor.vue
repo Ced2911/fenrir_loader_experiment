@@ -1,7 +1,6 @@
 <script lang="ts">
 import { RGBFunc } from '@/services/Utils'
 
-
 export default {
   props: {
     label_color: String,
@@ -21,7 +20,7 @@ export default {
       o.gradient_colors.tr = RGBFunc.fromHexString(this.itemColor.tr)
       o.gradient_colors.br = RGBFunc.fromHexString(this.itemColor.br)
       o.gradient_colors.bl = RGBFunc.fromHexString(this.itemColor.bl)
-      
+
       console.log(o, this.colors)
 
       this.$emit('update:colors', o)
@@ -52,10 +51,14 @@ export default {
   <div class="field">
     <slot name="gradient-label"></slot>
     <div class="control">
-      <input @change="update" v-model="itemColor.tl" type="color" />
-      <input @change="update" v-model="itemColor.tr" type="color" />
-      <input @change="update" v-model="itemColor.br" type="color" />
-      <input @change="update" v-model="itemColor.bl" type="color" />
+      <div>
+        <input @change="update" v-model="itemColor.tl" type="color" />
+        <input @change="update" v-model="itemColor.tr" type="color" />
+      </div>
+      <div>
+        <input @change="update" v-model="itemColor.bl" type="color" />
+        <input @change="update" v-model="itemColor.br" type="color" />
+      </div>
     </div>
   </div>
 </template>

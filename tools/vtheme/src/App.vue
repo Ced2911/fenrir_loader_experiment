@@ -73,9 +73,9 @@
         </div>
       </div>
     </nav>
-<div class="">
-    <router-view></router-view>
-  </div>
+    <div class="router-content">
+      <router-view></router-view>
+    </div>
   </main>
 </template>
 

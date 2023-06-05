@@ -72,22 +72,22 @@ export const fenrirDefaultConfig = (() => {
                             shadow: 0xffffff
                         },
                         gradient_colors: {
-                            tl: 0x888888,
-                            tr: 0x888888,
-                            bl: 0x888888,
-                            br: 0x888888,
+                            tl: 0x808080,
+                            tr: 0x808080,
+                            bl: 0x808080,
+                            br: 0x808080,
                         }
                     },
                     item_color: {
                         main_colors: {
                             color: 0x880000,
-                            shadow: 0x888888
+                            shadow: 0x808080
                         },
                         gradient_colors: {
-                            tl: 0x888888,
-                            tr: 0x888888,
-                            bl: 0x888888,
-                            br: 0x888888,
+                            tl: 0x808080,
+                            tr: 0x808080,
+                            bl: 0x808080,
+                            br: 0x808080,
                         }
                     },
                     x: 20,

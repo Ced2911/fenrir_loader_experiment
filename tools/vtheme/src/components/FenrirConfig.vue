@@ -6,7 +6,7 @@ import ItemColor from '@/components/ui/ItemColor.vue'
 import { fenrirDefaultConfig } from '@/models/screens'
 import UploadContent from '@/components/image/UploadContent.vue'
 import ImageTiler from '@/services/VDP2Tiler'
-import { downloadBuffer, saveToLocalStorage, getFromLocalStorage } from '@/services/Utils'
+import { downloadBuffer, saveToLocalStorage, getFromLocalStorage, RGBFunc } from '@/services/Utils'
 import { ThemeExport, ThemeConfigToBuffer, THEME_ID } from '@/services/ExportFenrirThemeConfig'
 
 import type { FenrirConfig } from '@/models/screens'
@@ -27,16 +27,39 @@ export default {
       this.browserBgX -= this.config.screens.gamelist.backgound.x_inc
       this.browserBgY -= this.config.screens.gamelist.backgound.y_inc
 
-      document.documentElement.style.setProperty('--browser-bg-x', '' + this.browserBgX + 'px')
-      document.documentElement.style.setProperty('--browser-bg-y', '' + this.browserBgY + 'px')
+      // document.documentElement.style.setProperty('--browser-bg-x', '' + this.browserBgX + 'px')
+      //  document.documentElement.style.setProperty('--browser-bg-y', '' + this.browserBgY + 'px')
     }, 16)
 
     this.restoreFromLocalStorage()
+
+    this.udpateCSS()
   },
   beforeUnmount() {
     clearInterval(this.intervalAnim)
   },
   methods: {
+    udpateCSS() {
+      document.documentElement.style.setProperty(
+        '--browser-main-color',
+        RGBFunc.toHexString(this.config.screens.gamelist.browser.item_color.main_colors.color)
+      )
+
+      Object.entries(this.config.screens.gamelist.browser.item_color.gradient_colors).forEach(
+        ([v, c]) => {
+          document.documentElement.style.setProperty(
+            '--browser-gr-' + v,
+
+            RGBFunc.toHexString(
+              RGBFunc.multiplyColor(
+                this.config.screens.gamelist.browser.item_color.main_colors.color,
+                c
+              )
+            )
+          )
+        }
+      )
+    },
     restoreFromLocalStorage() {
       // try to get data from ls
       const config_ls = getFromLocalStorage('theme-config')
@@ -86,9 +109,11 @@ export default {
     },
     updateGamelistFocusColors(c: any) {
       this.config.screens.gamelist.browser.focused_color = c
+      this.udpateCSS()
     },
     updateGamelistItemColors(c: any) {
       this.config.screens.gamelist.browser.item_color = c
+      this.udpateCSS()
     },
     updateAreaGamelistBrowser(c: any) {
       Object.assign(this.config.screens.gamelist.browser, c)
@@ -176,126 +201,128 @@ export default {
 </script>
 
 <template>
-  <div class="fenrir-config">
-    <div class="columns">
-      <div class="column is-one-fifth has-background-dark">is-one-fifth</div>
-      <div class="column  has-background-black">
-        <div class="fenrir-config-preview-area">
-          <div
-            class="fenrir-config-user-area my-0 mx-auto"
-            :style="{ backgroundImage: `url(${browserBackgroundImage})` }"
+  <div class="fenrir-config columns m-0">
+    <div class="column is-one-fifth has-background-dark">
+      <UploadContent class="upload-area" @files-dropped="browserBackgroundDropped">
+        <div class="is-size-7">File must be 512x512 with less than 16 colors</div>
+      </UploadContent>
+    </div>
+    <div class="column has-background-black">
+      <div class="fenrir-config-preview-area">
+        <div
+          class="fenrir-config-user-area my-0 mx-auto"
+          :style="{ backgroundImage: `url(${browserBackgroundImage})` }"
+        >
+          <div class="fenrir-config-user-area-img-preview"></div>
+          <AreaUI
+            :active="displayAreaGuide"
+            @update="updateAreaGamelistBrowser"
+            :area="config.screens.gamelist.browser"
           >
-            <div class="fenrir-config-user-area-img-preview"></div>
-            <AreaUI
-              :active="displayAreaGuide"
-              @update="updateAreaGamelistBrowser"
-              :area="config.screens.gamelist.browser"
-            >
-              <div class="game-list">
-                <ul :style="{ lineHeight: config.screens.gamelist.browser.line_height + 'px' }">
-                  <li :key="g" v-for="g in fakeGamesList">{{ g }}</li>
-                </ul>
-              </div>
-            </AreaUI>
-            <AreaUI
-              :active="displayAreaGuide"
-              @update="updateAreaGamelistCover"
-              :area="config.screens.gamelist.cover"
-              ><div class="cover-area"></div>
-            </AreaUI>
-          </div>
+            <div class="game-list">
+              <ul :style="{ lineHeight: config.screens.gamelist.browser.line_height + 'px' }">
+                <li :key="g" v-for="g in fakeGamesList">{{ g }}</li>
+              </ul>
+            </div>
+          </AreaUI>
+          <AreaUI
+            :active="displayAreaGuide"
+            @update="updateAreaGamelistCover"
+            :area="config.screens.gamelist.cover"
+            ><div class="cover-area"></div>
+          </AreaUI>
         </div>
       </div>
+    </div>
 
-      <div class="column is-one-fifth has-background-dark">
-        <div class="">
-          <button class="button is-primary" @click="buildTheme">
-            <span class="icon">
-              <font-awesome-icon icon="fa-solid fa-bolt" />
-            </span>
-            <span>Build</span>
-          </button>
+    <div class="column is-one-fifth has-background-dark">
+      <div class="">
+        <button class="button is-primary" @click="buildTheme">
+          <span class="icon">
+            <font-awesome-icon icon="fa-solid fa-bolt" />
+          </span>
+          <span>Build</span>
+        </button>
+
+        <div class="field">
+          <ItemColor
+            @update:colors="updateGamelistItemColors"
+            :colors="config.screens.gamelist.browser.item_color"
+          >
+            <template #main-label>
+              <label>Main color</label>
+            </template>
+            <template #gradient-label>
+              <label>Gradient color</label>
+            </template>
+          </ItemColor>
+
+          <ItemColor
+            @update:colors="updateGamelistFocusColors"
+            :colors="config.screens.gamelist.browser.focused_color"
+          >
+            <template #main-label>
+              <label>Main Focus color</label>
+            </template>
+            <template #gradient-label>
+              <label>Gradient Focus color</label>
+            </template>
+          </ItemColor>
 
           <div class="field">
-            <ItemColor
-              @update:colors="updateGamelistItemColors"
-              :colors="config.screens.gamelist.browser.item_color"
-            >
-              <template #main-label>
-                <label>Main color</label>
-              </template>
-              <template #gradient-label>
-                <label>Gradient color</label>
-              </template>
-            </ItemColor>
-
-            <ItemColor
-              @update:colors="updateGamelistFocusColors"
-              :colors="config.screens.gamelist.browser.focused_color"
-            >
-              <template #main-label>
-                <label>Main Focus color</label>
-              </template>
-              <template #gradient-label>
-                <label>Gradient Focus color</label>
-              </template>
-            </ItemColor>
-
-            <div class="field">
-              <div class="control">
-                <label class="label">Line height </label>
-                <input
-                  class="input"
-                  v-model.number="config.screens.gamelist.browser.line_height"
-                  type="number"
-                  max="50"
-                  min="8"
-                />
-              </div>
+            <div class="control">
+              <label class="label">Line height </label>
+              <input
+                class="input"
+                v-model.number="config.screens.gamelist.browser.line_height"
+                type="number"
+                max="50"
+                min="8"
+              />
             </div>
+          </div>
 
-            <div class="field is-horizontal">
-              <div class="control">
-                <label class="label"> Display/Move area helpers</label>
-              </div>
-              <div class="control">
-                <label class="checkbox"
-                  >&nbsp;
-                  <input type="checkbox" v-model="displayAreaGuide" />
-                </label>
-              </div>
+          <div class="field is-horizontal">
+            <div class="control">
+              <label class="label"> Display/Move area helpers</label>
             </div>
+            <div class="control">
+              <label class="checkbox"
+                >&nbsp;
+                <input type="checkbox" v-model="displayAreaGuide" />
+              </label>
+            </div>
+          </div>
 
-            <label class="label">Background scrolling</label>
-            <div class="field is-horizontal">
-              <div class="field-body">
-                <div class="field has-addons">
-                  <div class="control">
-                    <span class="button is-static"> X </span>
-                  </div>
-                  <div class="control">
-                    <input
-                      @change="updateBackgroundAnimation"
-                      step="0.25"
-                      type="number"
-                      class="input"
-                      v-model.number="config.screens.gamelist.backgound.x_inc"
-                    />
-                  </div>
+          <label class="label">Background scrolling</label>
+          <div class="field is-horizontal">
+            <div class="field-body">
+              <div class="field has-addons">
+                <div class="control">
+                  <span class="button is-static"> X </span>
                 </div>
-                <div class="field has-addons">
-                  <div class="control">
-                    <span class="button is-static"> Y </span>
-                  </div>
-                  <div class="control">
-                    <input
-                      @change="updateBackgroundAnimation"
-                      step="0.25"
-                      type="number"
-                      class="input"
-                      v-model.number="config.screens.gamelist.backgound.y_inc"
-                    />
-                  </div>
+                <div class="control">
+                  <input
+                    @change="updateBackgroundAnimation"
+                    step="0.25"
+                    type="number"
+                    class="input"
+                    v-model.number="config.screens.gamelist.backgound.x_inc"
+                  />
+                </div>
+              </div>
+              <div class="field has-addons">
+                <div class="control">
+                  <span class="button is-static"> Y </span>
+                </div>
+                <div class="control">
+                  <input
+                    @change="updateBackgroundAnimation"
+                    step="0.25"
+                    type="number"
+                    class="input"
+                    v-model.number="config.screens.gamelist.backgound.y_inc"
+                  />
                 </div>
               </div>
             </div>
@@ -304,19 +331,21 @@ export default {
       </div>
     </div>
 
+    <!--
     <div class="columns">
       <div class="column">
         
-        <UploadContent class="upload-area" @files-dropped="browserBackgroundDropped">
-            <div class="is-size-7">File must be 512x512 with less than 16 colors</div>
-          </UploadContent>
 
         <textarea class="textarea" v-model="configJson"></textarea>
       </div>
     </div>
-  </div>
+  --></div>
 </template>
 <style scoped lang="scss">
+.fenrir-config {
+  flex: 1;
+}
+
 .min-512 {
   min-width: 512px;
   padding: 0;
@@ -388,6 +417,13 @@ export default {
 
     white-space: nowrap;
     overflow: hidden;
+    color: var(--browser-main-color);
+    background: radial-gradient(ellipse at top left, var(--browser-gr-tl) 15%, transparent 60%),
+      radial-gradient(ellipse at bottom left, var(--browser-gr-bl) 15%, transparent 60%),
+      radial-gradient(ellipse at top right, var(--browser-gr-tr) 15%, transparent 70%),
+      radial-gradient(ellipse at bottom right, var(--browser-gr-br) 15%, transparent 70%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 }
 .cover-area {

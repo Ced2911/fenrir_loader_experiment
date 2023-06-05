@@ -22,9 +22,5 @@ export default {
 </script>
 
 <template>
-  <div class="columns">
-    <div class="column">
-      <fenrir-config />
-    </div>
-  </div>
+ <fenrir-config />
 </template>

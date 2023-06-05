@@ -35,8 +35,8 @@ export function ThemeConfigToBuffer(config: FenrirConfig) {
         // gradient
         _RgbColor(c.gradient_colors.tl)
         _RgbColor(c.gradient_colors.tr)
-        _RgbColor(c.gradient_colors.bl)
         _RgbColor(c.gradient_colors.br)
+        _RgbColor(c.gradient_colors.bl)
     }
 
     function _BrowserSetting(s: BrowserSetting) {
