@@ -1,6 +1,6 @@
 <template>
   <div class="upload-area">
-    <div class="file has-name is-fullwidth">
+    <div class="file is-fullwidth is-danger is-boxed">
       <label class="file-label">
         <input class="file-input" type="file" @change="onDrop" />
         <span class="file-cta">
@@ -9,7 +9,6 @@
           </span>
           <span class="file-label">Upload background</span>
         </span>
-        <span class="file-name"> {{ filename }} </span>
       </label>
     </div>
 

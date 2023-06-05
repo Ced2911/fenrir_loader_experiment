@@ -12,6 +12,10 @@ import { ThemeExport, ThemeConfigToBuffer, THEME_ID } from '@/services/ExportFen
 import type { FenrirConfig } from '@/models/screens'
 import { plainToClass } from 'class-transformer'
 
+const SCREEN_W = 352
+const SCREEN_H = 240
+const SCREEN_MAP_SZ = 512
+
 export default {
   components: {
     //GameList,
@@ -27,8 +31,14 @@ export default {
       this.browserBgX -= this.config.screens.gamelist.backgound.x_inc
       this.browserBgY -= this.config.screens.gamelist.backgound.y_inc
 
-      // document.documentElement.style.setProperty('--browser-bg-x', '' + this.browserBgX + 'px')
-      //  document.documentElement.style.setProperty('--browser-bg-y', '' + this.browserBgY + 'px')
+      document.documentElement.style.setProperty(
+        '--browser-bg-x',
+        '' + ((SCREEN_MAP_SZ - SCREEN_W) / 2 + this.browserBgX) + 'px'
+      )
+      document.documentElement.style.setProperty(
+        '--browser-bg-y',
+        '' + ((SCREEN_MAP_SZ - SCREEN_H) / 2 + this.browserBgY) + 'px'
+      )
     }, 16)
 
     this.restoreFromLocalStorage()
@@ -206,6 +216,9 @@ export default {
       <UploadContent class="upload-area" @files-dropped="browserBackgroundDropped">
         <div class="is-size-7">File must be 512x512 with less than 16 colors</div>
       </UploadContent>
+
+      <span class="is-size-5">Debug</span>
+      <textarea rows="10" class="textarea" v-model="configJson"></textarea>
     </div>
     <div class="column has-background-black">
       <div class="fenrir-config-preview-area">
@@ -214,46 +227,41 @@ export default {
           :style="{ backgroundImage: `url(${browserBackgroundImage})` }"
         >
           <div class="fenrir-config-user-area-img-preview"></div>
-          <AreaUI
-            :active="displayAreaGuide"
-            @update="updateAreaGamelistBrowser"
-            :area="config.screens.gamelist.browser"
-          >
-            <div class="game-list">
-              <ul :style="{ lineHeight: config.screens.gamelist.browser.line_height + 'px' }">
-                <li :key="g" v-for="g in fakeGamesList">{{ g }}</li>
-              </ul>
-            </div>
-          </AreaUI>
-          <AreaUI
-            :active="displayAreaGuide"
-            @update="updateAreaGamelistCover"
-            :area="config.screens.gamelist.cover"
-            ><div class="cover-area"></div>
-          </AreaUI>
+          <div class="fenrir-config-user-area-control">
+            <AreaUI
+              :active="displayAreaGuide"
+              @update="updateAreaGamelistBrowser"
+              :area="config.screens.gamelist.browser"
+            >
+              <div class="game-list">
+                <ul :style="{ lineHeight: config.screens.gamelist.browser.line_height + 'px' }">
+                  <li :key="g" v-for="g in fakeGamesList">{{ g }}</li>
+                </ul>
+              </div>
+            </AreaUI>
+            <AreaUI
+              :active="displayAreaGuide"
+              @update="updateAreaGamelistCover"
+              :area="config.screens.gamelist.cover"
+              ><div class="cover-area"></div>
+            </AreaUI>
+          </div>
         </div>
       </div>
     </div>
 
     <div class="column is-one-fifth has-background-dark">
       <div class="">
-        <button class="button is-primary" @click="buildTheme">
-          <span class="icon">
-            <font-awesome-icon icon="fa-solid fa-bolt" />
-          </span>
-          <span>Build</span>
-        </button>
-
         <div class="field">
           <ItemColor
             @update:colors="updateGamelistItemColors"
             :colors="config.screens.gamelist.browser.item_color"
           >
             <template #main-label>
-              <label>Main color</label>
+              <label class="label">Main color</label>
             </template>
             <template #gradient-label>
-              <label>Gradient color</label>
+              <label class="label">Gradient color</label>
             </template>
           </ItemColor>
 
@@ -262,10 +270,10 @@ export default {
             :colors="config.screens.gamelist.browser.focused_color"
           >
             <template #main-label>
-              <label>Main Focus color</label>
+              <label class="label">Main Focus color</label>
             </template>
             <template #gradient-label>
-              <label>Gradient Focus color</label>
+              <label class="label">Gradient Focus color</label>
             </template>
           </ItemColor>
 
@@ -328,20 +336,24 @@ export default {
             </div>
           </div>
         </div>
+
+        <div class="field">
+          <button class="button is-primary" @click="buildTheme">
+            <span class="icon">
+              <font-awesome-icon icon="fa-solid fa-bolt" />
+            </span>
+            <span>Build theme</span>
+          </button>
+        </div>
       </div>
     </div>
-
-    <!--
-    <div class="columns">
-      <div class="column">
-        
-
-        <textarea class="textarea" v-model="configJson"></textarea>
-      </div>
-    </div>
-  --></div>
+  </div>
 </template>
 <style scoped lang="scss">
+@use 'sass:math';
+$screen-w: var(--screen-w, 352px);
+$screen-h: var(--screen-h, 240px);
+$screen-map-sz: var(--screen-map-sz, 512px);
 .fenrir-config {
   flex: 1;
 }
@@ -378,29 +390,43 @@ export default {
 
   animation: background-position-x 16ms linear;
   animation: background-position-y 16ms linear;
+}
 
-  &::after,
+.fenrir-config-user-area-control {
+  transform: translate(
+    calc(($screen-map-sz - $screen-w) * 0.5),
+    calc(($screen-map-sz - $screen-h) * 0.5)
+  );
+
+  border: 1px solid #555;
+
+  width: $screen-w;
+  height: $screen-h;
+
   &::before {
-    background: #ffffff;
+    // background: #ffffff;
     content: ' ';
     position: absolute;
     display: block;
     opacity: 0.2;
     z-index: 65;
-  }
-  &::after {
-    top: 240px;
-    left: 0;
-    width: 512px;
-    height: 272px;
-  }
-  &::before {
+    width: $screen-map-sz;
+    height: $screen-map-sz;
+
     top: 0;
-    left: 356px;
-    width: 156px;
-    height: 240px;
+    left: 0;
+    transform: translate(
+      calc(($screen-map-sz - $screen-w) * -0.5),
+      calc(($screen-map-sz - $screen-h) * -0.5)
+    );
+
+    border-bottom: calc(($screen-map-sz - $screen-h) * 0.5) solid #ffffff;
+    border-top: calc(($screen-map-sz - $screen-h) * 0.5) solid #ffffff;
+    border-left: calc(($screen-map-sz - $screen-w) * 0.5) solid #ffffff;
+    border-right: calc(($screen-map-sz - $screen-w) * 0.5) solid #ffffff;
   }
 }
+
 .upload-area {
   //width: 512px;
 }

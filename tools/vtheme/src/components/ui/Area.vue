@@ -30,7 +30,8 @@ export default {
       maxWidth: 512,
       maxHeight: 512,
       minWidth: 10,
-      minHeight: 10
+      minHeight: 10,
+      fitParent: true
     }
     return {
       area_rs
@@ -56,13 +57,11 @@ export default {
 </script>
 
 <template>
-  <div class="fenrir-ui-browser">
-    <VueResizable v-bind="area_rs" @resize:end="eHandler" @drag:end="eHandler" :active="ractive">
-      <div class="resizable-content" :class="{ active: active }">
-        <slot></slot>
-      </div>
-    </VueResizable>
-  </div>
+  <VueResizable v-bind="area_rs" @resize:end="eHandler" @drag:end="eHandler" :active="ractive">
+    <div class="resizable-content" :class="{ active: active }">
+      <slot></slot>
+    </div>
+  </VueResizable>
 </template>
 <style lang="scss" scoped>
 .fenrir-ui-browser {
@@ -71,9 +70,18 @@ export default {
 .resizable-content {
   height: 100%;
   width: 100%;
+  position: relative;
   &.active {
-    background-color: aqua;
-    opacity: 0.4;
+    &::before {
+      content: ' ';
+      //background-color: aqua;
+      //opacity: 0.2;
+      border: 1px solid #555;
+      width: 100%;
+      height: 100%;
+      display: block;
+      position: absolute;
+    }
   }
 }
 </style>
