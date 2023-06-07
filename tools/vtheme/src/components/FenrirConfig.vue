@@ -11,14 +11,9 @@ import ImageTiler from '@/services/VDP2Tiler'
 
 import { useThemeConfigStore } from '@/store/ThemeConfig'
 import type { FenrirConfig } from '@/models/screens'
-import { fenrirDefaultConfig } from '@/models/screens'
 
-import {
-  downloadBuffer,
-  RGBFunc,
-  DVBuffer
-} from '@/services/Utils'
-import { ThemeExport, ThemeConfigToBuffer, THEME_ID } from '@/services/ExportFenrirThemeConfig'
+import { downloadBuffer, RGBFunc, DVBuffer } from '@/services/Utils'
+import { FontBuilder } from '@/services/FontBuilder'
 
 const SCREEN_W = 352
 const SCREEN_H = 240
@@ -91,26 +86,8 @@ export default {
       this.browserBgX = 0
       this.browserBgY = 0
     },
-    updateFonts(b: Buffer) {
-      // @ts-ignore
-      this.fontBuffer = b
-    },
-    async buildImage() {
-      const b = await ImageTiler(this.browserBackgroundImage)
-      downloadBuffer(b, 'vdp2.dat')
-    },
-    async buildTheme() {
-      const vdpbg = await ImageTiler(this.browserBackgroundImage)
-      const th = ThemeConfigToBuffer(this.config)
-      // @ts-ignore
-      const fontB = this.fontBuffer as Buffer
-
-      const expt = new ThemeExport()
-      expt.addRessource(THEME_ID.VDP2_BG, vdpbg)
-      expt.addRessource(THEME_ID.THEME_CONFIG_V0, th)
-      expt.addRessource(THEME_ID.FONT, fontB)
-
-      downloadBuffer(expt.build(), 'theme.bin')
+    async updateFonts({ font, canvas }: { font: string; canvas: HTMLCanvasElement }) {
+      await this.themeStore.updateFont(font);
     }
   },
   computed: {
@@ -184,7 +161,7 @@ export default {
         <div class="is-size-7">File must be 512x512 with less than 16 colors</div>
       </UploadContent>
 
-      <FontEditor :on-update:fonts="updateFonts"></FontEditor>
+      <FontEditor @update:fonts="updateFonts"></FontEditor>
 
       <span class="is-size-5">Debug</span>
       <textarea rows="10" class="textarea" v-model="configJson"></textarea>
@@ -307,7 +284,7 @@ export default {
         </div>
 
         <div class="field">
-          <button class="button is-primary" @click="buildTheme">
+          <button class="button is-primary" @click="themeStore.buildTheme">
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-bolt" />
             </span>

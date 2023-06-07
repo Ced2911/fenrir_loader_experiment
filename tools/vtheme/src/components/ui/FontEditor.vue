@@ -1,5 +1,7 @@
 <script lang="ts">
 import { FontBuilder } from '@/services/FontBuilder'
+import { useThemeConfigStore } from '@/store/ThemeConfig'
+import { mapStores } from 'pinia'
 
 export default {
   emits: ['update:fonts'],
@@ -7,13 +9,13 @@ export default {
   data() {
     return {}
   },
+  computed: {
+    ...mapStores(useThemeConfigStore),
+  },
   async mounted() {
-    const fontb = new FontBuilder(this.$refs.canvas as HTMLCanvasElement)
-    await fontb.loadAllFonts()
-    fontb.setFont('public-pixel')
-
-    fontb.drawCharInCanvas()
-    this.$emit('update:fonts', fontb.buildFont())
+    this.themeStore.initFonts(this.$refs.canvas as HTMLCanvasElement)
+    this.$emit('update:fonts', {font: this.themeStore.font, canvas:this.$refs.canvas})
+    
   }
 }
 </script>

@@ -1,6 +1,6 @@
 import { DVBuffer } from "./Utils"
 
-const fonts = [
+export const fonts = [
     {
         url: "https://fonts.cdnfonts.com/s/71909/PublicPixel-eZPz6.woff",
         name: 'public-pixel',
@@ -101,11 +101,12 @@ export class FontBuilder {
 
 
     _U8toU4(u8: Uint8ClampedArray) {
+        // u8 => RGBA32
         const u4 = new Uint8Array(u8.length / 8)
-        for (let i = 0; i < u8.length; i += 8) {
+        for (let i = 0, j = 0; i < u8.length; i += 8, j++) {
             const p0 = (u8[i] & 1) & 0xf
             const p1 = (u8[i + 4] & 1) & 0xf
-            u4[p0 | (p1 << 4)];
+            u4[j] = p0 | (p1 << 4);
         }
         return u4
     }
@@ -124,13 +125,14 @@ export class FontBuilder {
 
             buff.seek((id * this.curFont.width * this.curFont.height) / 2)
 
+            console.log(imgData.data, u4)
             for (let i = 0; i < u4.length; i++) {
                 buff.addUint8(u4[i])
             }
         })
 
         // font info
-        for(let i = 0; i < 256; i++) {
+        for (let i = 0; i < 256; i++) {
             let width = 0;
 
             buff.addUint8(8)
