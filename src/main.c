@@ -37,6 +37,7 @@ int main(void)
     vdp1_vram_partitions_get(&vdp1_vram_partitions);
 
     vdp1_init();
+    font_init();
 
     // test_vdp2();
 

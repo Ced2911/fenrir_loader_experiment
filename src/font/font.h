@@ -11,3 +11,4 @@ typedef struct
 
 size_t font_texture_font_create(font_texture_t *tex, char *text);
 int font_get_text_len(char *format, ...);
+void font_init();
