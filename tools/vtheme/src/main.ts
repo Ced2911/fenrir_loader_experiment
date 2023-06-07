@@ -1,24 +1,18 @@
 import './assets/main.scss'
 import 'verte/dist/verte.css'
 
-
-import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
-
-import { createApp } from 'vue'
-
-
-/* import the fontawesome core */
+/* fontawesome */
 import { library } from '@fortawesome/fontawesome-svg-core'
-
-/* import font awesome icon component */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-
-/* import specific icons */
 import { fas } from '@fortawesome/free-solid-svg-icons'
 library.add(fas)
 
-
+/* vue */
+import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
+import { createPinia } from 'pinia'
+import { createApp } from 'vue'
 import App from './App.vue'
+
 
 const router = createRouter({
   // 4. Provide the history implementation to use. We are using the hash history for simplicity here.
@@ -35,8 +29,8 @@ const router = createRouter({
   ],
 })
 
-
 const app = createApp(App)
 app.use(router)
+app.use(createPinia())
 app.component('font-awesome-icon', FontAwesomeIcon)
 app.mount('#app')

@@ -62,7 +62,8 @@ typedef struct __attribute__((__packed__))
 #define THEME_ID_CONFIG_V0 0x000000001
 #define THEME_ID_VDP2_BG 0x000000010
 #define THEME_ID_VDP2_FG 0x000000011
-#define THEME_ID_VGM_SN76xxx 0x000000100
+#define THEME_ID_FONT 0x000000100
+#define THEME_ID_VGM_SN76xxx 0x000001000
 
 /*****************************************************/
 typedef struct

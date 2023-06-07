@@ -1,4 +1,4 @@
-import {  type Area, type BackgroundSetting, type BrowserItemColor, type BrowserSetting, type CoverSetting, type FenrirConfig, type RgbColor } from "@/models/screens";
+import { type Area, type BackgroundSetting, type BrowserItemColor, type BrowserSetting, type CoverSetting, type FenrirConfig, type RgbColor } from "@/models/screens";
 
 import { DVBuffer, RGBFunc } from '@/services/Utils'
 import { Buffer } from "buffer";
@@ -10,14 +10,15 @@ export enum THEME_ID {
     THEME_CONFIG_V0 = 0x000000001,
     VDP2_BG = 0x000000010,
     VDP2_FG = 0x000000011,
-    VGM_SN76xxx = 0x000000100,
+    FONT = 0x000000100,
+    VGM_SN76xxx = 0x000001000,
 };
 
 export function ThemeConfigToBuffer(config: FenrirConfig) {
     const buffer = new DVBuffer()
 
     function _RgbColor(c: RgbColor) {
-      buffer.addUint16(RGBFunc.getRgb555(c))
+        buffer.addUint16(RGBFunc.getRgb555(c))
     }
 
     function _Area(area: Area) {

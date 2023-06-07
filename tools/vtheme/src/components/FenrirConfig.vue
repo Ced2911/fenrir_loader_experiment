@@ -1,16 +1,24 @@
 <script lang="ts">
-import { ref } from 'vue'
-import GameList from './screens/GameList.vue'
+import { mapStores } from 'pinia'
+import type { Buffer } from 'buffer'
+
 import AreaUI from '@/components/ui/Area.vue'
 import ItemColor from '@/components/ui/ItemColor.vue'
-import { fenrirDefaultConfig } from '@/models/screens'
+import FontEditor from '@/components/ui/FontEditor.vue'
 import UploadContent from '@/components/image/UploadContent.vue'
-import ImageTiler from '@/services/VDP2Tiler'
-import { downloadBuffer, saveToLocalStorage, getFromLocalStorage, RGBFunc } from '@/services/Utils'
-import { ThemeExport, ThemeConfigToBuffer, THEME_ID } from '@/services/ExportFenrirThemeConfig'
 
+import ImageTiler from '@/services/VDP2Tiler'
+
+import { useThemeConfigStore } from '@/store/ThemeConfig'
 import type { FenrirConfig } from '@/models/screens'
-import { plainToClass } from 'class-transformer'
+import { fenrirDefaultConfig } from '@/models/screens'
+
+import {
+  downloadBuffer,
+  RGBFunc,
+  DVBuffer
+} from '@/services/Utils'
+import { ThemeExport, ThemeConfigToBuffer, THEME_ID } from '@/services/ExportFenrirThemeConfig'
 
 const SCREEN_W = 352
 const SCREEN_H = 240
@@ -21,7 +29,8 @@ export default {
     //GameList,
     AreaUI,
     ItemColor,
-    UploadContent
+    UploadContent,
+    FontEditor
   },
   setup() {
     return {}
@@ -39,9 +48,9 @@ export default {
         '--browser-bg-y',
         '' + ((SCREEN_MAP_SZ - SCREEN_H) / 2 + this.browserBgY) + 'px'
       )
-    }, 16)
+    }, 1000)
 
-    this.restoreFromLocalStorage()
+    this.browserBackgroundImage = this.themeStore.backgroundImageUrl
 
     this.udpateCSS()
   },
@@ -70,70 +79,21 @@ export default {
         }
       )
     },
-    restoreFromLocalStorage() {
-      // try to get data from ls
-      const config_ls = getFromLocalStorage('theme-config')
-      console.log(config_ls)
-      if (config_ls) {
-        const config = JSON.parse(config_ls)
-        this.config = config as FenrirConfig
-      }
-
-      const gl_bg = getFromLocalStorage('gamelist-bg')
-
-      if (gl_bg) {
-        const ii = Uint8Array.from(gl_bg, (c) => c.charCodeAt(0))
-        const blobUrl = URL.createObjectURL(new Blob([ii]))
-
-        const img = document.createElement('img')
-        img.src = blobUrl
-
-        this.browserBackgroundImage = blobUrl
-      }
-    },
 
     async browserBackgroundDropped(blob: Blob) {
       const blobUrl = URL.createObjectURL(blob)
-
-      const img: HTMLImageElement = await new Promise((resolve, reject) => {
-        const img = document.createElement('img')
-        img.onload = () => resolve(img)
-        img.onerror = () => reject()
-        img.src = blobUrl
-      })
-
-      const imgB64 = await new Promise((resolve, _) => {
-        const reader = new FileReader()
-        reader.onloadend = () => resolve(reader.result)
-        reader.readAsDataURL(blob)
-      })
-
-      console.log(img.width)
       this.browserBackgroundImage = blobUrl
 
-      if (imgB64) {
-        const d = imgB64.split(',')
+      this.themeStore.updateBackground(blob)
+    },
 
-        saveToLocalStorage('gamelist-bg', atob(d[1]))
-      }
-    },
-    updateGamelistFocusColors(c: any) {
-      this.config.screens.gamelist.browser.focused_color = c
-      this.udpateCSS()
-    },
-    updateGamelistItemColors(c: any) {
-      this.config.screens.gamelist.browser.item_color = c
-      this.udpateCSS()
-    },
-    updateAreaGamelistBrowser(c: any) {
-      Object.assign(this.config.screens.gamelist.browser, c)
-    },
-    updateAreaGamelistCover(c: any) {
-      Object.assign(this.config.screens.gamelist.cover, c)
-    },
     updateBackgroundAnimation() {
       this.browserBgX = 0
       this.browserBgY = 0
+    },
+    updateFonts(b: Buffer) {
+      // @ts-ignore
+      this.fontBuffer = b
     },
     async buildImage() {
       const b = await ImageTiler(this.browserBackgroundImage)
@@ -142,17 +102,19 @@ export default {
     async buildTheme() {
       const vdpbg = await ImageTiler(this.browserBackgroundImage)
       const th = ThemeConfigToBuffer(this.config)
+      // @ts-ignore
+      const fontB = this.fontBuffer as Buffer
 
       const expt = new ThemeExport()
       expt.addRessource(THEME_ID.VDP2_BG, vdpbg)
       expt.addRessource(THEME_ID.THEME_CONFIG_V0, th)
+      expt.addRessource(THEME_ID.FONT, fontB)
 
       downloadBuffer(expt.build(), 'theme.bin')
-
-      saveToLocalStorage('theme-config', JSON.stringify(this.config))
     }
   },
   computed: {
+    ...mapStores(useThemeConfigStore),
     configJson: {
       get(): string {
         return JSON.stringify(this.config, null, 2)
@@ -162,6 +124,9 @@ export default {
       }
     },
 
+    config(): FenrirConfig {
+      return this.themeStore.config
+    },
     fakeGamesList() {
       const max_g = Math.floor(
         this.config.screens.gamelist.browser.h / this.config.screens.gamelist.browser.line_height
@@ -198,13 +163,15 @@ export default {
     }
   },
   data() {
+    //console.log(this.themeStore)
     return {
       intervalAnim: 0,
       browserBackgroundImage: '',
-      config: fenrirDefaultConfig,
+      //config: this.themeStore.config,
       browserBgX: 0,
       browserBgY: 0,
-      displayAreaGuide: true
+      displayAreaGuide: true,
+      fontBuffer: null
     }
   }
 }
@@ -216,6 +183,8 @@ export default {
       <UploadContent class="upload-area" @files-dropped="browserBackgroundDropped">
         <div class="is-size-7">File must be 512x512 with less than 16 colors</div>
       </UploadContent>
+
+      <FontEditor :on-update:fonts="updateFonts"></FontEditor>
 
       <span class="is-size-5">Debug</span>
       <textarea rows="10" class="textarea" v-model="configJson"></textarea>
@@ -230,7 +199,7 @@ export default {
           <div class="fenrir-config-user-area-control">
             <AreaUI
               :active="displayAreaGuide"
-              @update="updateAreaGamelistBrowser"
+              @update="themeStore.updateAreaGamelistBrowser"
               :area="config.screens.gamelist.browser"
             >
               <div class="game-list">
@@ -241,7 +210,7 @@ export default {
             </AreaUI>
             <AreaUI
               :active="displayAreaGuide"
-              @update="updateAreaGamelistCover"
+              @update="themeStore.updateAreaGamelistCover"
               :area="config.screens.gamelist.cover"
               ><div class="cover-area"></div>
             </AreaUI>
@@ -254,7 +223,7 @@ export default {
       <div class="">
         <div class="field">
           <ItemColor
-            @update:colors="updateGamelistItemColors"
+            @update:colors="themeStore.updateGamelistItemColors"
             :colors="config.screens.gamelist.browser.item_color"
           >
             <template #main-label>
@@ -266,7 +235,7 @@ export default {
           </ItemColor>
 
           <ItemColor
-            @update:colors="updateGamelistFocusColors"
+            @update:colors="themeStore.updateGamelistFocusColors"
             :colors="config.screens.gamelist.browser.focused_color"
           >
             <template #main-label>
@@ -315,7 +284,7 @@ export default {
                     step="0.25"
                     type="number"
                     class="input"
-                    v-model.number="config.screens.gamelist.backgound.x_inc"
+                    v-model.number="themeStore.config.screens.gamelist.backgound.x_inc"
                   />
                 </div>
               </div>
@@ -329,7 +298,7 @@ export default {
                     step="0.25"
                     type="number"
                     class="input"
-                    v-model.number="config.screens.gamelist.backgound.y_inc"
+                    v-model.number="themeStore.config.screens.gamelist.backgound.y_inc"
                   />
                 </div>
               </div>
