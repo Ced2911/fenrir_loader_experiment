@@ -1,21 +1,32 @@
 <script lang="ts">
-import { FontBuilder } from '@/services/FontBuilder'
+import { FontBuilder, fonts } from '@/services/FontBuilder'
 import { useThemeConfigStore } from '@/store/ThemeConfig'
 import { mapStores } from 'pinia'
 
 export default {
   emits: ['update:fonts'],
-  methods: {},
+  methods: {
+    udpateFont() {
+      console.log(this.font)
+
+      this.$emit('update:fonts', { font: this.font, canvas: this.$refs.canvas })
+    }
+  },
   data() {
-    return {}
+    const fontName = fonts.map((f) => f.name)
+    return { fonts, fontName, font: '' }
   },
   computed: {
     ...mapStores(useThemeConfigStore),
+    _font() {
+      return this.themeStore.font
+    }
   },
   async mounted() {
     this.themeStore.initFonts(this.$refs.canvas as HTMLCanvasElement)
-    this.$emit('update:fonts', {font: this.themeStore.font, canvas:this.$refs.canvas})
-    
+    this.font = this.themeStore.font
+
+    this.$emit('update:fonts', { font: this.font, canvas: this.$refs.canvas })
   }
 }
 </script>
@@ -23,6 +34,18 @@ export default {
 <template>
   <div>
     <div class="font-canvas">
+      <div class="field">
+        <div class="control">
+          <label class="label"> Font </label>
+          <div class="select is-rounded">
+            <select @change="udpateFont" v-model="font">
+              <option v-for="fontn in fonts" :key="fontn.name" :value="fontn.name">
+                {{ fontn.name }} - {{ fontn.size }}px
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
       <canvas ref="canvas" width="2048" height="32"></canvas>
       <svg width="0" height="0" style="position: absolute; z-index: -1">
         <defs>
@@ -39,8 +62,8 @@ export default {
 
 <style lang="scss" scoped>
 .font-canvas {
-  height: 64px;
   canvas {
+    display: none;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
     image-rendering: pixelated;

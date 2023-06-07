@@ -115,7 +115,7 @@ export const RGBFunc = {
             const fb = (((b / 255) * 2) - 1) / 2
             const r = (fa + fb)
             const v = Math.round(r * 255)
-            return  Math.min( Math.max(v, 0), 255)
+            return Math.min(Math.max(v, 0), 255)
         }
 
         const cc = getRGB(color)
@@ -124,4 +124,30 @@ export const RGBFunc = {
         const out = ((m(cc.r, cfactor.r) << 16) | (m(cc.g, cfactor.g) << 8) | (m(cc.b, cfactor.b)))
         return out
     }
+}
+
+
+
+
+export async function BlobToBase64(blob: Blob) {
+    const imgB64 = await new Promise((resolve, _) => {
+        const reader = new FileReader()
+        reader.onloadend = () => resolve(reader.result)
+        reader.readAsDataURL(blob)
+    })
+
+    if (imgB64) {
+        // @ts-ignore
+        const d = imgB64.split(',')
+        return atob(d[1])
+    }
+
+}
+
+
+export function SetCssVar(varn: string, value: string) {
+    document.documentElement.style.setProperty(
+        varn,
+        value
+    )
 }

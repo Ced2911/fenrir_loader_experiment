@@ -3,12 +3,13 @@ import { defineStore } from 'pinia'
 import { useStorage, type RemovableRef } from '@vueuse/core'
 import ImageTiler from '@/services/VDP2Tiler'
 import { THEME_ID, ThemeConfigToBuffer, ThemeExport } from '@/services/ExportFenrirThemeConfig'
-import { DVBuffer, downloadBuffer } from '@/services/Utils'
+import { BlobToBase64, DVBuffer, downloadBuffer } from '@/services/Utils'
 import { fonts, FontBuilder } from '@/services/FontBuilder'
 
 export interface State {
     config: RemovableRef<FenrirConfig>,
     backgroundImage: RemovableRef<string>, /* base 64*/
+    foregroundImage: RemovableRef<string>, /* base 64*/
     font: RemovableRef<typeof fonts[number]['name']>,
 }
 
@@ -29,11 +30,16 @@ const b64serializer = {
     }
 }
 
+
+
 export const useThemeConfigStore = defineStore('theme', {
     state: (): State => {
         return {
             config: useStorage<FenrirConfig>('theme-config', fenrirDefaultConfig),
             backgroundImage: useStorage<string>('theme-background', '', undefined, {
+                serializer: b64serializer
+            }),
+            foregroundImage: useStorage<string>('theme-foreground', '', undefined, {
                 serializer: b64serializer
             }),
             font: useStorage<string>('theme-font', fonts[0].name),
@@ -44,21 +50,25 @@ export const useThemeConfigStore = defineStore('theme', {
             const ii = Uint8Array.from(state.backgroundImage, (c) => c.charCodeAt(0))
             const blobUrl = URL.createObjectURL(new Blob([ii]))
             return blobUrl
+        },
+        foregroundImageUrl(state) {
+            const ii = Uint8Array.from(state.foregroundImage, (c) => c.charCodeAt(0))
+            const blobUrl = URL.createObjectURL(new Blob([ii]))
+            return blobUrl
         }
     },
 
     actions: {
         async updateBackground(blob: Blob) {
-            const imgB64 = await new Promise((resolve, _) => {
-                const reader = new FileReader()
-                reader.onloadend = () => resolve(reader.result)
-                reader.readAsDataURL(blob)
-            })
-
-            if (imgB64) {
-                // @ts-ignore
-                const d = imgB64.split(',')
-                this.backgroundImage = atob(d[1])
+            const b64 = await BlobToBase64(blob)
+            if (b64) {
+                this.backgroundImage = b64
+            }
+        },
+        async updateForeground(blob: Blob) {
+            const b64 = await BlobToBase64(blob)
+            if (b64) {
+                this.foregroundImage = b64
             }
         },
         async initFonts(canvas: HTMLCanvasElement) {
@@ -88,11 +98,13 @@ export const useThemeConfigStore = defineStore('theme', {
         },
         async buildTheme() {
             const vdpbg = await ImageTiler(this.backgroundImageUrl)
+            const vdpfg = await ImageTiler(this.foregroundImageUrl)
             const th = ThemeConfigToBuffer(this.config)
 
 
             const expt = new ThemeExport()
             expt.addRessource(THEME_ID.VDP2_BG, vdpbg)
+            expt.addRessource(THEME_ID.VDP2_FG, vdpfg)
             expt.addRessource(THEME_ID.THEME_CONFIG_V0, th)
 
             //

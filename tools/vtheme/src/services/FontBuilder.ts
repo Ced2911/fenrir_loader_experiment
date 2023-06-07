@@ -12,8 +12,8 @@ export const fonts = [
         url: "https://fonts.cdnfonts.com/s/67445/Quinquefive-Ea6d4.woff",
         name: 'quinquefive',
         size: 5,
-        width: 5,
-        height: 5,
+        width: 8,
+        height: 8,
     }
 
 ]
@@ -74,10 +74,10 @@ export class FontBuilder {
         console.log('.', this.ctx2d.measureText('.'))
         console.log('|', this.ctx2d.measureText('|'))
 
-        this.chars.forEach(c => {
-            const mt = this.ctx2d.measureText(c)
-            this.fontInfo[c] = { width: mt.width }
-        })
+        for (let i = 0; i < 256; i++) {
+            const mt = this.ctx2d.measureText(String.fromCharCode(i))
+            this.fontInfo[i] = { width: mt.width }
+        }
 
         console.log(this.fontInfo)
     }
@@ -121,15 +121,15 @@ export class FontBuilder {
 
         // font info
         for (let i = 0; i < 256; i++) {
-            let width = 8;
+            const width = this.fontInfo[i].width;
             buff.setUint8(OFF_CHAR_SPACE + i, width)
         }
 
         // add info
         // char w
-        buff.setUint32(OFF_CHAR_W, this.curFont.size)
+        buff.setUint32(OFF_CHAR_W, this.curFont.width)
         // char h
-        buff.setUint32(OFF_CHAR_H, this.curFont.size)
+        buff.setUint32(OFF_CHAR_H, this.curFont.height)
 
         // pixels
         this.chars.forEach((c, id) => {

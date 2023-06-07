@@ -1,19 +1,16 @@
 <script lang="ts">
 import { mapStores } from 'pinia'
-import type { Buffer } from 'buffer'
 
 import AreaUI from '@/components/ui/Area.vue'
 import ItemColor from '@/components/ui/ItemColor.vue'
 import FontEditor from '@/components/ui/FontEditor.vue'
 import UploadContent from '@/components/image/UploadContent.vue'
 
-import ImageTiler from '@/services/VDP2Tiler'
-
 import { useThemeConfigStore } from '@/store/ThemeConfig'
 import type { FenrirConfig } from '@/models/screens'
 
-import { downloadBuffer, RGBFunc, DVBuffer } from '@/services/Utils'
-import { FontBuilder } from '@/services/FontBuilder'
+import { RGBFunc, SetCssVar } from '@/services/Utils'
+import { fonts } from '@/services/FontBuilder'
 
 const SCREEN_W = 352
 const SCREEN_H = 240
@@ -35,17 +32,16 @@ export default {
       this.browserBgX -= this.config.screens.gamelist.backgound.x_inc
       this.browserBgY -= this.config.screens.gamelist.backgound.y_inc
 
-      document.documentElement.style.setProperty(
-        '--browser-bg-x',
-        '' + ((SCREEN_MAP_SZ - SCREEN_W) / 2 + this.browserBgX) + 'px'
-      )
-      document.documentElement.style.setProperty(
-        '--browser-bg-y',
-        '' + ((SCREEN_MAP_SZ - SCREEN_H) / 2 + this.browserBgY) + 'px'
-      )
-    }, 1000)
+      this.browserFgX -= this.config.screens.gamelist.foreground.x_inc
+      this.browserFgY -= this.config.screens.gamelist.foreground.y_inc
+    }, 16)
 
     this.browserBackgroundImage = this.themeStore.backgroundImageUrl
+    this.browserForegroundImage = this.themeStore.foregroundImageUrl
+
+    this.themeStore.$subscribe(() => {
+      this.udpateCSS()
+    })
 
     this.udpateCSS()
   },
@@ -54,25 +50,35 @@ export default {
   },
   methods: {
     udpateCSS() {
-      document.documentElement.style.setProperty(
-        '--browser-main-color',
-        RGBFunc.toHexString(this.config.screens.gamelist.browser.item_color.main_colors.color)
-      )
+      const style = document.documentElement.style
+      const { item_color, focused_color } = this.config.screens.gamelist.browser
 
-      Object.entries(this.config.screens.gamelist.browser.item_color.gradient_colors).forEach(
-        ([v, c]) => {
-          document.documentElement.style.setProperty(
-            '--browser-gr-' + v,
+      const colors = {
+        '--browser-main-color': RGBFunc.toHexString(item_color.main_colors.color),
+        '--browser-main-shadow': RGBFunc.toHexString(item_color.main_colors.shadow),
+        '--browser-focused-color': RGBFunc.toHexString(focused_color.main_colors.color),
+        '--browser-focused-shadow': RGBFunc.toHexString(focused_color.main_colors.shadow)
+      }
 
-            RGBFunc.toHexString(
-              RGBFunc.multiplyColor(
-                this.config.screens.gamelist.browser.item_color.main_colors.color,
-                c
-              )
-            )
-          )
-        }
-      )
+      Object.entries(colors).forEach(([v, color]) => {
+        style.setProperty(v, color)
+      })
+
+      Object.entries(item_color.gradient_colors).forEach(([v, c]) => {
+        document.documentElement.style.setProperty(
+          '--browser-gr-' + v,
+          RGBFunc.toHexString(RGBFunc.multiplyColor(item_color.main_colors.color, c))
+        )
+      })
+
+      Object.entries(focused_color.gradient_colors).forEach(([v, c]) => {
+        document.documentElement.style.setProperty(
+          '--browser-fr-' + v,
+          RGBFunc.toHexString(RGBFunc.multiplyColor(focused_color.main_colors.color, c))
+        )
+      })
+
+      SetCssVar('--foreground-image', `url(${this.themeStore.foregroundImageUrl})`)
     },
 
     async browserBackgroundDropped(blob: Blob) {
@@ -81,13 +87,24 @@ export default {
 
       this.themeStore.updateBackground(blob)
     },
+    async browserForegroundDropped(blob: Blob) {
+      const blobUrl = URL.createObjectURL(blob)
+      this.browserForegroundImage = blobUrl
+
+      this.themeStore.updateForeground(blob)
+    },
 
     updateBackgroundAnimation() {
       this.browserBgX = 0
       this.browserBgY = 0
     },
+    updateForegroundAnimation() {
+      this.browserFgX = 0
+      this.browserFgY = 0
+    },
+
     async updateFonts({ font, canvas }: { font: string; canvas: HTMLCanvasElement }) {
-      await this.themeStore.updateFont(font);
+      await this.themeStore.updateFont(font)
     }
   },
   computed: {
@@ -98,6 +115,30 @@ export default {
       },
       set(v: string) {
         this.config = JSON.parse(v)
+      }
+    },
+
+    browserFont(): any {
+      const fontInfo = fonts.find((f) => f.name === this.themeStore.font)
+      if (fontInfo) {
+        return {
+          fontFamily: fontInfo.name,
+          fontSize: fontInfo.size + 'px'
+        }
+      }
+      return {}
+    },
+
+    browserBackgroundPosition(): { x: string; y: string } {
+      return {
+        x: (SCREEN_MAP_SZ - SCREEN_W) / 2 + this.browserBgX + 'px',
+        y: (SCREEN_MAP_SZ - SCREEN_H) / 2 + this.browserBgY + 'px'
+      }
+    },
+    browserForegroundPosition(): { x: string; y: string } {
+      return {
+        x: (SCREEN_MAP_SZ - SCREEN_W) / 2 + this.browserFgX + 'px',
+        y: (SCREEN_MAP_SZ - SCREEN_H) / 2 + this.browserFgY + 'px'
       }
     },
 
@@ -144,9 +185,12 @@ export default {
     return {
       intervalAnim: 0,
       browserBackgroundImage: '',
+      browserForegroundImage: '',
       //config: this.themeStore.config,
       browserBgX: 0,
       browserBgY: 0,
+      browserFgX: 0,
+      browserFgY: 0,
       displayAreaGuide: true,
       fontBuffer: null
     }
@@ -161,7 +205,95 @@ export default {
         <div class="is-size-7">File must be 512x512 with less than 16 colors</div>
       </UploadContent>
 
-      <FontEditor @update:fonts="updateFonts"></FontEditor>
+      <UploadContent class="upload-area" @files-dropped="browserForegroundDropped">
+        <div class="is-size-7">File must be 512x512 with less than 16 colors</div>
+      </UploadContent>
+
+      <!-- background-settings-->
+      <div class="background-settings">
+        <label class="label">Background scrolling</label>
+        <div class="field is-horizontal">
+          <div class="field-body">
+            <div class="field has-addons">
+              <div class="control">
+                <span class="button is-static"> X </span>
+              </div>
+              <div class="control">
+                <input
+                  @change="updateBackgroundAnimation"
+                  step="0.25"
+                  type="number"
+                  class="input"
+                  v-model.number="themeStore.config.screens.gamelist.backgound.x_inc"
+                />
+              </div>
+            </div>
+            <div class="field has-addons">
+              <div class="control">
+                <span class="button is-static"> Y </span>
+              </div>
+              <div class="control">
+                <input
+                  @change="updateBackgroundAnimation"
+                  step="0.25"
+                  type="number"
+                  class="input"
+                  v-model.number="themeStore.config.screens.gamelist.backgound.y_inc"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div></div>
+      </div>
+      <!-- !background-settings-->
+      <!-- foreground-settings-->
+      <div class="background-settings">
+        <label class="label">Foreground scrolling</label>
+        <div class="field is-horizontal">
+          <div class="field-body">
+            <div class="field has-addons">
+              <div class="control">
+                <span class="button is-static"> X </span>
+              </div>
+              <div class="control">
+                <input
+                  @change="updateForegroundAnimation"
+                  step="0.25"
+                  type="number"
+                  class="input"
+                  v-model.number="themeStore.config.screens.gamelist.foreground.x_inc"
+                />
+              </div>
+            </div>
+            <div class="field has-addons">
+              <div class="control">
+                <span class="button is-static"> Y </span>
+              </div>
+              <div class="control">
+                <input
+                  @change="updateForegroundAnimation"
+                  step="0.25"
+                  type="number"
+                  class="input"
+                  v-model.number="themeStore.config.screens.gamelist.foreground.y_inc"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div></div>
+      </div>
+      <!-- !foreground-settings-->
+
+      <div class="field">
+        <div class="control">
+          <label class="label">
+            Display/Move area helpers
+            <input type="checkbox" v-model="displayAreaGuide" />
+          </label>
+        </div>
+      </div>
 
       <span class="is-size-5">Debug</span>
       <textarea rows="10" class="textarea" v-model="configJson"></textarea>
@@ -170,8 +302,20 @@ export default {
       <div class="fenrir-config-preview-area">
         <div
           class="fenrir-config-user-area my-0 mx-auto"
-          :style="{ backgroundImage: `url(${browserBackgroundImage})` }"
+          :style="{
+            backgroundImage: `url(${browserBackgroundImage})`,
+            backgroundPositionX: browserBackgroundPosition.x,
+            backgroundPositionY: browserBackgroundPosition.y
+          }"
         >
+          <div
+            :style="{
+              backgroundImage: `url(${browserForegroundImage})`,
+              backgroundPositionX: browserForegroundPosition.x,
+              backgroundPositionY: browserForegroundPosition.y
+            }"
+            class="fenrir-config-foreground"
+          ></div>
           <div class="fenrir-config-user-area-img-preview"></div>
           <div class="fenrir-config-user-area-control">
             <AreaUI
@@ -181,7 +325,7 @@ export default {
             >
               <div class="game-list">
                 <ul :style="{ lineHeight: config.screens.gamelist.browser.line_height + 'px' }">
-                  <li :key="g" v-for="g in fakeGamesList">{{ g }}</li>
+                  <li :style="{ ...browserFont }" :key="g" v-for="g in fakeGamesList">{{ g }}</li>
                 </ul>
               </div>
             </AreaUI>
@@ -223,6 +367,8 @@ export default {
             </template>
           </ItemColor>
 
+          <FontEditor @update:fonts="updateFonts"></FontEditor>
+
           <div class="field">
             <div class="control">
               <label class="label">Line height </label>
@@ -233,52 +379,6 @@ export default {
                 max="50"
                 min="8"
               />
-            </div>
-          </div>
-
-          <div class="field is-horizontal">
-            <div class="control">
-              <label class="label"> Display/Move area helpers</label>
-            </div>
-            <div class="control">
-              <label class="checkbox"
-                >&nbsp;
-                <input type="checkbox" v-model="displayAreaGuide" />
-              </label>
-            </div>
-          </div>
-
-          <label class="label">Background scrolling</label>
-          <div class="field is-horizontal">
-            <div class="field-body">
-              <div class="field has-addons">
-                <div class="control">
-                  <span class="button is-static"> X </span>
-                </div>
-                <div class="control">
-                  <input
-                    @change="updateBackgroundAnimation"
-                    step="0.25"
-                    type="number"
-                    class="input"
-                    v-model.number="themeStore.config.screens.gamelist.backgound.x_inc"
-                  />
-                </div>
-              </div>
-              <div class="field has-addons">
-                <div class="control">
-                  <span class="button is-static"> Y </span>
-                </div>
-                <div class="control">
-                  <input
-                    @change="updateBackgroundAnimation"
-                    step="0.25"
-                    type="number"
-                    class="input"
-                    v-model.number="themeStore.config.screens.gamelist.backgound.y_inc"
-                  />
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -331,11 +431,18 @@ $screen-map-sz: var(--screen-map-sz, 512px);
   background: #ccc;
   background-repeat: repeat;
 
-  background-position-x: var(--browser-bg-x);
-  background-position-y: var(--browser-bg-y);
-
   animation: background-position-x 16ms linear;
   animation: background-position-y 16ms linear;
+
+  .fenrir-config-foreground {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-image: var(--foreground-image);
+    left: attr(foregroundpositionx);
+    top: attr(foregroundpositiony);
+    position: absolute;
+  }
 }
 
 .fenrir-config-user-area-control {
@@ -396,6 +503,17 @@ $screen-map-sz: var(--screen-map-sz, 512px);
       radial-gradient(ellipse at bottom right, var(--browser-gr-br) 15%, transparent 70%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+
+    &:nth-of-type(5) {
+      color: var(--browser-focused-color);
+      background: radial-gradient(ellipse at top left, var(--browser-fr-tl) 15%, transparent 60%),
+        radial-gradient(ellipse at bottom left, var(--browser-fr-bl) 15%, transparent 60%),
+        radial-gradient(ellipse at top right, var(--browser-fr-tr) 15%, transparent 70%),
+        radial-gradient(ellipse at bottom right, var(--browser-fr-br) 15%, transparent 70%);
+
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
   }
 }
 .cover-area {

@@ -45,7 +45,8 @@ export interface FenrirConfig {
         gamelist: {
             browser: BrowserSetting,
             cover: CoverSetting,
-            backgound: BackgroundSetting
+            backgound: BackgroundSetting,
+            foreground: BackgroundSetting,
         }
     }
 }
@@ -55,6 +56,10 @@ export const fenrirDefaultConfig = (() => {
         screens: {
             gamelist: {
                 backgound: {
+                    x_inc: 0.25,
+                    y_inc: 0.25
+                },
+                foreground: {
                     x_inc: 0.25,
                     y_inc: 0.25
                 },
