@@ -56,6 +56,14 @@ typedef struct __attribute__((__packed__))
     theme_cfg_background_t gamelist_background;
 } theme_cfg_t;
 
+typedef struct __attribute__((__packed__))
+{
+    int char_width;
+    int char_height;
+    const uint8_t char_spacing[256];
+    const uint8_t data[];
+} theme_font_t;
+
 //
 
 /*****************************************************/

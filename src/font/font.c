@@ -3,29 +3,11 @@
 #include <assert.h>
 #include "font.h"
 #include "theme.h"
-#include "./themes/demo/font.sfa.h"
 
 #define align_8(addr) (((addr) + 7) & (~7))
 
-// #define THEME_FONT (&theme_get_ui_config()->main_font)
-typedef struct
-{
-    int char_width;
-    int char_height;
-    const uint8_t *data;
-    const uint8_t *char_spacing;
-} __font_t;
-
-typedef struct
-{
-    int char_width;
-    int char_height;
-    const uint8_t char_spacing[256];
-    const uint8_t data[];
-} theme_font_t;
-
-static __font_t __font = {.char_width = 8, .char_height = 9, .data = sfa_font_bitmap, .char_spacing = sfa_font_width};
-#define THEME_FONT (&__font)
+static theme_font_t *theme_font = NULL;
+#define THEME_FONT (theme_font)
 
 static inline void memcpy4bpp(uint8_t *d, uint8_t *s, uint32_t nb, int off)
 {
@@ -73,15 +55,6 @@ static uint8_t __draw_font_10(uint8_t letter, int x, int y, uint8_t *dst, uint32
     return letter_w;
 }
 
-void font_init() {
-    uint32_t sz = 0;
-    extern unsigned char theme_bin[];
-   theme_font_t * f = theme_get_ressource(theme_bin, THEME_ID_FONT, &sz);
-    __font.char_height = f->char_height;
-    __font.char_width = f->char_width;
-    __font.data = f->data;
-    __font.char_spacing = f->char_spacing;
-}
 
 size_t font_texture_font_create(font_texture_t *tex, char *text)
 {
@@ -126,4 +99,17 @@ int font_get_text_len(char *format, ...)
 
     va_end(arg);
     return x;
+}
+
+
+void font_init()
+{
+    uint32_t sz = 0;
+    extern unsigned char theme_bin[];
+    theme_font_t *f = theme_get_ressource(theme_bin, THEME_ID_FONT, &sz);
+    if (f == NULL)
+    {
+        // display error...
+    }
+    theme_font = f;
 }

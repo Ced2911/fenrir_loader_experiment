@@ -85,9 +85,9 @@ int main(void)
     {
         screens_update();
         //  dbgio_flush();
-       // vdp2_scrn_scroll_x_update(VDP2_SCRN_NBG1, x += 16);
-        //VDP2_REG_SCXIN1 = x;
-       // x+=5;
+        // vdp2_scrn_scroll_x_update(VDP2_SCRN_NBG1, x += 16);
+        // VDP2_REG_SCXIN1 = x;
+        // x+=5;
 
         vdp1_sync_render();
         vdp1_sync();
