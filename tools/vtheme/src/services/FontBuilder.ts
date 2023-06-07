@@ -106,37 +106,45 @@ export class FontBuilder {
         for (let i = 0, j = 0; i < u8.length; i += 8, j++) {
             const p0 = (u8[i] & 1) & 0xf
             const p1 = (u8[i + 4] & 1) & 0xf
-            u4[j] = p0 | (p1 << 4);
+            u4[j] = p1 | (p0 << 4);
         }
         return u4
     }
 
     buildFont() {
+        const OFF_CHAR_W = 0
+        const OFF_CHAR_H = 4
+        const OFF_CHAR_SPACE = 8
+        const OFF_CHAR_PIXELS = OFF_CHAR_SPACE + 256
+
         const buff = new DVBuffer()
+
+        // font info
+        for (let i = 0; i < 256; i++) {
+            let width = 8;
+            buff.setUint8(OFF_CHAR_SPACE + i, width)
+        }
+
         // add info
         // char w
-        buff.addUint32(this.curFont.size)
+        buff.setUint32(OFF_CHAR_W, this.curFont.size)
         // char h
-        buff.addUint32(this.curFont.size)
+        buff.setUint32(OFF_CHAR_H, this.curFont.size)
+
         // pixels
         this.chars.forEach((c, id) => {
             const imgData = this.ctx2d.getImageData(id * this.curFont.width, 0, this.curFont.width, this.curFont.height)
             const u4 = this._U8toU4(imgData.data)
 
-            buff.seek((id * this.curFont.width * this.curFont.height) / 2)
+            buff.seek(
+                OFF_CHAR_PIXELS +
+                (id * this.curFont.width * this.curFont.height) / 2)
 
-            console.log(imgData.data, u4)
+            //console.log(imgData.data, u4)
             for (let i = 0; i < u4.length; i++) {
                 buff.addUint8(u4[i])
             }
         })
-
-        // font info
-        for (let i = 0; i < 256; i++) {
-            let width = 0;
-
-            buff.addUint8(8)
-        }
 
         return buff.data()
 
