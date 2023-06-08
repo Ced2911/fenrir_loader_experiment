@@ -9,3 +9,6 @@
 #define NBG2_BITMAP_ADDR   (VDP2_VRAM_ADDR(1, 0x10000))
 
 void vdp2_init();
+void vdp2_bg_cell();
+void vdp2_fg_cell();
+

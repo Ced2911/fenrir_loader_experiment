@@ -5,6 +5,7 @@
 #include "diagnostic.h"
 #include "bram_backup.h"
 #include "credits.h"
+#include "vdp2.config.h"
 
 void theme_update();
 void theme_set_background(screens_type_t scr);
@@ -45,8 +46,8 @@ void screens_init()
     next_screen = screen_gamelist;
     current_screen = screen_max;
 
-    extern void tx_vdp2_cell();
-    tx_vdp2_cell();
+    vdp2_bg_cell();
+    vdp2_fg_cell();
 }
 
 void screens_select(screens_type_t scr)
