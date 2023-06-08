@@ -2,7 +2,7 @@
 
 <template>
   <main class="container is-fluid p-0 m-0">
-    <nav class="navbar" role="navigation" aria-label="main navigation">
+    <!--<nav class="navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <a class="navbar-item" href="https://bulma.io">
           Fenrir Configuration
@@ -72,7 +72,7 @@
           </div>
         </div>
       </div>
-    </nav>
+    </nav>-->
     <div class="router-content">
       <router-view></router-view>
     </div>

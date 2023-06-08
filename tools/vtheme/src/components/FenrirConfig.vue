@@ -4,6 +4,7 @@ import { mapStores } from 'pinia'
 import AreaUI from '@/components/ui/Area.vue'
 import ItemColor from '@/components/ui/ItemColor.vue'
 import FontEditor from '@/components/ui/FontEditor.vue'
+import BackgroundSettings from '@/components/ui/BackgroundSetting.vue'
 import UploadContent from '@/components/image/UploadContent.vue'
 
 import { useThemeConfigStore } from '@/store/ThemeConfig'
@@ -22,7 +23,8 @@ export default {
     AreaUI,
     ItemColor,
     UploadContent,
-    FontEditor
+    FontEditor,
+    BackgroundSettings
   },
   setup() {
     return {}
@@ -94,11 +96,11 @@ export default {
       this.themeStore.updateForeground(blob)
     },
 
-    updateBackgroundAnimation() {
+    resetBackgroundAnimation() {
       this.browserBgX = 0
       this.browserBgY = 0
     },
-    updateForegroundAnimation() {
+    resetForegroundAnimation() {
       this.browserFgX = 0
       this.browserFgY = 0
     },
@@ -192,7 +194,8 @@ export default {
       browserFgX: 0,
       browserFgY: 0,
       displayAreaGuide: true,
-      fontBuffer: null
+      fontBuffer: null,
+      scale: 100
     }
   }
 }
@@ -201,90 +204,16 @@ export default {
 <template>
   <div class="fenrir-config columns m-0">
     <div class="column is-one-fifth has-background-dark">
-      <UploadContent class="upload-area" @files-dropped="browserBackgroundDropped">
+      <UploadContent class="upload-area" @files-dropped="browserBackgroundDropped" buttonlabel="Upload background">
         <div class="is-size-7">File must be 512x512 with less than 16 colors</div>
       </UploadContent>
-
-      <UploadContent class="upload-area" @files-dropped="browserForegroundDropped">
+      
+      <UploadContent class="upload-area" @files-dropped="browserForegroundDropped"  buttonlabel="Upload foreground">
         <div class="is-size-7">File must be 512x512 with less than 16 colors</div>
       </UploadContent>
-
-      <!-- background-settings-->
-      <div class="background-settings">
-        <label class="label">Background scrolling</label>
-        <div class="field is-horizontal">
-          <div class="field-body">
-            <div class="field has-addons">
-              <div class="control">
-                <span class="button is-static"> X </span>
-              </div>
-              <div class="control">
-                <input
-                  @change="updateBackgroundAnimation"
-                  step="0.25"
-                  type="number"
-                  class="input"
-                  v-model.number="themeStore.config.screens.gamelist.backgound.x_inc"
-                />
-              </div>
-            </div>
-            <div class="field has-addons">
-              <div class="control">
-                <span class="button is-static"> Y </span>
-              </div>
-              <div class="control">
-                <input
-                  @change="updateBackgroundAnimation"
-                  step="0.25"
-                  type="number"
-                  class="input"
-                  v-model.number="themeStore.config.screens.gamelist.backgound.y_inc"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div></div>
-      </div>
-      <!-- !background-settings-->
-      <!-- foreground-settings-->
-      <div class="background-settings">
-        <label class="label">Foreground scrolling</label>
-        <div class="field is-horizontal">
-          <div class="field-body">
-            <div class="field has-addons">
-              <div class="control">
-                <span class="button is-static"> X </span>
-              </div>
-              <div class="control">
-                <input
-                  @change="updateForegroundAnimation"
-                  step="0.25"
-                  type="number"
-                  class="input"
-                  v-model.number="themeStore.config.screens.gamelist.foreground.x_inc"
-                />
-              </div>
-            </div>
-            <div class="field has-addons">
-              <div class="control">
-                <span class="button is-static"> Y </span>
-              </div>
-              <div class="control">
-                <input
-                  @change="updateForegroundAnimation"
-                  step="0.25"
-                  type="number"
-                  class="input"
-                  v-model.number="themeStore.config.screens.gamelist.foreground.y_inc"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div></div>
-      </div>
-      <!-- !foreground-settings-->
+      
+      <BackgroundSettings @change="resetBackgroundAnimation" v-model:model-value="themeStore.config.screens.gamelist.backgound" label="Background scrolling"/>
+      <BackgroundSettings @change="resetForegroundAnimation" v-model:model-value="themeStore.config.screens.gamelist.foreground" label="Foreground scrolling"/>
 
       <div class="field">
         <div class="control">
@@ -305,14 +234,16 @@ export default {
           :style="{
             backgroundImage: `url(${browserBackgroundImage})`,
             backgroundPositionX: browserBackgroundPosition.x,
-            backgroundPositionY: browserBackgroundPosition.y
+            backgroundPositionY: browserBackgroundPosition.y,
+            transform: `scale(${scale/100})`
           }"
         >
           <div
             :style="{
               backgroundImage: `url(${browserForegroundImage})`,
               backgroundPositionX: browserForegroundPosition.x,
-              backgroundPositionY: browserForegroundPosition.y
+              backgroundPositionY: browserForegroundPosition.y,
+              
             }"
             class="fenrir-config-foreground"
           ></div>
@@ -337,6 +268,9 @@ export default {
             </AreaUI>
           </div>
         </div>
+      </div>
+      <div>
+        <input v-model="scale" type="range" min="10" max="300" />
       </div>
     </div>
 
@@ -443,6 +377,16 @@ $screen-map-sz: var(--screen-map-sz, 512px);
     top: attr(foregroundpositiony);
     position: absolute;
   }
+}
+
+.fenrir-config-preview-area {
+    display: flex;
+    height: -webkit-fill-available;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
 }
 
 .fenrir-config-user-area-control {

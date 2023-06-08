@@ -83,6 +83,8 @@ export class FontBuilder {
     }
 
     drawCharInCanvas() {
+        this.ctx2d.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
         this.ctx2d.font = this.font
         this.ctx2d.filter = 'url(#remove-alpha)';
         // @ts-ignore
