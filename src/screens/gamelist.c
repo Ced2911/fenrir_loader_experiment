@@ -155,7 +155,7 @@ static void gamelist_init()
      * themes
      ****************************************************/
     // browser theme
-    memcpy(&browser.browser_ui_config, & (THEME_UI)->screens.gamelist.browser, sizeof(ui_config_browser_t));
+    memcpy(&browser.browser_ui_config, &(THEME_UI)->screens.gamelist.browser, sizeof(ui_config_browser_t));
     gamelist_theme_apply(&browser);
 
     // init browser
@@ -168,7 +168,11 @@ static void gamelist_init()
     // setup slave
     cpu_dual_slave_set(_slave_entry);
 
+    for (int i = 0; i < 8; i++)
+        vdp2_sprite_priority_set(i, 6);
+
     vdp2_scrn_priority_set(VDP2_SCRN_NBG1, 2);
+    vdp2_scrn_priority_set(VDP2_SCRN_NBG2, 3);
     vdp2_scrn_display_set(VDP2_SCRN_DISPTP_NBG1 | VDP2_SCRN_DISPTP_NBG2);
 }
 

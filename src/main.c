@@ -141,7 +141,6 @@ void user_init(void)
     vdp2_scrn_back_color_set(VDP2_VRAM_ADDR(3, 0x01FFFE),
                              RGB1555(0, 0, 0, 0));
 
-    vdp2_sprite_priority_set(0, 6);
     vdp1_env_set(&env);
     vdp1_sync_interval_set(0);
 

@@ -120,7 +120,6 @@ void vdp2_tx_cell(uint8_t *vdp2_dat, vdp2_scrn_cell_format_t *cell, vdp2_scrn_no
 	}
 
 	vdp2_scrn_cell_format_set(cell, screen_map);
-	vdp2_scrn_priority_set(cell->scroll_screen, 4);
 	vdp2_cram_offset_set(cell->scroll_screen, 0);
 }
 
@@ -134,6 +133,7 @@ void vdp2_bg_cell()
 	}
 
 	vdp2_tx_cell(vdp2_dat, &format_cell_nbg1, &normal_cell_nbg1);
+	vdp2_scrn_priority_set(format_cell_nbg2.scroll_screen, 6);
 }
 
 void vdp2_fg_cell()
@@ -146,6 +146,7 @@ void vdp2_fg_cell()
 	}
 
 	vdp2_tx_cell(vdp2_dat, &format_cell_nbg2, &normal_cell_nbg2);
+	vdp2_scrn_priority_set(format_cell_nbg2.scroll_screen, 7);
 }
 
 static void vdp2_setup_vram()
