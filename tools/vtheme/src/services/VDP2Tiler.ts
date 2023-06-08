@@ -34,10 +34,13 @@ function hash(tile: JimpType) {
 }
 
 function RGB8888To555Number(a: number, b: number, g: number, r: number) {
-    return (a ? 0x8000 : 0) |
-        ((b >> 3) << 10) |
-        ((g >> 3) << 5) |
-        ((r >> 3));
+    if (a)
+        return 0x8000 |
+            ((b >> 3) << 10) |
+            ((g >> 3) << 5) |
+            ((r >> 3));
+    else
+        return 0
 }
 
 
@@ -67,22 +70,24 @@ export default async function ImageTiler(i: any) {
     //const image = await Jimp.read("/workspaces/loader_yaul/assets/aurelie.png")
     const image: JimpType = await Jimp.read(i)
 
+    // always add transparent first
+    colors.push(0)
+
     // extract the palettes
     image.scan(0, 0, image.bitmap.width, image.bitmap.height, function (x, y, idx) {
         const color = RGB8888To555Number(this.bitmap.data[idx + 3], this.bitmap.data[idx + 2], this.bitmap.data[idx + 1], this.bitmap.data[idx + 0])
         colors.push(color)
     })
 
-    palettes.push(0, ... new Set(colors))
+    palettes.push(...new Set(colors))
     const palette_flip = Array.from(palettes.keys()).reduce(function (obj: Record<number, number>, v) {
         obj[palettes[v]] = v;
         return obj
     }, {})
 
     palettes.forEach(c => palData.addUint16(c))
-
+    
     // tiling
-
     for (let map_y = 0; map_y < vdp_config.map_sz; map_y++) {
         for (let map_x = 0; map_x < vdp_config.map_sz; map_x++) {
             for (let ply = 0; ply < vdp_config.plane; ply++) {
