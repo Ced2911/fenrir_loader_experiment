@@ -204,16 +204,46 @@ export default {
 <template>
   <div class="fenrir-config columns m-0">
     <div class="column is-one-fifth has-background-dark">
-      <UploadContent class="upload-area" @files-dropped="browserBackgroundDropped" buttonlabel="Upload background">
+      <UploadContent
+        class="upload-area"
+        @files-dropped="browserBackgroundDropped"
+        buttonlabel="Upload background"
+      >
         <div class="is-size-7">File must be 512x512 with less than 16 colors</div>
       </UploadContent>
-      
-      <UploadContent class="upload-area" @files-dropped="browserForegroundDropped"  buttonlabel="Upload foreground">
+
+      <UploadContent
+        class="upload-area"
+        @files-dropped="browserForegroundDropped"
+        buttonlabel="Upload foreground"
+      >
         <div class="is-size-7">File must be 512x512 with less than 16 colors</div>
       </UploadContent>
-      
-      <BackgroundSettings @change="resetBackgroundAnimation" v-model:model-value="themeStore.config.screens.gamelist.backgound" label="Background scrolling"/>
-      <BackgroundSettings @change="resetForegroundAnimation" v-model:model-value="themeStore.config.screens.gamelist.foreground" label="Foreground scrolling"/>
+
+      <BackgroundSettings
+        @change="resetBackgroundAnimation"
+        v-model:model-value="themeStore.config.screens.gamelist.backgound"
+        label="Background scrolling"
+      >
+        <div v-if="themeStore.backgroundStats.tilesCount > 0x400 || themeStore.backgroundStats.paletteSize > 16" class="notification is-danger">
+          Primar lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor.
+          <strong>{{ themeStore.backgroundStats.tilesCount }}</strong>, <strong>{{themeStore.backgroundStats.paletteSize}}</strong>.
+          Vestibulum rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum
+          <a>felis venenatis</a> efficitur.
+        </div>
+      </BackgroundSettings>
+      <BackgroundSettings
+        @change="resetForegroundAnimation"
+        v-model:model-value="themeStore.config.screens.gamelist.foreground"
+        label="Foreground scrolling"
+      >
+        <div v-if="themeStore.foregroundStats.tilesCount > 0x400 || themeStore.foregroundStats.paletteSize > 16" class="notification is-danger">
+          Primar lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor.
+          <strong>Pellentesque risus mi</strong>, tempus quis placerat ut, porta nec nulla.
+          Vestibulum rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum
+          <a>felis venenatis</a> efficitur.
+        </div>
+      </BackgroundSettings>
 
       <div class="field">
         <div class="control">
@@ -235,15 +265,14 @@ export default {
             backgroundImage: `url(${browserBackgroundImage})`,
             backgroundPositionX: browserBackgroundPosition.x,
             backgroundPositionY: browserBackgroundPosition.y,
-            transform: `scale(${scale/100})`
+            transform: `scale(${scale / 100})`
           }"
         >
           <div
             :style="{
               backgroundImage: `url(${browserForegroundImage})`,
               backgroundPositionX: browserForegroundPosition.x,
-              backgroundPositionY: browserForegroundPosition.y,
-              
+              backgroundPositionY: browserForegroundPosition.y
             }"
             class="fenrir-config-foreground"
           ></div>
@@ -380,13 +409,13 @@ $screen-map-sz: var(--screen-map-sz, 512px);
 }
 
 .fenrir-config-preview-area {
-    display: flex;
-    height: -webkit-fill-available;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
+  display: flex;
+  height: -webkit-fill-available;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
 }
 
 .fenrir-config-user-area-control {

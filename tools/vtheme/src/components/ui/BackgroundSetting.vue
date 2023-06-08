@@ -62,7 +62,11 @@ export default {
         </div>
       </div>
     </div>
-    <div></div>
+    <div>
+      <slot></slot>
+
+
+    </div>
   </div>
 </template>
 <style lang="scss" scoped></style>

@@ -6,17 +6,26 @@ import { THEME_ID, ThemeConfigToBuffer, ThemeExport } from '@/services/ExportFen
 import { BlobToBase64, DVBuffer, downloadBuffer } from '@/services/Utils'
 import { fonts, FontBuilder } from '@/services/FontBuilder'
 
+
+interface BackgroundState {
+    paletteSize: number,
+    tilesCount: number,
+    imageW: number,
+    imageH: number
+}
 export interface State {
     config: RemovableRef<FenrirConfig>,
     backgroundImage: RemovableRef<string>, /* base 64*/
     foregroundImage: RemovableRef<string>, /* base 64*/
     font: RemovableRef<typeof fonts[number]['name']>,
+    foregroundStats: BackgroundState,
+    backgroundStats: BackgroundState
 }
 
 
 const context: { fontCanvas?: HTMLCanvasElement, fontBuilder?: FontBuilder } = {
     fontCanvas: undefined,
-    fontBuilder: undefined
+    fontBuilder: undefined,
 }
 
 const b64serializer = {
@@ -30,8 +39,6 @@ const b64serializer = {
     }
 }
 
-
-
 export const useThemeConfigStore = defineStore('theme', {
     state: (): State => {
         return {
@@ -43,6 +50,20 @@ export const useThemeConfigStore = defineStore('theme', {
                 serializer: b64serializer
             }),
             font: useStorage<string>('theme-font', fonts[0].name),
+            // not saved
+            foregroundStats: {
+                imageH: 0,
+                imageW: 0,
+                paletteSize: 0,
+                tilesCount: 0
+            },
+            backgroundStats: {
+                imageH: 0,
+                imageW: 0,
+                paletteSize: 0,
+                tilesCount: 0
+            }
+
         }
     },
     getters: {
@@ -55,21 +76,40 @@ export const useThemeConfigStore = defineStore('theme', {
             const ii = Uint8Array.from(state.foregroundImage, (c) => c.charCodeAt(0))
             const blobUrl = URL.createObjectURL(new Blob([ii]))
             return blobUrl
-        }
+        },
     },
 
     actions: {
+        async init() {
+            this.loadBackground()
+            this.loadForeground()
+        },
+
+        async loadBackground() {
+            const tiler = new ImageTiler()
+            await tiler.loadImage(this.backgroundImageUrl)
+            this.backgroundStats = tiler.getStats()
+        },
+        async loadForeground() {
+            const tiler = new ImageTiler()
+            await tiler.loadImage(this.foregroundImageUrl)
+            this.foregroundStats = tiler.getStats()
+        },
         async updateBackground(blob: Blob) {
             const b64 = await BlobToBase64(blob)
             if (b64) {
                 this.backgroundImage = b64
             }
+
+            this.loadBackground()
         },
         async updateForeground(blob: Blob) {
             const b64 = await BlobToBase64(blob)
             if (b64) {
                 this.foregroundImage = b64
             }
+
+            this.loadForeground()
         },
         async initFonts(canvas: HTMLCanvasElement) {
             context.fontBuilder = new FontBuilder(canvas);
@@ -97,10 +137,15 @@ export const useThemeConfigStore = defineStore('theme', {
             Object.assign(this.config.screens.gamelist.cover, c)
         },
         async buildTheme() {
-            const vdpbg = await ImageTiler(this.backgroundImageUrl)
-            const vdpfg = await ImageTiler(this.foregroundImageUrl)
-            const th = ThemeConfigToBuffer(this.config)
+            const bgTiler = new ImageTiler()
+            await bgTiler.loadImage(this.backgroundImageUrl)
 
+            const fgTiler = new ImageTiler()
+            await fgTiler.loadImage(this.foregroundImageUrl)
+
+            const vdpbg = await bgTiler.build()
+            const vdpfg = await fgTiler.build()
+            const th = ThemeConfigToBuffer(this.config)
 
             const expt = new ThemeExport()
             expt.addRessource(THEME_ID.VDP2_BG, vdpbg)
