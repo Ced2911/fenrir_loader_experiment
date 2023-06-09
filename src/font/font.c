@@ -105,7 +105,6 @@ int font_get_text_len(char *format, ...)
 void font_init()
 {
     uint32_t sz = 0;
-    extern unsigned char theme_bin[];
     theme_font_t *f = theme_get_ressource(theme_bin, THEME_ID_FONT, &sz);
     if (f == NULL)
     {

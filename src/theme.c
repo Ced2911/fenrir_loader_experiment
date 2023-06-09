@@ -1,131 +1,12 @@
+
 #include "yaul.h"
+#include <stdlib.h>
+
 #include "theme.h"
 
-static ui_config_t *ui_config;
 theme_cfg_t theme_cfg;
 
-typedef struct
-{
-    ui_config_background_t *background;
-    ui_config_background_t *foreground;
-} current_theme_config_t;
-
-static current_theme_config_t current_theme_config = {
-    .background = NULL,
-    .foreground = NULL};
-
-#define SET_CURRENT_SCREEN(x)                            \
-    {                                                    \
-        current_theme_config.foreground = &x.foreground; \
-        current_theme_config.background = &x.background; \
-        theme_background_config_set(&x.foreground);      \
-        theme_background_config_set(&x.background);      \
-    }
-
-/*****************************************************
- * theme
- ****************************************************/
-void theme_init_vdp()
-{
-    // MEMORY_WRITE(16, VDP2(RAMCTL), 0x1301);
-}
-
-void theme_set_pattern(theme_scr_t scr, uint32_t pattern_offset)
-{
-#if 0
-    vdp2_scrn_normal_map_t map;
-    ui_config_t *ui_config = THEME_UI;
-
-    switch (scr)
-    {
-    case THEME_SCR_NBG0:
-        vdp2_set_plane_addr(&map,
-                            pattern_offset + ui_config->vdp2.nbg0.pattern_addr,
-                            0);
-        vdp2_scrn_cell_format_set(&format_nbg0, &map);
-        break;
-    case THEME_SCR_NBG2:
-        vdp2_set_plane_addr(&map,
-                            pattern_offset + ui_config->vdp2.nbg2.pattern_addr,
-                            0);
-        vdp2_scrn_cell_format_set(&format_nbg2, &map);
-        break;
-    default:
-        break;
-    }
-#endif
-}
-
-void theme_background_config_set(ui_config_background_t *b)
-{
-    // theme_set_pattern(b->screen, b->pattern_offset);
-
-    // dbgio_printf("unknow %d-%d\n", b->screen, b->pattern_offset);
-}
-
-#define VDP2_REG_SCXIN1 (*(volatile uint16_t *)0x25F80080)
-#define VDP2_REG_SCXDN1 (*(volatile uint16_t *)0x25F80082)
-#define VDP2_REG_SCYIN1 (*(volatile uint16_t *)0x25F80084)
-#define VDP2_REG_SCYDN1 (*(volatile uint16_t *)0x25F80086)
-
-void theme_set_background(screens_type_t scr)
-{
-#if 0
-    ui_config_t *ui_config = THEME_UI;
-
-    vdp2_scrn_scroll_x_set(VDP2_SCRN_NBG0, 0);
-    vdp2_scrn_scroll_y_set(VDP2_SCRN_NBG0, 0);
-
-    vdp2_scrn_scroll_x_set(VDP2_SCRN_NBG2, 0);
-    vdp2_scrn_scroll_y_set(VDP2_SCRN_NBG2, 0);
-
-    switch (scr)
-    {
-    case screen_error_no_sd:
-        SET_CURRENT_SCREEN(ui_config->screens.error_no_sd);
-        break;
-    case screen_gamelist:
-        SET_CURRENT_SCREEN(ui_config->screens.gamelist);
-        break;
-    case screen_error_bad_filesystem:
-        SET_CURRENT_SCREEN(ui_config->screens.error_bad_filesystem);
-        break;
-
-    default:
-        break;
-    }
-    dbgio_flush();
-#endif
-    VDP2_REG_SCXIN1 = 10;
-    // vdp2_scrn_scroll_x_set(VDP2_SCRN_NBG1, FIX16(100));
-}
-
-void theme_update()
-{
-    static int32_t x = 0;
-    x += theme_cfg.gamelist_background.x;
-    /*
-    if (theme_cfg.gamelist_background.x)
-        vdp2_scrn_scroll_x_update(VDP2_SCRN_NBG1, fix16_int32_from(theme_cfg.gamelist_background.x));
-    if (theme_cfg.gamelist_background.y)
-        vdp2_scrn_scroll_y_update(VDP2_SCRN_NBG1, fix16_int32_from(theme_cfg.gamelist_background.y));
-*/
-    vdp2_scrn_scroll_x_update(VDP2_SCRN_NBG1, theme_cfg.gamelist_background.x);
-    vdp2_scrn_scroll_y_update(VDP2_SCRN_NBG1, theme_cfg.gamelist_background.y);
-    // VDP2_REG_SCXIN1 = x;
-}
-
-void theme_init_bgm()
-{
-}
-
-/*****************************************************/
-
-#include "../assets/theme.h"
-
-/*****************************************************
- * theme loader
- ****************************************************/
+//
 
 static ui_config_t theme = {
     // browser
@@ -155,12 +36,68 @@ static ui_config_t theme = {
     .screens.gamelist.cover.h = 96,
 };
 
-static ui_config_t *ui_config = (ui_config_t *)&theme;
+ui_config_t const *ui_config = (ui_config_t *)&theme;
+
+void theme_update()
+{
+    vdp2_scrn_scroll_x_update(VDP2_SCRN_NBG1, theme_cfg.gamelist_background.x);
+    vdp2_scrn_scroll_y_update(VDP2_SCRN_NBG1, theme_cfg.gamelist_background.y);
+}
+
+void theme_init_bgm()
+{
+}
+
+/*****************************************************
+ * theme loader
+ ****************************************************/
+uint8_t *theme_bin;
+
+static void theme_load_from_disc()
+{
+
+    cdfs_filelist_t cdfs_filelist;
+    cdfs_filelist_entry_t cdfs_filelist_root;
+    cdfs_filelist_entry_t *cdfs_filelist_entries;
+
+    cdfs_filelist_entries = cdfs_entries_alloc(50);
+    cdfs_filelist_default_init(&cdfs_filelist, cdfs_filelist_entries, 50);
+    cdfs_filelist_root_read(&cdfs_filelist);
+
+    fad_t theme_starting_fad = 0;
+    uint16_t theme_sector_count = 0;
+
+    for (int i = 0; i < cdfs_filelist.entries_count; i++)
+    {
+        if (strcmp(cdfs_filelist.entries[i].name, "THEME.BIN") == 0)
+        {
+            theme_starting_fad = cdfs_filelist.entries[i].starting_fad;
+            theme_sector_count = cdfs_filelist.entries[i].sector_count;
+            break;
+        }
+    }
+
+    if (theme_starting_fad && theme_sector_count)
+    {
+        theme_bin = (uint8_t *)malloc(theme_sector_count * CDFS_SECTOR_SIZE);
+        cd_block_sectors_read(theme_starting_fad, theme_bin, theme_sector_count * CDFS_SECTOR_SIZE);
+    }
+    else
+    {
+        theme_bin = (uint8_t *)malloc(sizeof(theme_bin_t));
+        memset(theme_bin, 0, sizeof(theme_bin_t));
+    }
+
+    cdfs_entries_free(cdfs_filelist_entries);
+}
 
 void theme_ui_load()
 {
     uint32_t config_sz = 0;
-    theme_cfg_t *user_theme_cfg = theme_get_ressource(theme_bin, THEME_ID_CONFIG_V0, &config_sz);
+
+    theme_load_from_disc();
+
+    theme_cfg_t *user_theme_cfg = (theme_cfg_t *)theme_get_ressource(theme_bin, THEME_ID_CONFIG_V0, &config_sz);
 
     // theme_cfg->gamelist_cover.area.
     if (user_theme_cfg)
@@ -193,15 +130,4 @@ void theme_ui_load()
         theme.screens.gamelist.browser.item_focused_colors.gouraud[2] = user_theme_cfg->gamelist_browser.focused.gradients[2];
         theme.screens.gamelist.browser.item_focused_colors.gouraud[3] = user_theme_cfg->gamelist_browser.focused.gradients[3];
     }
-}
-
-ui_config_t *theme_get_ui_config()
-{
-    static int theme_loaded = 0;
-    if (theme_loaded == 0)
-    {
-        theme_ui_load();
-        theme_loaded = 1;
-    }
-    return ui_config;
 }

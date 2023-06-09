@@ -11,12 +11,12 @@
 
 void gamelist_theme_update(browser_t *browser)
 {
-    ui_config_t *theme = THEME_UI;
+    ui_config_t *const theme = ui_config;
 }
 
 void gamelist_theme_apply(browser_t *browser)
 {
-    ui_config_t *theme = THEME_UI;
+    ui_config_t *const theme = ui_config;
     /*****************************************************
      * Apply theme configuration
      ****************************************************/
@@ -102,5 +102,4 @@ void gamelist_theme_apply(browser_t *browser)
 
 void gamelist_theme_destroy(browser_t *browser)
 {
-    ui_config_t *theme = THEME_UI;
 }

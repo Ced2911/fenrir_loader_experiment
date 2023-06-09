@@ -26,15 +26,13 @@ void *zalloc(size_t l)
     return ptr;
 }
 
-#define VDP2_REG_SCXIN1 (*(volatile uint16_t *)0x25F80080)
-#define VDP2_REG_SCXDN1 (*(volatile uint16_t *)0x25F80082)
-#define VDP2_REG_SCYIN1 (*(volatile uint16_t *)0x25F80084)
-#define VDP2_REG_SCYDN1 (*(volatile uint16_t *)0x25F80086)
-
 int main(void)
 {
     vdp1_vram_partitions_t vdp1_vram_partitions;
     vdp1_vram_partitions_get(&vdp1_vram_partitions);
+
+    
+    theme_ui_load();
 
     vdp1_init();
     font_init();
@@ -84,10 +82,6 @@ int main(void)
     while (1)
     {
         screens_update();
-        //  dbgio_flush();
-        // vdp2_scrn_scroll_x_update(VDP2_SCRN_NBG1, x += 16);
-        // VDP2_REG_SCXIN1 = x;
-        // x+=5;
 
         vdp1_sync_render();
         vdp1_sync();

@@ -81,7 +81,7 @@ static void __init()
      * themes
      ****************************************************/
     // browser theme
-    memcpy(&browser.browser_ui_config, &(THEME_UI)->screens.gamelist.browser, sizeof(ui_config_browser_t));
+    memcpy(&browser.browser_ui_config, &ui_config->screens.gamelist.browser, sizeof(ui_config_browser_t));
 
     // init browser
     browser_init(&browser);

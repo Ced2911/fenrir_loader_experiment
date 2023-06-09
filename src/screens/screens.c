@@ -8,7 +8,6 @@
 #include "vdp2.config.h"
 
 void theme_update();
-void theme_set_background(screens_type_t scr);
 
 static screens_type_t next_screen;
 static screens_type_t current_screen;
@@ -62,8 +61,6 @@ void screens_update()
         get(current_screen)->destroy();
         get(next_screen)->init();
         current_screen = next_screen;
-
-        // theme_set_background(current_screen);
     }
     screen_t *s = get_screen();
     theme_update();

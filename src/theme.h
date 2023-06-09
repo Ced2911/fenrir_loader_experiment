@@ -2,13 +2,10 @@
 #include "ui.config.h"
 #include "screens/screens.h"
 
-#define THEME_UI (theme_get_ui_config())
+void theme_ui_load();
 
-// local
 void theme_update();
 
-// shared
-ui_config_t *theme_get_ui_config();
 void theme_init_vdp();
 void theme_init_bgm();
 void theme_set_background(screens_type_t scr);
@@ -105,4 +102,6 @@ static uint8_t *theme_get_ressource(uint8_t *thm, uint32_t id, uint32_t *size)
 
     return NULL;
 }
+
+extern uint8_t *theme_bin;
 /*****************************************************/

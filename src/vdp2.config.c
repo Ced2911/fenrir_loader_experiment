@@ -71,8 +71,6 @@ const vdp2_scrn_normal_map_t normal_cell_nbg2 = {
 	.plane_d = NBG2_BITMAP_ADDR,
 };
 
-extern unsigned char theme_bin[];
-
 void vdp2_tx_cell(uint8_t *vdp2_dat, vdp2_scrn_cell_format_t *cell, vdp2_scrn_normal_map_t *screen_map)
 {
 	uint8_t map_sz = vdp2_dat[0];

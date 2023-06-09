@@ -97,6 +97,6 @@ macro(gen_iso target bootbin output)
         COMMAND     xorrisofs -quiet -sysid "SEGA SEGASATURN" -volid "FENRIR LOADER" -volset "FENRIR LOADER" -publisher "SEGA ENTERPRISES, LTD." -preparer "SEGA ENTERPRISES, LTD." -appid "SEGA ENTERPRISES, LTD." 
                     -full-iso9660-filenames
                     -generic-boot ${CMAKE_BINARY_DIR}/IP.bin -abstract "ABS.TXT" -biblio "BIB.TXT" -copyright "CPY.TXT" -verbose
-                    -o "${output}" ${bootbin}
+                    -o "${output}" ${bootbin} ${ARGN}
         COMMENT     "Generating disc image for ${target}")
 endmacro()

@@ -81,3 +81,5 @@ typedef PACKED_STRUCT {
 	ui_config_screens_t screens;
 	ui_config_font_t main_font;
 } ui_config_t;
+
+extern  ui_config_t const * ui_config;
