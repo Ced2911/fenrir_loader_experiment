@@ -25,15 +25,16 @@ set(YAUL_LIBS   )
 set(YAUL_INCLUDE_DIRS 
     ${YAUL_INCDIR}/bcl
     ${YAUL_INCDIR}/tga
-    ${YAUL_INCDIR}/sega3d
+    ${YAUL_INCDIR}/mic3d
     ${YAUL_INCDIR}/yaul
-    ${YAUL_INCDIR}/yaul/common
+    ${YAUL_INCDIR}/yaul/bup
     ${YAUL_INCDIR}/yaul/dbgio
     ${YAUL_INCDIR}/yaul/math
-    ${YAUL_INCDIR}/yaul/fs/fileclient
-    ${YAUL_INCDIR}/yaul/fs/romdisk
+    ${YAUL_INCDIR}/yaul/lib
     ${YAUL_INCDIR}/yaul/scu
+    ${YAUL_INCDIR}/yaul/scu/bus/a/cs0/arp
     ${YAUL_INCDIR}/yaul/scu/bus/a/cs0/dram-cart
+    ${YAUL_INCDIR}/yaul/scu/bus/a/cs0/flash
     ${YAUL_INCDIR}/yaul/scu/bus/a/cs0/usb-cart
     ${YAUL_INCDIR}/yaul/scu/bus/a/cs2/cd-block
     ${YAUL_INCDIR}/yaul/scu/bus/b/scsp
@@ -41,6 +42,7 @@ set(YAUL_INCLUDE_DIRS
     ${YAUL_INCDIR}/yaul/scu/bus/cpu
     ${YAUL_INCDIR}/yaul/scu/bus/cpu/smpc
 )
+
 
 set(YAUL_SYSTEM_INCLUDE_DIRS
     $ENV{YAUL_INSTALL_ROOT}bin/../lib/gcc/$ENV{YAUL_ARCH_SH_PREFIX}/8.4.0/include
@@ -83,13 +85,18 @@ macro(gen_iso target bootbin output)
         POST_BUILD
         DEPENDS     ${bootbin}
         COMMAND     $(YAUL_INSTALL_ROOT)/bin/make-ip
-        ARGS        ${bootbin} ${IP_VERSION} ${IP_RELEASE_DATE} ${IP_AREAS} ${IP_PERIPHERALS} "${IP_TITLE}" ${IP_MASTER_STACK_ADDR} ${IP_SLAVE_STACK_ADDR} ${IP_1ST_READ_ADDR} ${IP_1ST_READ_ADDR} 
-        COMMENT     "Generating ip.bin")
+        ARGS        ${bootbin} ${IP_VERSION} ${IP_RELEASE_DATE} ${IP_AREAS} ${IP_PERIPHERALS} "${IP_TITLE}" ${IP_MASTER_STACK_ADDR} ${IP_SLAVE_STACK_ADDR} ${IP_1ST_READ_ADDR} ${IP_1ST_READ_SIZE} 
+        COMMENT     "Generating IP.bin")
 
     add_custom_command(TARGET ${target}
         POST_BUILD
         DEPENDS     ${CMAKE_BINARY_DIR}/IP.bin
-        COMMAND     $(YAUL_INSTALL_ROOT)/bin/make-iso 
-        ARGS        ${CMAKE_SOURCE_DIR}/cd ${CMAKE_BINARY_DIR}/IP.BIN ${output}
-        COMMENT     "Generating disc image for ${TARGET}")
+        # COMMAND     $(YAUL_INSTALL_ROOT)/bin/make-iso 
+        # ARGS        ${CMAKE_SOURCE_DIR}/cd ${CMAKE_BINARY_DIR}/IP.BIN ${output}
+
+        COMMAND     xorrisofs -quiet -sysid "SEGA SEGASATURN" -volid "FENRIR LOADER" -volset "FENRIR LOADER" -publisher "SEGA ENTERPRISES, LTD." -preparer "SEGA ENTERPRISES, LTD." -appid "SEGA ENTERPRISES, LTD." 
+                    -full-iso9660-filenames
+                    -generic-boot ${CMAKE_BINARY_DIR}/IP.bin -abstract "ABS.TXT" -biblio "BIB.TXT" -copyright "CPY.TXT" -verbose
+                    -o "${output}" ${bootbin} ${ARGN}
+        COMMENT     "Generating disc image for ${target}")
 endmacro()

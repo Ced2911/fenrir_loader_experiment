@@ -2,11 +2,10 @@
 #include <stdint.h>
 
 #define SD_MENU_FILENAME_LENGTH 58
-
 #define SD_DIR_FLAG_DIRECTORY    (1<<31)
 
 /*****************************************************
- * sd_dir
+ * fenrir_config
  ****************************************************/
 
 // 64bytes
@@ -45,4 +44,4 @@ typedef union
         uint8_t card_uid[4];        
     } hdr;
     uint8_t byte[2048];
-} __attribute__((packed)) sd_dir_t;
+} __attribute__((packed)) fenrir_config_t;

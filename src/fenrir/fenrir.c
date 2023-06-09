@@ -82,17 +82,17 @@ static void __noreturn fenrir_direct_boot()
     }
 }
 
-void fenrir_read_configuration(sd_dir_t *sd_dir)
+void fenrir_read_configuration(fenrir_config_t *fenrir_config)
 {
     if (EMU_BUILD)
     {
-        sd_dir->hdr.sd_card_status = 0;//FENRIR_SD_CARD_STATUS_NO_CARD;
-        sd_dir->hdr.count = 25;
-        sd_dir->hdr.use_cover = 1;
+        fenrir_config->hdr.sd_card_status = 0;//FENRIR_SD_CARD_STATUS_NO_CARD;
+        fenrir_config->hdr.count = 25;
+        fenrir_config->hdr.use_cover = 1;
     }
     else
     {
-        cd_block_sector_read(FENRIR_READ_CONFIGURATION_FAD, (void *)sd_dir);
+        cd_block_sector_read(FENRIR_READ_CONFIGURATION_FAD, (void *)fenrir_config);
     }
 }
 
@@ -108,31 +108,31 @@ void fenrir_read_status_sector(status_sector_t *status_sector)
     }
 }
 
-void fenrir_refresh_entries(sd_dir_t *sd_dir, sd_dir_entry_t *sd_dir_entries)
+void fenrir_refresh_entries(fenrir_config_t *fenrir_config, sd_dir_entry_t *sd_dir_entries)
 {
     if (EMU_BUILD)
     {
-        sd_dir->hdr.count = 25;
-        sd_dir->hdr.use_cover = 1;
+        fenrir_config->hdr.count = 25;
+        fenrir_config->hdr.use_cover = 1;
         // emulator
-        for (int i = 0; i < sd_dir->hdr.count; i++)
+        for (int i = 0; i < fenrir_config->hdr.count; i++)
         {
             sd_dir_entries[i].id = i;
             snprintf(sd_dir_entries[i].filename, 55, "%d Dragon Ball Z - La Grande Legende des Boules de Cristal (France, Spain)", i);
         }
-        // sd_dir->hdr.sd_card_status = 1;
+        // fenrir_config->hdr.sd_card_status = 1;
     }
     else
     {
         // Refresh main configuration
-        cd_block_sector_read(FENRIR_READ_CONFIGURATION_FAD, (void *)sd_dir);
+        cd_block_sector_read(FENRIR_READ_CONFIGURATION_FAD, (void *)fenrir_config);
 
         // Set auto patch region
         // set_auto_region();
 
         // Read gamelist
         uint32_t n_entry_per_sector = 2048 / sizeof(sd_dir_entry_t);
-        uint32_t sect_to_read = (sd_dir->hdr.count + n_entry_per_sector - 1) / n_entry_per_sector;
+        uint32_t sect_to_read = (fenrir_config->hdr.count + n_entry_per_sector - 1) / n_entry_per_sector;
         uint32_t read = 0;
         if (sect_to_read > 0)
             cd_block_sectors_read(FENRIR_READ_FILEBROWSER_START_FAD, (void *)sd_dir_entries, sect_to_read * 2048);
@@ -140,8 +140,8 @@ void fenrir_refresh_entries(sd_dir_t *sd_dir, sd_dir_entry_t *sd_dir_entries)
             memset(sd_dir_entries, 0, 2048);
     }
     // sort !!
-    // if (sd_dir->hdr.count > 1)
-    //     qsort(sd_dir_entries, sd_dir->hdr.count, sizeof(sd_dir_entry_t), sd_compare);
+    // if (fenrir_config->hdr.count > 1)
+    //     qsort(sd_dir_entries, fenrir_config->hdr.count, sizeof(sd_dir_entry_t), sd_compare);
 }
 
 void __noreturn fenrir_launch_game(uint32_t id, int boot_method)

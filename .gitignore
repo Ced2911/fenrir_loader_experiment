@@ -13,3 +13,8 @@ node_modules
 *.no
 *.vgm
 compile_commands.json
+*.gc*
+tmp/
+dbg.png
+vdp2.dat
+tools/image/vdp2.h

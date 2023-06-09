@@ -1,4 +1,4 @@
-#include "screen.h"
+#include "screens.h"
 #include "yaul.h"
 
 static void _vbk()
@@ -32,12 +32,12 @@ static void error_destroy()
 {
 }
 
-screen_t error_no_sd = {
+screen_t error_no_sd_screen = {
     .init = error_init,
     .update = error_update,
     .destroy = error_destroy,
 };
-screen_t error_bad_filesystem = {
+screen_t error_bad_filesystem_screen = {
     .init = error_init,
     .update = error_update,
     .destroy = error_destroy,

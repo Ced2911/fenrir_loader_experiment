@@ -16,12 +16,14 @@ typedef PACKED_STRUCT {
 	int char_width;
 	int char_height;
 } ui_config_font_t;
+
 typedef PACKED_STRUCT {
 	uint32_t pattern_offset;
 	fix16_t velocity_x;
 	fix16_t velocity_y;
 	uint8_t screen;
 } ui_config_background_t;
+
 typedef PACKED_STRUCT {
 	uint16_t w;
 	uint16_t h;
@@ -30,10 +32,12 @@ typedef PACKED_STRUCT {
 	uint8_t enabled;
 	uint8_t padding;
 } ui_position_bar_t;
+
 typedef PACKED_STRUCT {
 	rgb1555_t colors[2];
 	rgb1555_t gouraud[4];
 } ui_item_color_t;
+
 typedef PACKED_STRUCT {
 	uint16_t x;
 	uint16_t y;
@@ -44,6 +48,7 @@ typedef PACKED_STRUCT {
 	ui_item_color_t item_colors;
 	ui_item_color_t item_focused_colors;
 } ui_config_browser_t;
+
 typedef PACKED_STRUCT {
 	uint16_t x;
 	uint16_t y;
@@ -53,43 +58,28 @@ typedef PACKED_STRUCT {
 	uint8_t enabled;
 	uint8_t padding;
 } ui_config_screen_game_list_cover_t;
+
 typedef PACKED_STRUCT {
 	ui_config_screen_game_list_cover_t cover;
 	ui_config_browser_t browser;
-	ui_config_background_t foreground;
-	ui_config_background_t background;
 } ui_config_screen_game_list_t;
+
 typedef PACKED_STRUCT {
-	ui_config_background_t foreground;
-	ui_config_background_t background;
+	int a;
 } ui_config_error_t;
+
 typedef PACKED_STRUCT {
 	ui_config_screen_game_list_t gamelist;
 	ui_config_error_t error_no_sd;
 	ui_config_error_t error_bad_filesystem;
 } ui_config_screens_t;
-typedef PACKED_STRUCT {
-	uint32_t cell_addr;
-	uint32_t pal_addr;
-	uint32_t pattern_addr;
-} ui_config_vdp2_screen_t;
-typedef PACKED_STRUCT {
-	ui_config_vdp2_screen_t nbg0;
-	ui_config_vdp2_screen_t nbg1;
-	ui_config_vdp2_screen_t nbg2;
-	ui_config_vdp2_screen_t nbg3;
-} ui_config_vdp2_t;
-typedef PACKED_STRUCT {
-	uint32_t type;
-	uint32_t offset;
-	uint32_t lenght;
-} ui_config_ressources_t;
+
+
 typedef PACKED_STRUCT {
 	uint32_t version;
 	uint32_t size;
-	ui_config_vdp2_t vdp2;
 	ui_config_screens_t screens;
 	ui_config_font_t main_font;
-	uint32_t ressource_count;
-	ui_config_ressources_t ressources[];
 } ui_config_t;
+
+extern  ui_config_t const * ui_config;

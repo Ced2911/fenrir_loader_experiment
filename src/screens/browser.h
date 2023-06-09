@@ -19,6 +19,7 @@ typedef struct browser_s
     // config
     uint32_t count;
     uint32_t file_per_page;
+    uint32_t item_w;
     // event
     browser_input_callback_t input_handler;
     browser_get_item_callback_t get_item;
@@ -43,3 +44,4 @@ typedef struct browser_s
 
 void browser_init(browser_t *);
 void browser_update(browser_t *);
+void browser_destroy(browser_t *);

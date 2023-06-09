@@ -77,6 +77,22 @@
             ],
             "group": "build",
             "detail": "Tâche générée par le débogueur."
+        },
+        {
+            "type": "cppbuild",
+            "label": "odefs_makefile",
+            "command": "/usr/bin/make",
+            "args": [
+                
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/tests/odefs/"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build",
+            "detail": "Tâche générée par le débogueur."
         }
     ],
     "version": "2.0.0"
