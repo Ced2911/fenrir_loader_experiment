@@ -173,7 +173,7 @@ static void gamelist_init()
 
     vdp2_scrn_priority_set(VDP2_SCRN_NBG1, 2);
     vdp2_scrn_priority_set(VDP2_SCRN_NBG2, 3);
-    vdp2_scrn_display_set(VDP2_SCRN_DISPTP_NBG1 | VDP2_SCRN_DISPTP_NBG2);
+    vdp2_scrn_display_set(VDP2_SCRN_DISP_NBG1 | VDP2_SCRN_DISPTP_NBG2);
 }
 
 static void gamelist_destroy()
