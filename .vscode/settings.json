@@ -54,7 +54,8 @@
         "dma-queue.h": "c",
         "pcm.h": "c",
         "screens.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "cd-miss.h": "c"
     },
     "rust-analyzer.linkedProjects": [
         "${workspaceFolder}/tools/themes/Cargo.toml"

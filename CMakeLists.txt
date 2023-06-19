@@ -63,8 +63,8 @@ set(FENRIR_SRC
 	src/lz4/lz4.c
 	src/fastlz/fastlz.c
 
-	# linker script isn't friendly
-	# ${CMAKE_BINARY_DIR}/xxxx_boot.c
+	# mssing
+	src/stdlib/qsort.c
 	)
 
 add_executable(${PROJECT_NAME} ${FENRIR_SRC})

@@ -3,17 +3,32 @@
 #include "fenrir.h"
 #include "bios_ex.h"
 #include "cd-miss.h"
+#include "region.h"
 
-#include "ui.h"
-#include "message_box.h"
-
-extern void sys_reset(void);
-
-static int sd_compare(const void *s1, const void *s2)
+static int sd_compare(const void *p1, const void *p2)
 {
-    sd_dir_entry_t *e1 = (sd_dir_entry_t *)s1;
-    sd_dir_entry_t *e2 = (sd_dir_entry_t *)s2;
+#ifdef HAVE_STRICMP
+    sd_dir_entry_t *e1 = (sd_dir_entry_t *)p1;
+    sd_dir_entry_t *e2 = (sd_dir_entry_t *)p2;
     return strcicmp(e1->filename, e2->filename);
+#else
+    sd_dir_entry_t *e1 = (sd_dir_entry_t *)p1;
+    sd_dir_entry_t *e2 = (sd_dir_entry_t *)p2;
+
+    const char *s1 = e1->filename;
+    const char *s2 = e2->filename;
+
+    while (tolower((unsigned char)*s1) == tolower((unsigned char)*s2))
+    {
+        if (*s1 == '\0')
+            return 0;
+        s1++;
+        s2++;
+    }
+
+    return (int)tolower((unsigned char)*s1) -
+           (int)tolower((unsigned char)*s2);
+#endif
 }
 
 static void __noreturn fenrir_direct_boot()
@@ -160,9 +175,6 @@ void fenrir_refresh_entries(fenrir_config_t *fenrir_config, sd_dir_entry_t *sd_d
         // Refresh main configuration
         cd_block_sector_read(FENRIR_READ_CONFIGURATION_FAD, (void *)fenrir_config);
 
-        // Set auto patch region
-        // set_auto_region();
-
         // Read gamelist
         uint32_t n_entry_per_sector = 2048 / sizeof(sd_dir_entry_t);
         uint32_t sect_to_read = (fenrir_config->hdr.count + n_entry_per_sector - 1) / n_entry_per_sector;
@@ -173,8 +185,8 @@ void fenrir_refresh_entries(fenrir_config_t *fenrir_config, sd_dir_entry_t *sd_d
             memset(sd_dir_entries, 0, 2048);
     }
     // sort !!
-    // if (fenrir_config->hdr.count > 1)
-    //     qsort(sd_dir_entries, fenrir_config->hdr.count, sizeof(sd_dir_entry_t), sd_compare);
+    if (fenrir_config->hdr.count > 1)
+        qsort(sd_dir_entries, fenrir_config->hdr.count, sizeof(sd_dir_entry_t), sd_compare);
 }
 
 void fenrir_launch_game(uint32_t id, int boot_method)
@@ -196,19 +208,18 @@ void fenrir_launch_game(uint32_t id, int boot_method)
     {
         switch (boot_method)
         {
-            /** todo **/
-        case fenrir_boot_dev:
-            break;
-        case fenrir_boot_direct:
-            fenrir_direct_boot();
-            break;
         case fenrir_boot_cd_player:
             bios_cd_player_execute();
             break;
-        /** todo **/
-        case fenrir_boot_card:
         case fenrir_boot_reset:
             smpc_smc_nmireq_call();
+            break;
+
+        case fenrir_boot_card: // todo
+        case fenrir_boot_dev:  // todo
+        case fenrir_boot_direct:
+        default:
+            fenrir_direct_boot();
             break;
         };
     }

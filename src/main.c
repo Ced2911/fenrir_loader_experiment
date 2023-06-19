@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "fenrir/fenrir.h"
+#include "fenrir/region.h"
 #include "vdp1.config.h"
 #include "vdp2.config.h"
 #include "font/font.h"
@@ -55,8 +56,6 @@ int main(void)
 
     message_box_t msg = {.type = message_box_info, .message = "This is a wip build, some features are imcomplete", .title = "Fenrir loader"};
     message_box(&msg);
-    vdp2_bg_cell();
-    vdp2_fg_cell();
 
     // set auto region patch
     fenrir_set_region(region_get_fenrir_id());
@@ -83,7 +82,7 @@ int main(void)
 #else
     screens_select(screen_options);
 #endif
-    int x = 256;
+
     while (1)
     {
         screens_update();
