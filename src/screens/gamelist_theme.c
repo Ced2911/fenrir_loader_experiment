@@ -98,6 +98,8 @@ void gamelist_theme_apply(browser_t *browser)
 
     browser->item_w = theme->screens.gamelist.browser.w;
     browser->file_per_page = theme->screens.gamelist.browser.h / theme->screens.gamelist.browser.line_height;
+
+    vdp2_upload_cells();
 }
 
 void gamelist_theme_destroy(browser_t *browser)

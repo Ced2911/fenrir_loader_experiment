@@ -5,13 +5,13 @@ Use [Libyaul](https://github.com/ijacquez/libyaul)
 
 ## Status
 
-- [-] Game browser (wip - some crash when launching)
+- [X] Game browser
 - [X] Options
 - [X] Diagnostics screen
+- [X] Theme support
 - [ ] BRAM dump screen
 - [ ] BRAM restore screen
 - [ ] Credits screen
-- [X] Theme support
 - [-] Sound effect
 - [ ] VGM Player
 

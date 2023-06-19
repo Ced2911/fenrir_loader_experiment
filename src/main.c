@@ -9,6 +9,7 @@
 #include "sound_driver/pcm.h"
 #include "ui.h"
 #include "message_box.h"
+#include "bios_ex.h"
 
 #define RESOLUTION_WIDTH (352)
 #define RESOLUTION_HEIGHT (224)
@@ -31,7 +32,6 @@ int main(void)
     vdp1_vram_partitions_t vdp1_vram_partitions;
     vdp1_vram_partitions_get(&vdp1_vram_partitions);
 
-    
     theme_ui_load();
 
     vdp1_init();
@@ -55,6 +55,11 @@ int main(void)
 
     message_box_t msg = {.type = message_box_info, .message = "This is a wip build, some features are imcomplete", .title = "Fenrir loader"};
     message_box(&msg);
+    vdp2_bg_cell();
+    vdp2_fg_cell();
+
+    // set auto region patch
+    fenrir_set_region(region_get_fenrir_id());
 
     // read status
     fenrir_read_configuration(fenrir_config);

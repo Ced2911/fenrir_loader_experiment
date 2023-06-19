@@ -44,9 +44,6 @@ void screens_init()
     // next_screen = screen_error_no_sd;
     next_screen = screen_gamelist;
     current_screen = screen_max;
-
-    vdp2_bg_cell();
-    vdp2_fg_cell();
 }
 
 void screens_select(screens_type_t scr)

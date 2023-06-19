@@ -12,13 +12,13 @@ bios_cd_init(void)
     ((void (*)(void)) * bios_address)();
 }
 
-static inline void __always_inline
+static inline int __always_inline
 bios_cd_read(void)
 {
     __register uint32_t *bios_address;
     bios_address = (uint32_t *)0x060002cc;
 
-    ((void (*)(void)) * bios_address)();
+    return ((int (*)(void)) * bios_address)();
 }
 
 static inline int __always_inline

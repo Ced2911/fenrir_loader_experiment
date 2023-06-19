@@ -61,6 +61,7 @@ macro(gen_map target output)
         POST_BUILD
         DEPENDS ${target}
         COMMAND ${CMAKE_OBJDUMP}  -x ${target} > ${output}
+        COMMAND ${CMAKE_OBJDUMP}  -S ${target} > ${output}.s
         COMMENT "Generating map file ${output}" )
 endmacro()
 

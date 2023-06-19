@@ -400,6 +400,10 @@ void ui_set_color(int pal_nb, rgb1555_t color)
 
 void ui_render(ui_item_t *diag)
 {
+    // disable screen
+    vdp2_scrn_display_set(0);
+    vdp_sync_vblank_out_clear();
+    
     int n = 0;
     // palettes...
     ui_ctx.cram[COLOR_BACKGROUND] = bg_color.raw;

@@ -45,7 +45,7 @@ set(FENRIR_SRC
 	src/fenrir/fenrir.asserts.c 
 	src/fenrir/region.c 
 	src/fenrir/fileio/fileio.c
-
+	
 	# screens
 	src/screens/screens.c 
 	src/screens/error.c 
@@ -56,12 +56,15 @@ set(FENRIR_SRC
 	src/screens/browser.c 
 	src/screens/options.c 
 	src/screens/credits.c 
-
+	
 	src/sound_driver/pcm.c 
-
+	
 	# compression
 	src/lz4/lz4.c
 	src/fastlz/fastlz.c
+
+	# linker script isn't friendly
+	# ${CMAKE_BINARY_DIR}/xxxx_boot.c
 	)
 
 add_executable(${PROJECT_NAME} ${FENRIR_SRC})
@@ -77,4 +80,12 @@ set(LOADER_IP_BIN	${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bin)
 gen_map(${PROJECT_NAME} ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.map)
 gen_start_bin(${PROJECT_NAME} ${LOADER_IP_BIN})
 gen_symbol_size(${PROJECT_NAME} ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.size.txt)
-gen_iso(${PROJECT_NAME} ${LOADER_IP_BIN} ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.iso -path-list ${CMAKE_CURRENT_SOURCE_DIR}"/iso-path-list")
+gen_iso(${PROJECT_NAME} ${LOADER_IP_BIN} ${CMAKE_BINARY_DIR}/fenrir-yaul.iso -path-list ${CMAKE_CURRENT_SOURCE_DIR}"/iso-path-list")
+
+
+# create boot.bin 
+add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/xxxx_boot.c
+	COMMAND ${CMAKE_ASM_COMPILER} ${CMAKE_CURRENT_SOURCE_DIR}/src/fenrir/boot.s -c ${CMAKE_BINARY_DIR}/boot.o -m2
+	COMMAND ${CMAKE_OBJCOPY} --output-format=binary ${CMAKE_BINARY_DIR}/boot.o ${CMAKE_BINARY_DIR}/xxxx_boot.bin
+	COMMAND xxd -i ${CMAKE_BINARY_DIR}/xxxx_boot.bin ${CMAKE_BINARY_DIR}/xxxx_boot.c
+)

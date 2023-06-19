@@ -4,6 +4,9 @@
 #include "bios_ex.h"
 #include "cd-miss.h"
 
+#include "ui.h"
+#include "message_box.h"
+
 extern void sys_reset(void);
 
 static int sd_compare(const void *s1, const void *s2)
@@ -26,17 +29,19 @@ static void __noreturn fenrir_direct_boot()
         vdp2_sync();
         vdp1_sync_wait();
     }
-    int s = 0;
+    int s = 100;
 
+    cd_block_init();
     for (;;)
     {
         switch (s)
         {
         // wait until disc is mounted
-        case 0:
+        case 100:
         {
             cd_block_cmd_status_get(&cd);
-            if (cd.cd_status == CD_STATUS_NO_DISC)
+            if (cd.cd_status == CD_STATUS_NO_DISC ||
+                cd.cd_status == CD_STATUS_BUSY)
             {
                 vdp1_sync_render();
                 vdp1_sync();
@@ -45,13 +50,13 @@ static void __noreturn fenrir_direct_boot()
             }
             else
             {
-                s = 1;
+                s = 101;
             }
             break;
         }
 
         // wait auth
-        case 1:
+        case 101:
         {
             uint16_t check;
             cd_block_cmd_disk_auth();
@@ -61,17 +66,45 @@ static void __noreturn fenrir_direct_boot()
             cd_block_cmd_auth_check(&check);
 
             // check finished
-            s = 0x10 + check;
+
+            s = check;
             break;
         }
 
         // launch disc
-        case 0x14:
+        case 0x04: // Original Saturn Disc
         {
+            cpu_intc_mask_set(15);
+            vdp_sync_vblank_in_clear();
+            vdp_sync_vblank_out_clear();
+
+            smpc_smc_sshoff_call();
+
+            vdp2_tvmd_display_res_set(VDP2_TVMD_INTERLACE_NONE, VDP2_TVMD_HORZ_NORMAL_A,
+                                      VDP2_TVMD_VERT_224);
+            vdp2_scrn_back_color_set(VDP2_VRAM_ADDR(0, 0x01FFFE),
+                                     RGB1555(1, 0, 7, 0));
+
+            vdp1_env_stop();
+
+            vdp2_scrn_display_set(VDP2_SCRN_DISP_NONE);
+
+            vdp2_sprite_priority_set(0, 0);
+            vdp2_sprite_priority_set(1, 0);
+            vdp2_sprite_priority_set(2, 0);
+            vdp2_sprite_priority_set(3, 0);
+            vdp2_sprite_priority_set(4, 0);
+            vdp2_sprite_priority_set(5, 0);
+            vdp2_sprite_priority_set(6, 0);
+            vdp2_sprite_priority_set(7, 0);
+
             bios_cd_init();
             bios_cd_read();
+
             while (1)
+            {
                 bios_cd_boot();
+            }
             break;
         }
         // launch cd player (unknown cd, audio or video)
@@ -86,7 +119,7 @@ void fenrir_read_configuration(fenrir_config_t *fenrir_config)
 {
     if (EMU_BUILD)
     {
-        fenrir_config->hdr.sd_card_status = 0;//FENRIR_SD_CARD_STATUS_NO_CARD;
+        fenrir_config->hdr.sd_card_status = 0; // FENRIR_SD_CARD_STATUS_NO_CARD;
         fenrir_config->hdr.count = 25;
         fenrir_config->hdr.use_cover = 1;
     }
@@ -144,13 +177,20 @@ void fenrir_refresh_entries(fenrir_config_t *fenrir_config, sd_dir_entry_t *sd_d
     //     qsort(sd_dir_entries, fenrir_config->hdr.count, sizeof(sd_dir_entry_t), sd_compare);
 }
 
-void __noreturn fenrir_launch_game(uint32_t id, int boot_method)
+void fenrir_launch_game(uint32_t id, int boot_method)
 {
-    // stop interrupts and slave cpu
-    sys_reset();
-
     // launch game
     fenrir_call(FENRIR_EVENT_LAUNCH_ID_START_FAD + id);
+
+    // wait a few (0.5s) - system will refresh the toc
+    for (int i = 0; i < 30; i++)
+    {
+        vdp1_sync_render();
+        vdp1_sync();
+        vdp2_sync();
+        vdp1_sync_wait();
+        vdp2_sync_wait();
+    }
 
     while (1)
     {
@@ -196,8 +236,14 @@ void fenrir_get_cover(uint32_t id, uint8_t *cover)
 static uint8_t buffer[2352];
 void fenrir_call(uint32_t sector_addr)
 {
+
+    if (EMU_BUILD)
+    {
+        return;
+    }
     /** todo **/
     // uint8_t *buffer = malloc(2048);
+    cd_block_init();
     cd_block_sector_read(sector_addr, buffer);
     // free(buffer);
     // cd_block_cmd_disk_seek(sector_addr);

@@ -64,6 +64,9 @@ static void wait_for_btn()
 
 void message_box(message_box_t *box)
 {
+    // save some vdp2 states
+    vdp2_scrn_disp_t vdp2_scrn_disp = vdp2_scrn_display_get();
+
     strcpy(GET_LABEL_BY_ID(DIA_TITLE), box->title);
     strcpy(GET_LABEL_BY_ID(DIA_MESSAGE), box->message);
 
@@ -85,6 +88,9 @@ void message_box(message_box_t *box)
 
     ui_update(dialog, NULL, NULL);
     wait_for_btn();
+
+    // restore some state
+    vdp2_scrn_display_set(vdp2_scrn_disp);
 }
 
 // error

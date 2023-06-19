@@ -99,6 +99,7 @@ void theme_ui_load()
 
     theme_cfg_t *user_theme_cfg = (theme_cfg_t *)theme_get_ressource(theme_bin, THEME_ID_CONFIG_V0, &config_sz);
 
+
     // theme_cfg->gamelist_cover.area.
     if (user_theme_cfg)
     {

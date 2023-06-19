@@ -17,22 +17,6 @@ const vdp2_scrn_bitmap_format_t format_ngb0 = {
 	.ccc = VDP2_SCRN_CCC_PALETTE_256,
 };
 
-const vdp2_scrn_bitmap_format_t format_nbg1 = {
-	.bitmap_size = VDP2_SCRN_BITMAP_SIZE_512X256,
-	.bitmap_base = NBG1_BITMAP_ADDR,
-	.scroll_screen = VDP2_SCRN_NBG1,
-	.palette_base = VDP2_CRAM_ADDR(0x100),
-	.ccc = VDP2_SCRN_CCC_PALETTE_16,
-};
-
-const vdp2_scrn_bitmap_format_t format_nbg2 = {
-	.bitmap_size = VDP2_SCRN_BITMAP_SIZE_512X256,
-	.bitmap_base = NBG2_BITMAP_ADDR,
-	.scroll_screen = VDP2_SCRN_NBG2,
-	.palette_base = VDP2_CRAM_ADDR(0x200),
-	.ccc = VDP2_SCRN_CCC_PALETTE_16,
-};
-
 const vdp2_scrn_cell_format_t format_cell_nbg1 = {
 	.scroll_screen = VDP2_SCRN_NBG1,
 	.ccc = VDP2_SCRN_CCC_PALETTE_16,
@@ -40,16 +24,15 @@ const vdp2_scrn_cell_format_t format_cell_nbg1 = {
 	.char_size = VDP2_SCRN_CHAR_SIZE_1X1,
 	.aux_mode = VDP2_SCRN_AUX_MODE_0,
 	.pnd_size = 1,
-
-	.palette_base = VDP2_CRAM_ADDR(0x000),
-	.cpd_base = VDP2_VRAM_ADDR(0, 0x00000),
+	.palette_base = VDP2_CRAM_ADDR(0x100),
+	.cpd_base = NBG1_CELL_ADDR,
 };
 
 const vdp2_scrn_normal_map_t normal_cell_nbg1 = {
-	.plane_a = NBG1_BITMAP_ADDR,
-	.plane_b = NBG1_BITMAP_ADDR,
-	.plane_c = NBG1_BITMAP_ADDR,
-	.plane_d = NBG1_BITMAP_ADDR,
+	.plane_a = NBG1_MAP_ADDR,
+	.plane_b = NBG1_MAP_ADDR,
+	.plane_c = NBG1_MAP_ADDR,
+	.plane_d = NBG1_MAP_ADDR,
 };
 
 const vdp2_scrn_cell_format_t format_cell_nbg2 = {
@@ -60,15 +43,15 @@ const vdp2_scrn_cell_format_t format_cell_nbg2 = {
 	.aux_mode = VDP2_SCRN_AUX_MODE_0,
 	.pnd_size = 1,
 
-	.palette_base = VDP2_CRAM_ADDR(0x100),
-	.cpd_base = VDP2_VRAM_ADDR(0, 0x10000),
+	.palette_base = VDP2_CRAM_ADDR(0x200),
+	.cpd_base = NBG2_CELL_ADDR,
 };
 
 const vdp2_scrn_normal_map_t normal_cell_nbg2 = {
-	.plane_a = NBG2_BITMAP_ADDR,
-	.plane_b = NBG2_BITMAP_ADDR,
-	.plane_c = NBG2_BITMAP_ADDR,
-	.plane_d = NBG2_BITMAP_ADDR,
+	.plane_a = NBG2_MAP_ADDR,
+	.plane_b = NBG2_MAP_ADDR,
+	.plane_c = NBG2_MAP_ADDR,
+	.plane_d = NBG2_MAP_ADDR,
 };
 
 void vdp2_tx_cell(uint8_t *vdp2_dat, vdp2_scrn_cell_format_t *cell, vdp2_scrn_normal_map_t *screen_map)
@@ -92,29 +75,41 @@ void vdp2_tx_cell(uint8_t *vdp2_dat, vdp2_scrn_cell_format_t *cell, vdp2_scrn_no
 
 	{
 		uint16_t *ptr = (uint16_t *)(vdp2_dat + 0x80);
+#if 0
 		// upload palettes
 		for (int i = 0; i < 16; i++)
 		{
 			cram[i] = *ptr++;
 		}
+#else
+		scu_dma_transfer(0, cram, ptr, 16 * sizeof(uint16_t));
+#endif
 	}
 	{
 		uint16_t *ptr = (uint16_t *)(vdp2_dat + 0x100);
+#if 0
 		// upload map
 		for (int i = 0; i < VDP2_SCRN_PAGE_SIZE_CALCULATE(cell); i++)
 		{
 			map[i] = *ptr++;
 			// map[i] = i * 4;
 		}
+#else
+		scu_dma_transfer(0, map, ptr, VDP2_SCRN_PAGE_SIZE_CALCULATE(cell) * sizeof(uint16_t));
+#endif
 	}
 	{
 		// upload tiles
 		uint8_t *ptr = (uint8_t *)(vdp2_dat + 0x100 + (VDP2_SCRN_PAGE_SIZE_CALCULATE(cell)));
 		uint8_t *p_tile = tiles;
+#if 0
 		for (int i = 0; i < tile_cnt * tile * tile; i++)
 		{
 			*p_tile++ = *ptr++;
 		}
+#else
+		scu_dma_transfer(0, tiles, ptr, tile_cnt * tile * tile);
+#endif
 	}
 
 	vdp2_scrn_cell_format_set(cell, screen_map);
@@ -147,14 +142,20 @@ void vdp2_fg_cell()
 	vdp2_scrn_priority_set(format_cell_nbg2.scroll_screen, 7);
 }
 
+void vdp2_upload_cells()
+{
+	vdp2_bg_cell();
+	vdp2_fg_cell();
+}
+
 static void vdp2_setup_vram()
 {
 	// __setup_vdp2_cycles();
 	vdp2_vram_cycp_t vram_cycp;
 	vram_cycp.pt[0].t0 = VDP2_VRAM_CYCP_CHPNDR_NBG0;
 	vram_cycp.pt[0].t1 = VDP2_VRAM_CYCP_CHPNDR_NBG0;
-	vram_cycp.pt[0].t2 = VDP2_VRAM_CYCP_CHPNDR_NBG1;
-	vram_cycp.pt[0].t3 = VDP2_VRAM_CYCP_CHPNDR_NBG2;
+	vram_cycp.pt[0].t2 = VDP2_VRAM_CYCP_NO_ACCESS;
+	vram_cycp.pt[0].t3 = VDP2_VRAM_CYCP_NO_ACCESS;
 	vram_cycp.pt[0].t4 = VDP2_VRAM_CYCP_NO_ACCESS;
 	vram_cycp.pt[0].t5 = VDP2_VRAM_CYCP_NO_ACCESS;
 	vram_cycp.pt[0].t6 = VDP2_VRAM_CYCP_NO_ACCESS;
@@ -169,8 +170,8 @@ static void vdp2_setup_vram()
 	vram_cycp.pt[1].t6 = VDP2_VRAM_CYCP_NO_ACCESS;
 	vram_cycp.pt[1].t7 = VDP2_VRAM_CYCP_NO_ACCESS;
 
-	vram_cycp.pt[2].t0 = VDP2_VRAM_CYCP_NO_ACCESS;
-	vram_cycp.pt[2].t1 = VDP2_VRAM_CYCP_NO_ACCESS;
+	vram_cycp.pt[2].t0 = VDP2_VRAM_CYCP_CHPNDR_NBG1;
+	vram_cycp.pt[2].t1 = VDP2_VRAM_CYCP_CHPNDR_NBG2;
 	vram_cycp.pt[2].t2 = VDP2_VRAM_CYCP_NO_ACCESS;
 	vram_cycp.pt[2].t3 = VDP2_VRAM_CYCP_NO_ACCESS;
 	vram_cycp.pt[2].t4 = VDP2_VRAM_CYCP_NO_ACCESS;
