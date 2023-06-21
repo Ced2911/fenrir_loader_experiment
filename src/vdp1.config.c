@@ -1,5 +1,7 @@
 #include "vdp1.config.h"
 
+uint32_t vdp1_texture_base_addr = 0;
+
 #define C_RGB(r, g, b) (((b)&0x1F) << 10 | ((g)&0x1F) << 5 | ((r)&0x1F) | 0x8000)
 
 static const uint16_t color_[] = {
@@ -88,6 +90,7 @@ void vdp1_init()
 
     vdp_dma_enqueue(vdp1_vram_partitions.gouraud_base, (void *)color_, sizeof(color_) * sizeof(uint16_t));
     vdp_dma_enqueue(vdp1_vram_partitions.clut_base, (void *)palettes, sizeof(palettes) * sizeof(uint16_t));
+    vdp1_texture_base_addr = (uintptr_t)vdp1_vram_partitions.texture_base;
 
     vdp2_sprite_priority_set(0, 2);
 

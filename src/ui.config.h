@@ -41,12 +41,18 @@ typedef PACKED_STRUCT {
 typedef PACKED_STRUCT {
 	uint16_t x;
 	uint16_t y;
+} ui_config_pos_t;
+
+typedef PACKED_STRUCT {
+	uint16_t x;
+	uint16_t y;
 	uint16_t w;
 	uint16_t h;
 	uint16_t line_height;
 	ui_position_bar_t position_bar;
 	ui_item_color_t item_colors;
 	ui_item_color_t item_focused_colors;
+	ui_config_pos_t device_icon;
 } ui_config_browser_t;
 
 typedef PACKED_STRUCT {

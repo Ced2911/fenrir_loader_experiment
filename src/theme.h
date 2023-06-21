@@ -28,6 +28,21 @@ typedef struct __attribute__((__packed__))
 
 typedef struct __attribute__((__packed__))
 {
+    uint8_t w;
+    uint8_t h;
+    uint8_t count;
+    uint8_t _;
+    uint8_t data[];
+} theme_vdp1_sprites_t;
+
+typedef struct __attribute__((__packed__))
+{
+    uint16_t x;
+    uint16_t y;
+} theme_cfg_icon_t;
+
+typedef struct __attribute__((__packed__))
+{
     theme_cfg_area_t area;
     uint16_t line_height;
     theme_cfg_item_color_t item;
@@ -51,6 +66,7 @@ typedef struct __attribute__((__packed__))
     theme_cfg_browser_t gamelist_browser;
     theme_cfg_cover_t gamelist_cover;
     theme_cfg_background_t gamelist_background;
+    theme_cfg_icon_t gamelist_device_icon;
 } theme_cfg_t;
 
 typedef struct __attribute__((__packed__))
@@ -68,6 +84,7 @@ typedef struct __attribute__((__packed__))
 #define THEME_ID_VDP2_BG 0x000000010
 #define THEME_ID_VDP2_FG 0x000000011
 #define THEME_ID_FONT 0x000000100
+#define THEME_ID_ICONS 0x000000101
 #define THEME_ID_VGM_SN76xxx 0x000001000
 
 /*****************************************************/

@@ -6,8 +6,6 @@
 #include "vdp2.config.h"
 #include "theme.h"
 
-#define COVER_TEXTURE_ADDR (browser.texture_base + (FONT_CACHE_SIZE * 2))
-
 #define _CPU_IN_SPINLOCK(x)         \
     do                              \
     {                               \
@@ -15,6 +13,14 @@
         x;                          \
         cpu_sync_spinlock_clear(0); \
     } while (0);
+
+enum
+{
+    DEVICE_ICON_STATE_SD = 0,
+    DEVICE_ICON_STATE_NO_SD,
+    DEVICE_ICON_STATE_WIFI,
+    DEVICE_ICON_STATE_NO_WIFI,
+};
 
 extern fenrir_config_t *fenrir_config;
 extern status_sector_t *status_sector;
@@ -29,6 +35,7 @@ typedef struct
 {
     int last_selected_item;
     uintptr_t game_cover;
+    int gamelist_source;
 } gamelist_ctx_t;
 
 static gamelist_ctx_t gamelist_ctx = {
@@ -60,11 +67,30 @@ static void browser_change_dir(browser_t *browser, int16_t id)
 {
     fenrir_select_direntry(id);
     fenrir_refresh_entries(fenrir_config, sd_dir_entries);
+
     browser->count = fenrir_config->hdr.count;
     browser->page = 0;
     browser->selected = 0;
     browser->old_page = -1;
     gamelist_ctx.last_selected_item = -1;
+}
+
+static void browser_change_source(browser_t *browser, int source)
+{
+
+    fenrir_set_gamelist_source(source);
+    fenrir_select_direntry(DIR_ENTRY_ROOT);
+    fenrir_refresh_entries(fenrir_config, sd_dir_entries);
+
+    fenrir_read_configuration(fenrir_config);
+
+    browser->count = fenrir_config->hdr.count;
+    browser->page = 0;
+    browser->selected = 0;
+    browser->old_page = -1;
+
+    gamelist_ctx.last_selected_item = -1;
+    gamelist_ctx.gamelist_source = source;
 }
 
 static void browser_input_callback(browser_t *browser)
@@ -90,6 +116,20 @@ static void browser_input_callback(browser_t *browser)
     {
         screens_select(screen_options);
     }
+    // btn l / r switch between filesystem
+    else if (browser->digital.held.button.l || browser->digital.held.button.r)
+    {
+        switch (gamelist_ctx.gamelist_source)
+        {
+        case fenrir_gamelist_source_sd:
+            browser_change_source(browser, fenrir_gamelist_source_http);
+            break;
+        case fenrir_gamelist_source_http:
+        default:
+            browser_change_source(browser, fenrir_gamelist_source_sd);
+            break;
+        }
+    }
 }
 
 static void _slave_entry(void)
@@ -114,6 +154,17 @@ static void gamelist_update()
 
     gamelist_theme_update(&browser);
 
+    int state = DEVICE_ICON_STATE_SD;
+    switch (gamelist_ctx.gamelist_source)
+    {
+    case fenrir_gamelist_source_sd:
+        state = browser.count > 0 ? DEVICE_ICON_STATE_SD : DEVICE_ICON_STATE_NO_SD;
+        break;
+    case fenrir_gamelist_source_http:
+        state = browser.count > 0 ? DEVICE_ICON_STATE_WIFI : DEVICE_ICON_STATE_NO_WIFI;
+        break;
+    }
+
     // if entry changed, load the cover
     if (ui_config->screens.gamelist.cover.enabled && browser.selected != gamelist_ctx.last_selected_item)
     {
@@ -121,12 +172,23 @@ static void gamelist_update()
         cover_selected = sd_dir_entries[browser.selected].id;
         cpu_dual_slave_notify();
     }
+
+    // draw sd/wifi bar..
+    {
+        const int tex_w = 16;
+        const int tex_h = 16;
+
+        vdp1_cmdt_t *cmdt = &cmdt_list->cmdts[ORDER_BUFFER_DEV_ICON];        
+
+        vdp1_cmdt_char_base_set(cmdt, ICONS_TEXTURE_ADDR + state * (tex_w * tex_h * 2));
+    }
 }
 
 static void gamelist_init()
 {
     vdp2_scrn_display_set(0);
     gamelist_ctx.last_selected_item = -1;
+    gamelist_ctx.gamelist_source = fenrir_gamelist_source_sd;
 
     /*****************************************************
      * Alloc ressources

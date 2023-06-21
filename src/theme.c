@@ -130,5 +130,9 @@ void theme_ui_load()
         theme.screens.gamelist.browser.item_focused_colors.gouraud[1] = user_theme_cfg->gamelist_browser.focused.gradients[1];
         theme.screens.gamelist.browser.item_focused_colors.gouraud[2] = user_theme_cfg->gamelist_browser.focused.gradients[2];
         theme.screens.gamelist.browser.item_focused_colors.gouraud[3] = user_theme_cfg->gamelist_browser.focused.gradients[3];
+
+
+        theme.screens.gamelist.browser.device_icon.x = user_theme_cfg->gamelist_device_icon.x;
+        theme.screens.gamelist.browser.device_icon.y = user_theme_cfg->gamelist_device_icon.y;
     }
 }

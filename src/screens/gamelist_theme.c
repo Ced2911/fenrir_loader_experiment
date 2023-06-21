@@ -7,8 +7,6 @@
 #include "../assets/vdp2.h"
 #include "theme.h"
 
-#define COVER_TEXTURE_ADDR (browser->texture_base + (FONT_CACHE_SIZE * 2))
-
 void gamelist_theme_update(browser_t *browser)
 {
     ui_config_t *const theme = ui_config;
@@ -77,7 +75,7 @@ void gamelist_theme_apply(browser_t *browser)
         cmdt->cmd_xd = theme->screens.gamelist.cover.x;
         cmdt->cmd_yd = theme->screens.gamelist.cover.y + theme->screens.gamelist.cover.h;
 
-        vdp1_cmdt_scaled_sprite_set(cmdt);
+        vdp1_cmdt_distorted_sprite_set(cmdt);
         vdp1_cmdt_color_mode1_set(cmdt, 0);
         vdp1_cmdt_gouraud_base_set(cmdt, 0);
         vdp1_cmdt_draw_mode_set(cmdt, draw_mode);
@@ -88,10 +86,63 @@ void gamelist_theme_apply(browser_t *browser)
         // noise_init(&noise_cfg);
     }
 
-    if (!theme->screens.gamelist.cover.enabled)
+    /*****************************************************
+     * upload icons
+     ****************************************************/
     {
-        // vdp2_scrn_display_unset(VDP2_SCRN_DISP_NBG0);
+        uint32_t icon_sz = 0;
+        theme_vdp1_sprites_t *icons = (theme_vdp1_sprites_t *)theme_get_ressource(theme_bin, THEME_ID_ICONS, &icon_sz);
+        if (icons && icon_sz)
+        {
+            memcpy(ICONS_TEXTURE_ADDR, icons->data, icon_sz - sizeof(theme_vdp1_sprites_t));
+        }
     }
+
+    // draw sd/wifi bar..
+    {
+        ui_config_t *const theme = ui_config;
+        vdp1_cmdt_t *cmdt = &cmdt_list->cmdts[ORDER_BUFFER_DEV_ICON];
+        // build and enqueue the polygon
+        const vdp1_cmdt_draw_mode_t draw_mode = {
+            .raw = 0x0000,
+            .cc_mode = 0,
+            .color_mode = VDP1_CMDT_CM_RGB_32768,
+            .trans_pixel_disable = false,
+            .pre_clipping_disable = true,
+            .end_code_disable = true};
+
+        const int tex_w = 16;
+        const int tex_h = 16;
+
+        const vdp1_cmdt_color_bank_t color_bank = {
+            .type_0.dc = 0};
+
+        cmdt->cmd_xa = theme->screens.gamelist.browser.device_icon.x;
+        cmdt->cmd_ya = theme->screens.gamelist.browser.device_icon.y;
+
+        cmdt->cmd_xc = cmdt->cmd_xa + tex_w;
+        cmdt->cmd_yc = cmdt->cmd_ya + tex_h;
+
+        cmdt->cmd_xb = cmdt->cmd_xc;
+        cmdt->cmd_yb = cmdt->cmd_ya;
+
+        cmdt->cmd_xd = cmdt->cmd_xa;
+        cmdt->cmd_yd = cmdt->cmd_yc;
+
+        vdp1_cmdt_normal_sprite_set(cmdt);
+        vdp1_cmdt_color_mode1_set(cmdt, 0);
+        vdp1_cmdt_gouraud_base_set(cmdt, 0);
+        vdp1_cmdt_draw_mode_set(cmdt, draw_mode);
+        vdp1_cmdt_char_size_set(cmdt, tex_w, tex_h);
+
+        vdp1_cmdt_char_base_set(cmdt, ICONS_TEXTURE_ADDR);
+
+        // noise_init(&noise_cfg);
+    }
+
+    /*****************************************************
+     * ...
+     ****************************************************/
 
     rgb1555_t black = RGB1555_INITIALIZER(1, 0, 0, 0);
     vdp2_scrn_back_color_set(VDP2_VRAM_ADDR(3, 0x01FFFE), black);

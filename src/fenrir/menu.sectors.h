@@ -2,56 +2,62 @@
 #include <stdint.h>
 
 /*****************************************************
- * [seek] Configuration events
- * 500 to 1000 
+ * start offset
+ * keep a big area (200Mb) for data in iso
  ****************************************************/
-#define FENRIR_EVENT_SET_REGION_MIN_FAD (520)
+#define FENRIR_START_LBA_OFFSET (102400)
+
+/*****************************************************
+ * [seek] Configuration events
+ * 500 to 1000
+ ****************************************************/
+#define FENRIR_EVENT_SET_REGION_MIN_FAD (FENRIR_START_LBA_OFFSET + 520)
 #define FENRIR_EVENT_SET_REGION_MAX_FAD (FENRIR_EVENT_SET_REGION_MIN_FAD + (16 * 8)) // end at 648
-#define FENRIR_EVENT_TOGGLE_AUTO_RELOAD (700)
-#define FENRIR_EVENT_TOGGLE_COVER (710)
-#define FENRIR_EVENT_CHOOSE_SOURCE (720)
-#define FENRIR_EVENT_CHOOSE_SOURCE_SD (720)
-#define FENRIR_EVENT_CHOOSE_SOURCE_HTTP (721)
+#define FENRIR_EVENT_TOGGLE_AUTO_RELOAD (FENRIR_START_LBA_OFFSET + 700)
+#define FENRIR_EVENT_TOGGLE_COVER (FENRIR_START_LBA_OFFSET + 710)
+#define FENRIR_EVENT_CHOOSE_SOURCE (FENRIR_START_LBA_OFFSET + 720)
+#define FENRIR_EVENT_CHOOSE_SOURCE_SD (FENRIR_START_LBA_OFFSET + 720)
+#define FENRIR_EVENT_CHOOSE_SOURCE_HTTP (FENRIR_START_LBA_OFFSET + 721)
 
 /*****************************************************
  * @deprecated
  * [seek] launch games, big area !!!
  * 20000 to 30000
  ****************************************************/
-#define FENRIR_EVENT_LAUNCH_ID_START_FAD (20000)
-#define FENRIR_EVENT_LAUNCH_ID_END_FAD (30000)
+#define FENRIR_EVENT_LAUNCH_ID_START_FAD (FENRIR_START_LBA_OFFSET + 20000)
+#define FENRIR_EVENT_LAUNCH_ID_END_FAD (FENRIR_START_LBA_OFFSET + 30000)
 /*****************************************************
  * [seek] launch with wifi
  * 9000
  ****************************************************/
-#define FENRIR_EVENT_LAUNCH_WIFI (9000)
+#define FENRIR_EVENT_LAUNCH_WIFI (FENRIR_START_LBA_OFFSET + 9000)
 
 /*****************************************************
  * [read] configuration area
  * 2000
  ****************************************************/
-#define FENRIR_READ_CONFIGURATION_FAD (2000)
+#define FENRIR_READ_CONFIGURATION_FAD (FENRIR_START_LBA_OFFSET + 2000)
 
 /*****************************************************
  * [read] status sector area
  * 2010
  ****************************************************/
-#define FENRIR_READ_STATUS_FAD (2010)
+#define FENRIR_READ_STATUS_FAD (FENRIR_START_LBA_OFFSET + 2010)
 
 /*****************************************************
  * [read] Filebrowser streaming
  * 3000 to 4000
  ****************************************************/
-#define FENRIR_READ_FILEBROWSER_START_FAD (3000)
-#define FENRIR_READ_FILEBROWSER_END_FAD (4000)
+#define FENRIR_READ_FILEBROWSER_START_FAD (FENRIR_START_LBA_OFFSET + 3000)
+#define FENRIR_READ_FILEBROWSER_END_FAD (FENRIR_START_LBA_OFFSET + 4000)
 
 /*****************************************************
  * [read/select] FILE IO Reading func
  * 5000 to 8101
  ****************************************************/
-#define FENRIR_IO_SELECT (5000)
-#define FENRIR_IO_READ (8001)
-#define FENRIR_IO_DELETE (8101)
+#define FENRIR_IO_SELECT (FENRIR_START_LBA_OFFSET + 5000)
+#define FENRIR_IO_READ (FENRIR_START_LBA_OFFSET + 8001)
+#define FENRIR_IO_DELETE (FENRIR_START_LBA_OFFSET + 8101)
 #define FENRIR_MAX_READ_IO (8)
 #define FENRIR_MAX_IO (3000)
 
@@ -59,8 +65,8 @@
  * [read] screenshot area
  * 10000 to 20000
  ****************************************************/
-#define FENRIR_SCREENSHOT_ID_START_FAD (10000)
-#define FENRIR_SCREENSHOT_ID_END_FAD (13000)
+#define FENRIR_SCREENSHOT_ID_START_FAD (FENRIR_START_LBA_OFFSET + 10000)
+#define FENRIR_SCREENSHOT_ID_END_FAD (FENRIR_START_LBA_OFFSET + 13000)
 
 /*****************************************************
  * Extended area - allow 2500 games to be launched
@@ -98,7 +104,7 @@ enum
     FENRIR_WRITE_NOTHING = 0,
     FENRIR_WRITE_PENDING,
     FENRIR_WRITE_CHUNK,
-    FENRIR_WRITE_CHUNK_ERROR,    
+    FENRIR_WRITE_CHUNK_ERROR,
 };
 
 enum
@@ -145,7 +151,8 @@ typedef union
         uint32_t full_checksum;
     };
     // Wifi
-    struct {
+    struct
+    {
         uint8_t _wifi_status;
         uint8_t _wifi_type;
         uint8_t wifi_state;
