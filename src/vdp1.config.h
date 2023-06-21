@@ -21,9 +21,9 @@ extern uint32_t vdp1_texture_base_addr;
 void vdp1_init();
 void vdp1_reset();
 
-#define FONT_CACHE_SIZE (32 * 1024)
+#define FONT_CACHE_SIZE (64 * 1024)
 #define VDP2_CRAM_LUT (0x80)
 
 
 #define COVER_TEXTURE_ADDR (vdp1_texture_base_addr + (FONT_CACHE_SIZE * 2))
-#define ICONS_TEXTURE_ADDR (COVER_TEXTURE_ADDR + (128 * 96 * 2))
+#define ICONS_TEXTURE_ADDR (COVER_TEXTURE_ADDR + (128 * 128 * 2))

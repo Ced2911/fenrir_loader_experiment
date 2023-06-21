@@ -178,8 +178,7 @@ static void gamelist_update()
         const int tex_w = 16;
         const int tex_h = 16;
 
-        vdp1_cmdt_t *cmdt = &cmdt_list->cmdts[ORDER_BUFFER_DEV_ICON];        
-
+        vdp1_cmdt_t *cmdt = &cmdt_list->cmdts[ORDER_BUFFER_DEV_ICON]; 
         vdp1_cmdt_char_base_set(cmdt, ICONS_TEXTURE_ADDR + state * (tex_w * tex_h * 2));
     }
 }
