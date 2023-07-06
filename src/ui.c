@@ -66,31 +66,45 @@ static int ui_render_text(ui_render_text_param_t *param)
 {
     int len = strlen(param->text);
     int text_size = 0;
+    int max_width = 0;
+    int y = param->y;
+
     uint8_t *font = (uint8_t *)(THEME_FONT->data);
     const uint32_t h = THEME_FONT->char_height;
     const uint32_t w = THEME_FONT->char_width;
 
     for (int i = 0; i < len; i++)
     {
-        const uint8_t letter_w = THEME_FONT->char_spacing[param->text[i]];
-        uint8_t *src = &font[(param->text[i] - 32) * ((w * h / 2))];
+        char letter = param->text[i];
 
-        // do font
-        for (int y0 = 0; y0 < h; y0++)
+        if (letter == '\n')
         {
-            for (int x0 = 0; x0 < w; x0 += 2)
-            {
-                uint8_t *dst = &param->dst[(y0 + param->y) * param->pitch + param->x + x0 + text_size];
-                dst[0] = ((*src) >> 4) ? ui_ctx.pal_nb : COLOR_BACKGROUND;
-                dst[1] = ((*src) & 0xf) ? ui_ctx.pal_nb : COLOR_BACKGROUND;
-                *src++;
-            }
+            max_width = max_width > text_size ? max_width : text_size;
+            text_size = 0;
+            y += h * 1.2;
         }
+        else
+        {
+            const uint8_t letter_w = THEME_FONT->char_spacing[letter];
+            uint8_t *src = &font[(letter - 32) * ((w * h / 2))];
 
-        text_size += letter_w;
+            // do font
+            for (int y0 = 0; y0 < h; y0++)
+            {
+                for (int x0 = 0; x0 < w; x0 += 2)
+                {
+                    uint8_t *dst = &param->dst[(y0 + y) * param->pitch + param->x + x0 + text_size];
+                    dst[0] = ((*src) >> 4) ? ui_ctx.pal_nb : COLOR_BACKGROUND;
+                    dst[1] = ((*src) & 0xf) ? ui_ctx.pal_nb : COLOR_BACKGROUND;
+                    *src++;
+                }
+            }
+
+            text_size += letter_w;
+        }
     }
 
-    return text_size;
+    return max_width == 0 ? text_size : max_width;
 }
 
 static int ui_item_is_ctrl(ui_item_t *item)
@@ -403,7 +417,7 @@ void ui_render(ui_item_t *diag)
     // disable screen
     vdp2_scrn_display_set(0);
     vdp_sync_vblank_out_clear();
-    
+
     int n = 0;
     // palettes...
     ui_ctx.cram[COLOR_BACKGROUND] = bg_color.raw;

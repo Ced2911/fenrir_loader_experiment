@@ -18,23 +18,29 @@ static const rgb1555_t info_bg_color = RGB888_RGB1555_INITIALIZER(1, 9, 21, 64);
 static const rgb1555_t info_message_color = RGB888_RGB1555_INITIALIZER(1, 72, 202, 228);
 static const rgb1555_t info_title_color = RGB888_RGB1555_INITIALIZER(1, 0, 150, 199);
 
-static char dia_title[50];
-static char dia_message[50];
+// static char dia_title[50];
+// static char dia_message[50];
 
 static ui_item_t dialog[] = {
-    _UI_TITLE_ID(dia_title, DIA_TITLE),
+    _UI_TITLE_ID("", DIA_TITLE),
     _UI_LINE,
-    _UI_LABEL_ID(dia_message, DIA_MESSAGE),
+    _UI_LABEL_ID("", DIA_MESSAGE),
     _UI_END};
 
 static void set_message(const char *str)
 {
-    strcpy(GET_LABEL_BY_ID(DIA_MESSAGE), str);
+    // strcpy(GET_LABEL_BY_ID(DIA_MESSAGE), str);
+
+    ui_item_t *item = ui_get_item_by_id(dialog, DIA_MESSAGE);
+    if (item)
+        item->label.text = str;
 }
 
 static void set_title(const char *str)
 {
-    strcpy(GET_LABEL_BY_ID(DIA_TITLE), str);
+    ui_item_t *item = ui_get_item_by_id(dialog, DIA_TITLE);
+    if (item)
+        item->label.text = str;
 }
 
 static void __end(smpc_peripheral_digital_t *digital, int *end)
@@ -67,8 +73,8 @@ void message_box(message_box_t *box)
     // save some vdp2 states
     vdp2_scrn_disp_t vdp2_scrn_disp = vdp2_scrn_display_get();
 
-    strcpy(GET_LABEL_BY_ID(DIA_TITLE), box->title);
-    strcpy(GET_LABEL_BY_ID(DIA_MESSAGE), box->message);
+    set_title(box->title);
+    set_message(box->message);
 
     ui_render(dialog);
 

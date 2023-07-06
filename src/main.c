@@ -54,7 +54,7 @@ int main(void)
 
     ui_init(&ui_param);
 
-    message_box_t msg = {.type = message_box_info, .message = "This is a wip build, some features are imcomplete", .title = "Fenrir loader"};
+    message_box_t msg = {.type = message_box_error, .message = "Lorem ipsum dolor sit amet,\nconsectetur\n adipiscing elit.", .title = "TITLE: ERROR"};
     message_box(&msg);
 
     // set auto region patch
