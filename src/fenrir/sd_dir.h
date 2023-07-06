@@ -41,7 +41,7 @@ typedef union
         uint32_t sd_size;
         // Fev 2022
         uint32_t card_cpld_id;
-        uint8_t card_uid[4];        
+        uint8_t card_uid[4];
     } hdr;
     uint8_t byte[2048];
 } __attribute__((packed)) fenrir_config_t;

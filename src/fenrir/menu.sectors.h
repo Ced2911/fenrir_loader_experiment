@@ -69,18 +69,16 @@
 #define FENRIR_SCREENSHOT_ID_END_FAD (FENRIR_START_LBA_OFFSET + 13000)
 
 /*****************************************************
- * Extended area - allow 2500 games to be launched
+ * [read] current theme
+ * 20010 to 20300
  ****************************************************/
-// todo
-/*****************************************************
- * Extended area - reserve an area for multiples saturn parsed header
- * Each ip header size is 0xFF
- * It need about (2500 * 256 / 2048) ~= 313, we will use 500
- ****************************************************/
-// todo
+#define FENRIR_THEME_BIN_MAX_FAD (512)
+#define FENRIR_THEME_BIN_START_FAD (FENRIR_START_LBA_OFFSET + 30010)
+#define FENRIR_THEME_BIN_END_FAD (FENRIR_THEME_BIN_START_FAD + FENRIR_THEME_BIN_MAX_FAD)
 
-#define FENRIR_FILEBROWSER_MIN (500)
-#define FENRIR_FILEBROWSER_MAX (40000)
+
+#define FENRIR_FILEBROWSER_MIN (FENRIR_START_LBA_OFFSET + 500)
+#define FENRIR_FILEBROWSER_MAX (FENRIR_START_LBA_OFFSET + 50000)
 
 #define STATUS_SECTOR_SIZE 2048
 
