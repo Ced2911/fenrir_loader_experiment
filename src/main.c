@@ -13,7 +13,7 @@
 #include "bios_ex.h"
 
 #define RESOLUTION_WIDTH (352)
-#define RESOLUTION_HEIGHT (224)
+#define RESOLUTION_HEIGHT (240)
 
 fenrir_config_t *fenrir_config;
 status_sector_t *status_sector;
@@ -54,8 +54,8 @@ int main(void)
 
     ui_init(&ui_param);
 
-    message_box_t msg = {.type = message_box_error, .message = "Lorem ipsum dolor sit amet,\nconsectetur\n adipiscing elit.", .title = "TITLE: ERROR"};
-    message_box(&msg);
+    // message_box_t msg = {.type = message_box_error, .message = "Lorem ipsum dolor sit amet,\nconsectetur\n adipiscing elit.", .title = "TITLE: ERROR"};
+    // message_box(&msg);
 
     // set auto region patch
     fenrir_set_region(region_get_fenrir_id());

@@ -16,21 +16,16 @@
 #define FENRIR_EVENT_TOGGLE_AUTO_RELOAD (FENRIR_START_LBA_OFFSET + 700)
 #define FENRIR_EVENT_TOGGLE_COVER (FENRIR_START_LBA_OFFSET + 710)
 #define FENRIR_EVENT_CHOOSE_SOURCE (FENRIR_START_LBA_OFFSET + 720)
-#define FENRIR_EVENT_CHOOSE_SOURCE_SD (FENRIR_START_LBA_OFFSET + 720)
-#define FENRIR_EVENT_CHOOSE_SOURCE_HTTP (FENRIR_START_LBA_OFFSET + 721)
+#define FENRIR_EVENT_CHOOSE_SOURCE_SD (FENRIR_EVENT_CHOOSE_SOURCE + 0)
+#define FENRIR_EVENT_CHOOSE_SOURCE_HTTP (FENRIR_EVENT_CHOOSE_SOURCE + 1)
+#define FENRIR_EVENT_CHOOSE_SOURCE_SMB (FENRIR_EVENT_CHOOSE_SOURCE + 2)
 
 /*****************************************************
- * @deprecated
  * [seek] launch games, big area !!!
  * 20000 to 30000
  ****************************************************/
 #define FENRIR_EVENT_LAUNCH_ID_START_FAD (FENRIR_START_LBA_OFFSET + 20000)
 #define FENRIR_EVENT_LAUNCH_ID_END_FAD (FENRIR_START_LBA_OFFSET + 30000)
-/*****************************************************
- * [seek] launch with wifi
- * 9000
- ****************************************************/
-#define FENRIR_EVENT_LAUNCH_WIFI (FENRIR_START_LBA_OFFSET + 9000)
 
 /*****************************************************
  * [read] configuration area
@@ -75,7 +70,6 @@
 #define FENRIR_THEME_BIN_MAX_FAD (512)
 #define FENRIR_THEME_BIN_START_FAD (FENRIR_START_LBA_OFFSET + 30010)
 #define FENRIR_THEME_BIN_END_FAD (FENRIR_THEME_BIN_START_FAD + FENRIR_THEME_BIN_MAX_FAD)
-
 
 #define FENRIR_FILEBROWSER_MIN (FENRIR_START_LBA_OFFSET + 500)
 #define FENRIR_FILEBROWSER_MAX (FENRIR_START_LBA_OFFSET + 50000)

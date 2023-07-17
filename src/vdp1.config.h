@@ -4,7 +4,7 @@
 #define SCREEN_WIDTH (320 * 2)
 #define SCREEN_HEIGHT (240 * 2)
 #else
-#define SCREEN_WIDTH (320)
+#define SCREEN_WIDTH (352)
 #define SCREEN_HEIGHT (240)
 #endif
 

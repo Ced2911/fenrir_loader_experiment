@@ -57,7 +57,7 @@ static void browser_get_item(browser_t *browser, uint32_t item, char *dst, int m
 {
     if (item < browser->count)
     {
-        // sprintf(dst, "item: %x", sd_dir_entries[item].flag);
+        // snprintf(dst, max_len, "item: %x %s", sd_dir_entries[item].flag, sd_dir_entries[item].filename);
         strncpy(dst, sd_dir_entries[item].filename, max_len);
         dst[max_len - 1] = 0;
     }
@@ -122,9 +122,9 @@ static void browser_input_callback(browser_t *browser)
         switch (gamelist_ctx.gamelist_source)
         {
         case fenrir_gamelist_source_sd:
-            browser_change_source(browser, fenrir_gamelist_source_http);
+            browser_change_source(browser, fenrir_gamelist_source_smb);
             break;
-        case fenrir_gamelist_source_http:
+        case fenrir_gamelist_source_smb:
         default:
             browser_change_source(browser, fenrir_gamelist_source_sd);
             break;
@@ -178,7 +178,7 @@ static void gamelist_update()
         const int tex_w = 16;
         const int tex_h = 16;
 
-        vdp1_cmdt_t *cmdt = &cmdt_list->cmdts[ORDER_BUFFER_DEV_ICON]; 
+        vdp1_cmdt_t *cmdt = &cmdt_list->cmdts[ORDER_BUFFER_DEV_ICON];
         vdp1_cmdt_char_base_set(cmdt, ICONS_TEXTURE_ADDR + state * (tex_w * tex_h * 2));
     }
 }
@@ -251,6 +251,10 @@ static void gamelist_destroy()
     // free ressources
     free((void *)gamelist_ctx.game_cover);
     free((void *)browser.texture_buffer);
+
+    memset(COVER_TEXTURE_ADDR, 0, FENRIR_COVER_SIZE);
+
+    vdp1_reset();
 
     browser_destroy(&browser);
 }

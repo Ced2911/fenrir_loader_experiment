@@ -7,10 +7,19 @@
 #include "fenrir/region.h"
 
 #define SCREEN_W (352)
+#define OPTION_LABEL_W (120)
 
 #define GET_LABEL_BY_ID(ID) ui_get_item_by_id(options_items, ID)->label.text
 
+static const rgb1555_t option_bg_color = RGB888_RGB1555_INITIALIZER(1, 4, 8, 15);
+static const rgb1555_t option_default_color = RGB888_RGB1555_INITIALIZER(1, 80, 125, 188);
+static const rgb1555_t option_highlight_color = RGB888_RGB1555_INITIALIZER(1, 161, 198, 234);
+
 extern fenrir_config_t *fenrir_config;
+
+static void set_diag_screen(ui_item_t *item);
+static void set_backup_bram_screen(ui_item_t *item);
+static void set_restore_bram_screen(ui_item_t *item);
 
 enum
 {
@@ -19,42 +28,23 @@ enum
     UI_SYS_SMPC_REGION,
     UI_SYS_VIDEO_FREQ,
     UI_SYS_REGION_FLAGS,
-    UI_SYS_HW_FW_REV,
-    UI_SYS_HW_REV,
-    UI_SYS_HW_UID,
-    UI_SYS_HW_FW_DATE,
-    UI_SYS_HW_WIFI_STATE,
-    UI_SYS_HW_IP_ADDR,
-    UI_SYS_HW_SD
+    UI_SYS_FW,
+    UI_SYS_HW,
+    UI_SYS_WIFI_STATE,
+    UI_SYS_IP_ADDR,
+    UI_SYS_SD,
+    UI_SYS_SMB,
+    UI_SYS_SMB_URL,
 };
-
-static void enable_igr(ui_item_t *i)
-{
-    i->number.value = !i->number.value;
-}
-
-void set_diag_screen(ui_item_t *item)
-{
-    screens_select(screen_diagnostic);
-}
-
-void set_backup_bram_screen(ui_item_t *item)
-{
-    screens_select(screen_backup_bram);
-}
-
-void set_restore_bram_screen(ui_item_t *item)
-{
-    screens_select(screen_restore_bram);
-}
 
 static ui_item_t options_items[] = {
     _UI_TITLE("Settings"),
     _UI_BREAK,
     //
-    _UI_LABEL_W("Enable IGR", SCREEN_W / 2),
-    _UI_BOOL(UI_OPTIONS_IGR, 0, enable_igr),
-    _UI_BREAK,
+    // _UI_LABEL_W("Enable IGR", OPTION_LABEL_W),
+    // _UI_BOOL(UI_OPTIONS_IGR, 0, enable_igr),
+    // _UI_BREAK,
+    //
     {.type = UI_LABEL, .label = {.text = "Diagnostics"}, .w = SCREEN_W / 2, .handler = set_diag_screen},
     _UI_BREAK,
     {.type = UI_LABEL, .label = {.text = "Backup BRAM"}, .w = SCREEN_W / 2, .handler = set_backup_bram_screen},
@@ -65,51 +55,71 @@ static ui_item_t options_items[] = {
     _UI_TITLE("System informations"),
     _UI_BREAK,
 
-    _UI_LABEL_W("Bios", SCREEN_W / 2),
+    _UI_LABEL_W("Bios", OPTION_LABEL_W),
     _UI_LABEL_NULL_ID(UI_SYS_BIOS_ID),
     _UI_BREAK,
 
-    _UI_LABEL_W("Video frequency", SCREEN_W / 2),
+    _UI_LABEL_W("Video frequency", OPTION_LABEL_W),
     _UI_LABEL_NULL_ID(UI_SYS_VIDEO_FREQ),
     _UI_BREAK,
 
-    _UI_LABEL_W("Region", SCREEN_W / 2),
+    _UI_LABEL_W("Region", OPTION_LABEL_W),
     _UI_LABEL_ID_W(UI_SYS_SMPC_REGION, SCREEN_W / 4),
     _UI_BREAK,
 
-    _UI_LABEL_W("Region flags", SCREEN_W / 2),
+    _UI_LABEL_W("Region flags", OPTION_LABEL_W),
     _UI_LABEL_ID_W(UI_SYS_REGION_FLAGS, SCREEN_W / 4),
     _UI_BREAK,
 
-    _UI_LABEL_W("Firmware version", SCREEN_W / 2),
-    _UI_LABEL_NULL_ID(UI_SYS_HW_FW_REV),
+    _UI_LABEL_W("Firmware ", OPTION_LABEL_W),
+    _UI_LABEL_NULL_ID(UI_SYS_FW),
     _UI_BREAK,
 
-    _UI_LABEL_W("Hardware version", SCREEN_W / 2),
-    _UI_LABEL_NULL_ID(UI_SYS_HW_REV),
+    _UI_LABEL_W("Hardware", OPTION_LABEL_W),
+    _UI_LABEL_NULL_ID(UI_SYS_HW),
     _UI_BREAK,
 
-    _UI_LABEL_W("Hardware UID", SCREEN_W / 2),
-    _UI_LABEL_NULL_ID(UI_SYS_HW_UID),
+    _UI_LABEL_W("Wifi status", OPTION_LABEL_W),
+    _UI_LABEL_NULL_ID(UI_SYS_WIFI_STATE),
     _UI_BREAK,
 
-    _UI_LABEL_W("Firmware date", SCREEN_W / 2),
-    _UI_LABEL_NULL_ID(UI_SYS_HW_FW_DATE),
+    _UI_LABEL_W("Wifi Ip addr.", OPTION_LABEL_W),
+    _UI_LABEL_NULL_ID(UI_SYS_IP_ADDR),
     _UI_BREAK,
 
-    _UI_LABEL_W("Wifi status", SCREEN_W / 2),
-    _UI_LABEL_NULL_ID(UI_SYS_HW_WIFI_STATE),
+    _UI_LABEL_W("SD Card: ", OPTION_LABEL_W),
+    _UI_LABEL_NULL_ID(UI_SYS_SD),
     _UI_BREAK,
 
-    _UI_LABEL_W("Wifi Ip addr.", SCREEN_W / 2),
-    _UI_LABEL_NULL_ID(UI_SYS_HW_IP_ADDR),
+    _UI_LABEL_W("SMB: ", OPTION_LABEL_W),
+    _UI_LABEL_NULL_ID(UI_SYS_SMB),
     _UI_BREAK,
 
-    _UI_LABEL_W("SD Card: ", SCREEN_W / 2),
-    _UI_LABEL_NULL_ID(UI_SYS_HW_SD),
+    _UI_LABEL_W("SMB URL: ", OPTION_LABEL_W),
+    _UI_LABEL_NULL_ID(UI_SYS_SMB_URL),
     _UI_BREAK,
 
     _UI_END};
+
+static void enable_igr(ui_item_t *i)
+{
+    i->number.value = !i->number.value;
+}
+
+static void set_diag_screen(ui_item_t *item)
+{
+    screens_select(screen_diagnostic);
+}
+
+static void set_backup_bram_screen(ui_item_t *item)
+{
+    screens_select(screen_backup_bram);
+}
+
+static void set_restore_bram_screen(ui_item_t *item)
+{
+    screens_select(screen_restore_bram);
+}
 
 static void options_diag_allocate_str()
 {
@@ -119,7 +129,7 @@ static void options_diag_allocate_str()
     {
         if (item->type == UI_LABEL && item->id && item->label.text == NULL)
         {
-            item->label.text = (char *)malloc(24);
+            item->label.text = (char *)malloc(40);
             item->label.text[0] = 0;
         }
         item++;
@@ -168,22 +178,26 @@ static void options_init()
     snprintf(GET_LABEL_BY_ID(UI_SYS_VIDEO_FREQ), 24, "%s Hz", region_flag & 0x800 ? "50" : "60");
     snprintf(GET_LABEL_BY_ID(UI_SYS_REGION_FLAGS), 24, "%08lx", region_flag);
 
-    strncpy(GET_LABEL_BY_ID(UI_SYS_HW_FW_REV), fenrir_config->hdr.firmware_version, 24);
-    strncpy(GET_LABEL_BY_ID(UI_SYS_HW_REV), hw_rev, 24);
-    snprintf(GET_LABEL_BY_ID(UI_SYS_HW_UID), 24, "%02x%02x%02x%02x", fenrir_config->hdr.card_uid[0], fenrir_config->hdr.card_uid[1], fenrir_config->hdr.card_uid[2], fenrir_config->hdr.card_uid[3]);
-    strncpy(GET_LABEL_BY_ID(UI_SYS_HW_FW_DATE), fenrir_config->hdr.build_date, 24);
-    strncpy(GET_LABEL_BY_ID(UI_SYS_HW_WIFI_STATE), wifi_state_str[fenrir_config->hdr.wifi_state & 0b11], 24);
-    snprintf(GET_LABEL_BY_ID(UI_SYS_HW_IP_ADDR), 24, "%d.%d.%d.%d", fenrir_config->hdr.local_ip[0], fenrir_config->hdr.local_ip[1], fenrir_config->hdr.local_ip[2], fenrir_config->hdr.local_ip[3]);
+    snprintf(GET_LABEL_BY_ID(UI_SYS_FW), 40, "%s / %s", fenrir_config->hdr.firmware_version, fenrir_config->hdr.build_date);
+    snprintf(GET_LABEL_BY_ID(UI_SYS_HW), 40, "%s / %02x%02x%02x%02x", hw_rev, fenrir_config->hdr.card_uid[0], fenrir_config->hdr.card_uid[1], fenrir_config->hdr.card_uid[2], fenrir_config->hdr.card_uid[3]);
 
-    snprintf(GET_LABEL_BY_ID(UI_SYS_HW_SD), 24, "%s %s %ldMB", fenrir_config->hdr.sd_name, fenrir_config->hdr.sd_type, fenrir_config->hdr.sd_size);
+    strncpy(GET_LABEL_BY_ID(UI_SYS_WIFI_STATE), wifi_state_str[fenrir_config->hdr.wifi_state & 0b11], 24);
+    snprintf(GET_LABEL_BY_ID(UI_SYS_IP_ADDR), 24, "%d.%d.%d.%d", fenrir_config->hdr.local_ip[0], fenrir_config->hdr.local_ip[1], fenrir_config->hdr.local_ip[2], fenrir_config->hdr.local_ip[3]);
 
-    ui_item_t *it = ui_get_item_by_id(options_items, UI_OPTIONS_IGR);
-    if (it)
-    {
-        it->number.value = fenrir_config->hdr.auto_reload;
-    }
+    snprintf(GET_LABEL_BY_ID(UI_SYS_SMB), 24, "%02x", fenrir_config->hdr.smb_status);
+    strncpy(GET_LABEL_BY_ID(UI_SYS_SMB_URL), fenrir_config->hdr.smb_url, 64);
+
+    // ui_item_t *it = ui_get_item_by_id(options_items, UI_OPTIONS_IGR);
+    // if (it)
+    // {
+    //     it->number.value = fenrir_config->hdr.auto_reload;
+    // }
 
     ui_render(options_items);
+
+    ui_set_color(COLOR_BACKGROUND, option_bg_color);
+    ui_set_color(COLOR_HIGHLIGHT, option_default_color);
+    ui_set_color(COLOR_DEFAULT, option_highlight_color);
 }
 
 static void options_update()

@@ -137,6 +137,9 @@ void fenrir_read_configuration(fenrir_config_t *fenrir_config)
         fenrir_config->hdr.sd_card_status = 0; // FENRIR_SD_CARD_STATUS_NO_CARD;
         fenrir_config->hdr.count = 25;
         fenrir_config->hdr.use_cover = 1;
+        strcpy(fenrir_config->hdr.firmware_version, "DEBUG");
+        strcpy(fenrir_config->hdr.build_date, "_BUILD_DATE_");
+        strcpy(fenrir_config->hdr.smb_url, "....");
     }
     else
     {
@@ -160,7 +163,7 @@ void fenrir_refresh_entries(fenrir_config_t *fenrir_config, sd_dir_entry_t *sd_d
 {
     if (EMU_BUILD)
     {
-        fenrir_config->hdr.count = 25;
+        fenrir_config->hdr.count = 0;
         fenrir_config->hdr.use_cover = 1;
         // emulator
         for (int i = 0; i < fenrir_config->hdr.count; i++)

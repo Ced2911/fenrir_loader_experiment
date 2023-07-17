@@ -42,6 +42,10 @@ typedef union
         // Fev 2022
         uint32_t card_cpld_id;
         uint8_t card_uid[4];
+        // July 2023
+        uint8_t smb_status;
+        char smb_url[64];
+        uint8_t cur_source[4]; // SD/SMB/WFI/USB
     } hdr;
     uint8_t byte[2048];
 } __attribute__((packed)) fenrir_config_t;

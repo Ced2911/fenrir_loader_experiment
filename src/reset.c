@@ -31,7 +31,7 @@ void sys_reset(void)
     smpc_smc_sshoff_call();
 
     vdp2_tvmd_display_res_set(VDP2_TVMD_INTERLACE_NONE, VDP2_TVMD_HORZ_NORMAL_A,
-                              VDP2_TVMD_VERT_224);
+                              VDP2_TVMD_VERT_240);
     vdp2_scrn_back_color_set(VDP2_VRAM_ADDR(0, 0x01FFFE),
                              RGB1555(1, 0, 7, 0));
 
