@@ -56,7 +56,8 @@
         "screens.h": "c",
         "stdlib.h": "c",
         "cd-miss.h": "c",
-        "region.h": "c"
+        "region.h": "c",
+        "iosfwd": "c"
     },
     "rust-analyzer.linkedProjects": [
         "${workspaceFolder}/tools/themes/Cargo.toml"

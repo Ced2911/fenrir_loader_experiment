@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "browser.h"
 #include "screens.h"
+#include "gamelist.h"
 #include "fenrir/fenrir.h"
 #include "vdp1.config.h"
 #include "vdp2.config.h"
@@ -14,13 +15,6 @@
         cpu_sync_spinlock_clear(0); \
     } while (0);
 
-enum
-{
-    DEVICE_ICON_STATE_SD = 0,
-    DEVICE_ICON_STATE_NO_SD,
-    DEVICE_ICON_STATE_WIFI,
-    DEVICE_ICON_STATE_NO_WIFI,
-};
 
 extern fenrir_config_t *fenrir_config;
 extern status_sector_t *status_sector;
@@ -171,15 +165,6 @@ static void gamelist_update()
         gamelist_ctx.last_selected_item = browser.selected;
         cover_selected = sd_dir_entries[browser.selected].id;
         cpu_dual_slave_notify();
-    }
-
-    // draw sd/wifi bar..
-    {
-        const int tex_w = 16;
-        const int tex_h = 16;
-
-        vdp1_cmdt_t *cmdt = &cmdt_list->cmdts[ORDER_BUFFER_DEV_ICON];
-        vdp1_cmdt_char_base_set(cmdt, ICONS_TEXTURE_ADDR + state * (tex_w * tex_h * 2));
     }
 }
 
