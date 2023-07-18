@@ -66,6 +66,7 @@ typedef struct __attribute__((__packed__))
     theme_cfg_browser_t gamelist_browser;
     theme_cfg_cover_t gamelist_cover;
     theme_cfg_background_t gamelist_background;
+    theme_cfg_background_t gamelist_foreground;
     theme_cfg_icon_t gamelist_device_icon;
 } theme_cfg_t;
 
