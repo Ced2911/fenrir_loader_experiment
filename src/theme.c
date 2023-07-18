@@ -42,6 +42,8 @@ void theme_update()
 {
     vdp2_scrn_scroll_x_update(VDP2_SCRN_NBG1, theme_cfg.gamelist_background.x);
     vdp2_scrn_scroll_y_update(VDP2_SCRN_NBG1, theme_cfg.gamelist_background.y);
+    vdp2_scrn_scroll_x_update(VDP2_SCRN_NBG2, theme_cfg.gamelist_foreground.x);
+    vdp2_scrn_scroll_y_update(VDP2_SCRN_NBG2, theme_cfg.gamelist_foreground.y);
 }
 
 void theme_init_bgm()
