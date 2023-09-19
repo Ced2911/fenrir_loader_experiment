@@ -145,6 +145,7 @@ static void options_diag_free_str()
         if (item->type == UI_LABEL && item->id && item->label.text != NULL)
         {
             free(item->label.text);
+            item->label.text = 0;
         }
         item++;
     }

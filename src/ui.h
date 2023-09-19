@@ -82,6 +82,8 @@ enum
 struct ui_item_s
 {
     int16_t type;
+
+    // string id, 0 => allocated, others: need memory management (malloc/free)
     int16_t id;
 
     // 0: auto, >0 fixed
