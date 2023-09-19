@@ -19,15 +19,6 @@ fenrir_config_t *fenrir_config;
 status_sector_t *status_sector;
 sd_dir_entry_t *sd_dir_entries;
 
-int16_t hadoken_snd;
-
-void *zalloc(size_t l)
-{
-    void *ptr = malloc(l);
-    memset(ptr, 0, l);
-    return ptr;
-}
-
 int main(void)
 {
     vdp1_vram_partitions_t vdp1_vram_partitions;
@@ -43,9 +34,13 @@ int main(void)
     // slave cpu setup
     cpu_dual_comm_mode_set(CPU_DUAL_ENTRY_ICI);
 
-    fenrir_config = (fenrir_config_t *)zalloc(sizeof(fenrir_config_t));
-    status_sector = (status_sector_t *)zalloc(sizeof(status_sector_t));
-    sd_dir_entries = (sd_dir_entry_t *)zalloc(sizeof(sd_dir_entry_t) * 2500);
+    fenrir_config = (fenrir_config_t *)malloc(sizeof(fenrir_config_t));
+    status_sector = (status_sector_t *)malloc(sizeof(status_sector_t));
+    sd_dir_entries = (sd_dir_entry_t *)malloc(sizeof(sd_dir_entry_t) * 2500);
+
+    memset(fenrir_config, 0, sizeof(fenrir_config_t));
+    memset(status_sector, 0, sizeof(status_sector_t));
+    memset(sd_dir_entries, 0, sizeof(sd_dir_entry_t) * 2500);
 
     ui_item_init_t ui_param = {
         .vram = (uint8_t *)NBG0_BITMAP_ADDR,

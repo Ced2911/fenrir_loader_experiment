@@ -15,7 +15,6 @@
         cpu_sync_spinlock_clear(0); \
     } while (0);
 
-
 extern fenrir_config_t *fenrir_config;
 extern status_sector_t *status_sector;
 extern sd_dir_entry_t *sd_dir_entries;
@@ -237,7 +236,7 @@ static void gamelist_destroy()
     free((void *)gamelist_ctx.game_cover);
     free((void *)browser.texture_buffer);
 
-    memset(COVER_TEXTURE_ADDR, 0, FENRIR_COVER_SIZE);
+    memset((void *)COVER_TEXTURE_ADDR, 0, FENRIR_COVER_SIZE);
 
     vdp1_reset();
 

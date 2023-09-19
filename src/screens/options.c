@@ -21,6 +21,12 @@ static void set_diag_screen(ui_item_t *item);
 static void set_backup_bram_screen(ui_item_t *item);
 static void set_restore_bram_screen(ui_item_t *item);
 
+static const char *wifi_state_str[] = {
+    "DISCONNECTED",
+    "CONNECTING",
+    "CONNECTED",
+};
+
 enum
 {
     UI_OPTIONS_IGR = 1,
@@ -151,11 +157,6 @@ static void options_diag_free_str()
     }
 }
 
-static const char *wifi_state_str[] = {
-    "DISCONNECTED",
-    "CONNECTING",
-    "CONNECTED"};
-
 static void options_input_handler(smpc_peripheral_digital_t *digital, void *unused)
 {
     if (digital->held.button.b)
@@ -164,15 +165,13 @@ static void options_input_handler(smpc_peripheral_digital_t *digital, void *unus
     }
 }
 
-static void options_init()
+static void options_draw_text()
 {
     char *hw_rev = fenrir_hw_rev_str(fenrir_config->hdr.hw_rev);
     char ip_addr[(4 * 4) + 1];
     char fenrir_uuid[24];
 
     uint32_t region_flag = bios_get_region_flag();
-
-    options_diag_allocate_str();
 
     snprintf(GET_LABEL_BY_ID(UI_SYS_BIOS_ID), 24, "%s", (char *)0x800);
     strncpy(GET_LABEL_BY_ID(UI_SYS_SMPC_REGION), region_get_smpc_string(), 24);
@@ -187,18 +186,17 @@ static void options_init()
 
     snprintf(GET_LABEL_BY_ID(UI_SYS_SMB), 24, "%02x", fenrir_config->hdr.smb_status);
     strncpy(GET_LABEL_BY_ID(UI_SYS_SMB_URL), fenrir_config->hdr.smb_url, 64);
+}
 
-    // ui_item_t *it = ui_get_item_by_id(options_items, UI_OPTIONS_IGR);
-    // if (it)
-    // {
-    //     it->number.value = fenrir_config->hdr.auto_reload;
-    // }
-
+static void options_init()
+{
+    options_diag_allocate_str();
+    options_draw_text();
 
     ui_set_color(COLOR_BACKGROUND, option_bg_color);
     ui_set_color(COLOR_HIGHLIGHT, option_default_color);
     ui_set_color(COLOR_DEFAULT, option_highlight_color);
-    
+
     ui_clear();
     ui_render(options_items);
 }

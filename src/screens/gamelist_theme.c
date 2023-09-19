@@ -27,7 +27,7 @@ static void cmdt_set_x_y_w_h(vdp1_cmdt_t *cmdt, int16_t x, int16_t y, int16_t w,
 
 void gamelist_theme_update(browser_t *browser)
 {
-    ui_config_t *const theme = ui_config;
+    const ui_config_t *theme = ui_config;
 
     // draw sd/wifi bar..
     const int tex_w = 16;
@@ -49,7 +49,7 @@ void gamelist_theme_update(browser_t *browser)
 
 static void draw_status_icons()
 {
-    ui_config_t *const theme = ui_config;
+    const ui_config_t *theme = ui_config;
     vdp1_cmdt_t *cmdt = &cmdt_list->cmdts[ORDER_BUFFER_DEV_ICON];
     // build and enqueue the polygon
     const vdp1_cmdt_draw_mode_t draw_mode = {
@@ -92,7 +92,7 @@ static void draw_status_icons()
 
 void gamelist_theme_apply(browser_t *browser)
 {
-    ui_config_t *const theme = ui_config;
+    const ui_config_t *theme = ui_config;
     /*****************************************************
      * Apply theme configuration
      ****************************************************/
@@ -172,7 +172,7 @@ void gamelist_theme_apply(browser_t *browser)
         theme_vdp1_sprites_t *icons = (theme_vdp1_sprites_t *)theme_get_ressource(theme_bin, THEME_ID_ICONS, &icon_sz);
         if (icons && icon_sz)
         {
-            memcpy(ICONS_TEXTURE_ADDR, icons->data, icon_sz - sizeof(theme_vdp1_sprites_t));
+            memcpy((void *)ICONS_TEXTURE_ADDR, icons->data, icon_sz - sizeof(theme_vdp1_sprites_t));
         }
     }
 

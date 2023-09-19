@@ -54,7 +54,7 @@ const vdp2_scrn_normal_map_t normal_cell_nbg2 = {
 	.plane_d = NBG2_MAP_ADDR,
 };
 
-void vdp2_tx_cell(uint8_t *vdp2_dat, vdp2_scrn_cell_format_t *cell, vdp2_scrn_normal_map_t *screen_map)
+void vdp2_tx_cell(uint8_t *vdp2_dat, const vdp2_scrn_cell_format_t *cell, const vdp2_scrn_normal_map_t *screen_map)
 {
 	uint8_t map_sz = vdp2_dat[0];
 	uint8_t plane = vdp2_dat[1];
@@ -71,7 +71,7 @@ void vdp2_tx_cell(uint8_t *vdp2_dat, vdp2_scrn_cell_format_t *cell, vdp2_scrn_no
 	uint16_t *cram = (uint16_t *)cell->palette_base;
 	uint16_t *map = (uint16_t *)screen_map->plane_a;
 
-	uint8_t *tiles = cell->cpd_base;
+	uint8_t *tiles = (uint8_t *)cell->cpd_base;
 
 	{
 		uint16_t *ptr = (uint16_t *)(vdp2_dat + 0x80);

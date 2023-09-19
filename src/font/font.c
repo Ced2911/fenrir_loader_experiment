@@ -55,7 +55,6 @@ static uint8_t __draw_font_10(uint8_t letter, int x, int y, uint8_t *dst, uint32
     return letter_w;
 }
 
-
 size_t font_texture_font_create(font_texture_t *tex, char *text)
 {
     int w_str = font_get_text_len(text);
@@ -101,11 +100,10 @@ int font_get_text_len(char *format, ...)
     return x;
 }
 
-
 void font_init()
 {
     uint32_t sz = 0;
-    theme_font_t *f = theme_get_ressource(theme_bin, THEME_ID_FONT, &sz);
+    theme_font_t *f = (theme_font_t *)theme_get_ressource(theme_bin, THEME_ID_FONT, &sz);
     if (f == NULL)
     {
         // display error...

@@ -27,7 +27,7 @@ static ui_item_t dialog[] = {
     _UI_LABEL_ID("", DIA_MESSAGE),
     _UI_END};
 
-static void set_message(const char *str)
+static void set_message(char *str)
 {
     // strcpy(GET_LABEL_BY_ID(DIA_MESSAGE), str);
 
@@ -36,15 +36,16 @@ static void set_message(const char *str)
         item->label.text = str;
 }
 
-static void set_title(const char *str)
+static void set_title(char *str)
 {
     ui_item_t *item = ui_get_item_by_id(dialog, DIA_TITLE);
     if (item)
         item->label.text = str;
 }
 
-static void __end(smpc_peripheral_digital_t *digital, int *end)
+static void __end(smpc_peripheral_digital_t *digital, void *_end)
 {
+    int *end = (void *)end;
     if (digital->held.button.a || digital->held.button.start)
     {
         *end = 1;
@@ -101,11 +102,11 @@ void message_box(message_box_t *box)
 }
 
 // error
-void error_set_message(const char *str) { set_message(str); }
-void error_set_title(const char *str) { set_title(str); }
+void error_set_message(char *str) { set_message(str); }
+void error_set_title(char *str) { set_title(str); }
 void error_wait_for_btn() { wait_for_btn(); }
 
 // info
-void info_set_message(const char *str) { set_message(str); }
-void info_set_title(const char *str) { set_title(str); }
+void info_set_message(char *str) { set_message(str); }
+void info_set_title(char *str) { set_title(str); }
 void info_wait_for_btn() { wait_for_btn(); }

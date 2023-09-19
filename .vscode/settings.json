@@ -61,5 +61,8 @@
     },
     "rust-analyzer.linkedProjects": [
         "${workspaceFolder}/tools/themes/Cargo.toml"
-    ]
+    ],
+    "[c]": {
+        "editor.formatOnSave": true
+    },
 }
