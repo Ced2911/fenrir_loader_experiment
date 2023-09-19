@@ -62,6 +62,7 @@ typedef struct
     int pal;
 } ui_render_text_param_t;
 
+
 static int ui_render_text(ui_render_text_param_t *param)
 {
     int len = strlen(param->text);
@@ -94,8 +95,8 @@ static int ui_render_text(ui_render_text_param_t *param)
                 for (int x0 = 0; x0 < w; x0 += 2)
                 {
                     uint8_t *dst = &param->dst[(y0 + y) * param->pitch + param->x + x0 + text_size];
-                    dst[0] = ((*src) >> 4) ? ui_ctx.pal_nb : COLOR_BACKGROUND;
-                    dst[1] = ((*src) & 0xf) ? ui_ctx.pal_nb : COLOR_BACKGROUND;
+                    dst[0] |= ((*src) >> 4) ? ui_ctx.pal_nb : COLOR_BACKGROUND;
+                    dst[1] |= ((*src) & 0xf) ? ui_ctx.pal_nb : COLOR_BACKGROUND;
                     *src++;
                 }
             }
@@ -517,4 +518,10 @@ void ui_init(ui_item_init_t *param)
 
     ui_ctx.shadow = ui_shadow;
     ui_ctx.cram = ui_ctx.cram;
+}
+
+
+void ui_clear() {
+    memset(ui_shadow, 0, 512 * 240);
+    ui_blit(ui_shadow, ui_ctx.vram);
 }

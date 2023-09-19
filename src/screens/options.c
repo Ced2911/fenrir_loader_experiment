@@ -45,11 +45,11 @@ static ui_item_t options_items[] = {
     // _UI_BOOL(UI_OPTIONS_IGR, 0, enable_igr),
     // _UI_BREAK,
     //
-    {.type = UI_LABEL, .label = {.text = "Diagnostics"}, .w = SCREEN_W / 2, .handler = set_diag_screen},
+    {.type = UI_LABEL, .label = {.text = "Diagnostics (Missing)"}, .w = SCREEN_W / 2, .handler = set_diag_screen},
     _UI_BREAK,
-    {.type = UI_LABEL, .label = {.text = "Backup BRAM"}, .w = SCREEN_W / 2, .handler = set_backup_bram_screen},
+    {.type = UI_LABEL, .label = {.text = "Backup BRAM (Missing)"}, .w = SCREEN_W / 2, .handler = set_backup_bram_screen},
     _UI_BREAK,
-    {.type = UI_LABEL, .label = {.text = "Restore BRAM"}, .w = SCREEN_W / 2, .handler = set_restore_bram_screen},
+    {.type = UI_LABEL, .label = {.text = "Restore BRAM (Missing)"}, .w = SCREEN_W / 2, .handler = set_restore_bram_screen},
     // =======================
     _UI_LINE,
     _UI_TITLE("System informations"),
@@ -194,11 +194,13 @@ static void options_init()
     //     it->number.value = fenrir_config->hdr.auto_reload;
     // }
 
-    ui_render(options_items);
 
     ui_set_color(COLOR_BACKGROUND, option_bg_color);
     ui_set_color(COLOR_HIGHLIGHT, option_default_color);
     ui_set_color(COLOR_DEFAULT, option_highlight_color);
+    
+    ui_clear();
+    ui_render(options_items);
 }
 
 static void options_update()

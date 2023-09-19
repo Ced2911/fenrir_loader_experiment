@@ -76,6 +76,7 @@ void message_box(message_box_t *box)
     set_title(box->title);
     set_message(box->message);
 
+    ui_clear();
     ui_render(dialog);
 
     switch (box->type)

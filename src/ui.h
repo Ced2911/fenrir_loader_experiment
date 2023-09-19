@@ -129,6 +129,7 @@ typedef struct
 } ui_item_init_t;
 
 void ui_init(ui_item_init_t *p);
+void ui_clear();
 void ui_render(ui_item_t *diag);
 void ui_update(ui_item_t *diag, void (*input_handler)(smpc_peripheral_digital_t *, void *), void *user_data);
 void ui_set_color(int pal_nb, rgb1555_t color);
