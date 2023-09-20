@@ -86,11 +86,17 @@ void fenrir_call(uint32_t sector_addr);
 void fenrir_set_region(uint32_t region_id);
 void fenrir_get_cover(uint32_t id, uint8_t *cover);
 
+// send a read requset
+int fenrir_read_configuration_req();
+int fenrir_async_req_ready();
+int fenrir_async_data_ready();
+int fenrir_async_read_response(void *out);
+
 #define FENRIR_TOGGLE_FUNC(func_name, sector_addr, header_field) \
     static inline void fenrir_toggle_##func_name()               \
     {                                                            \
         fenrir_call(sector_addr);                                \
-        /*fenrir_config->hdr.##header_field ^= 1;*/                     \
+        /*fenrir_config->hdr.##header_field ^= 1;*/              \
     }
 
 FENRIR_TOGGLE_FUNC(auto_reload, FENRIR_EVENT_TOGGLE_AUTO_RELOAD, auto_reload)
@@ -116,8 +122,6 @@ int fenrir_readfile_packet(void *buffer);
 // Look for a file
 fenrir_dir_entry_t *fenrir_find_entry(fenrir_dir_data_t *fenrir_dir_data, char *name);
 
-
-
 /*****************************************************
  * fenrir hw revision
  ****************************************************/
@@ -139,4 +143,3 @@ static inline char *fenrir_hw_rev_str(uint8_t rev)
         return FENRIR_HW_REV_0_STR;
     }
 }
-

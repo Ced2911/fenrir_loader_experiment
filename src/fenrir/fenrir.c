@@ -272,3 +272,64 @@ void fenrir_set_gamelist_source(uint8_t source)
 {
     fenrir_call(FENRIR_EVENT_CHOOSE_SOURCE + source);
 }
+
+/*****************************************************
+ * fenrir async cd func
+ ****************************************************/
+static int cd_block_sector_read_req(fad_t fad)
+{
+    assert(fad >= 150);
+
+    int ret;
+
+    if ((ret = cd_block_cmd_sector_length_set(SECTOR_LENGTH_2048)) != 0)
+    {
+        return ret;
+    }
+
+    if ((ret = cd_block_cmd_selector_reset(0, 0)) != 0)
+    {
+        return ret;
+    }
+
+    if ((ret = cd_block_cmd_cd_dev_connection_set(0)) != 0)
+    {
+        return ret;
+    }
+
+    /* Start reading */
+    if ((ret = cd_block_cmd_disk_play(0, fad, /* num_sectors */ 1)) != 0)
+    {
+        return ret;
+    }
+
+    return 0;
+}
+
+static int fenrir_async_flag = 0;
+
+int fenrir_read_configuration_req()
+{
+    fenrir_async_flag++;
+    return cd_block_sector_read_req(FENRIR_READ_CONFIGURATION_FAD);
+}
+
+int fenrir_async_req_ready()
+{
+    return fenrir_async_flag == 0;
+}
+
+int fenrir_async_data_ready()
+{
+    return cd_block_cmd_sector_number_get(0);
+}
+
+int fenrir_async_read_response(void *out)
+{
+    if (cd_block_cmd_sector_number_get(0) > 0)
+    {
+        return cd_block_transfer_data(0, 0, out, CDFS_SECTOR_SIZE);
+    }
+
+    return -1;
+}

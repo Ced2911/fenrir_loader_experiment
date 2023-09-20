@@ -21,12 +21,9 @@ static void set_diag_screen(ui_item_t *item);
 static void set_backup_bram_screen(ui_item_t *item);
 static void set_restore_bram_screen(ui_item_t *item);
 
-static const char *wifi_state_str[] = {
-    "DISCONNECTED",
-    "CONNECTING",
-    "CONNECTED",
-};
-
+/*****************************************************
+ * Options items
+ ****************************************************/
 enum
 {
     UI_OPTIONS_IGR = 1,
@@ -107,6 +104,9 @@ static ui_item_t options_items[] = {
 
     _UI_END};
 
+/*****************************************************
+ * Options callbacks
+ ****************************************************/
 static void enable_igr(ui_item_t *i)
 {
     i->number.value = !i->number.value;
@@ -126,6 +126,10 @@ static void set_restore_bram_screen(ui_item_t *item)
 {
     screens_select(screen_restore_bram);
 }
+
+/*****************************************************
+ * Option memory management
+ ****************************************************/
 
 static void options_diag_allocate_str()
 {
@@ -157,6 +161,9 @@ static void options_diag_free_str()
     }
 }
 
+/*****************************************************
+ * Option screen funcs
+ ****************************************************/
 static void options_input_handler(smpc_peripheral_digital_t *digital, void *unused)
 {
     if (digital->held.button.b)
@@ -165,8 +172,13 @@ static void options_input_handler(smpc_peripheral_digital_t *digital, void *unus
     }
 }
 
-static void options_draw_text()
+static void options_fill_text()
 {
+    const char *wifi_state_str[] = {
+        "DISCONNECTED",
+        "CONNECTING",
+        "CONNECTED",
+    };
     char *hw_rev = fenrir_hw_rev_str(fenrir_config->hdr.hw_rev);
     char ip_addr[(4 * 4) + 1];
     char fenrir_uuid[24];
@@ -191,7 +203,7 @@ static void options_draw_text()
 static void options_init()
 {
     options_diag_allocate_str();
-    options_draw_text();
+    options_fill_text();
 
     ui_set_color(COLOR_BACKGROUND, option_bg_color);
     ui_set_color(COLOR_HIGHLIGHT, option_default_color);
@@ -201,16 +213,53 @@ static void options_init()
     ui_render(options_items);
 }
 
+static fenrir_config_t last_cfg;
 static void options_update()
 {
     ui_update(options_items, options_input_handler, NULL);
+
+    // periodly check for change (every 2 secs)
+    static int cnt = 0;
+
+    if ((cnt > (60 * 2)) && fenrir_async_req_ready())
+    {
+        cnt == 0;
+        memcpy(&last_cfg, fenrir_config, sizeof(fenrir_config_t));
+
+        fenrir_read_configuration_req();
+    }
+
+    if (fenrir_async_data_ready())
+    {
+        fenrir_async_read_response(fenrir_config);
+
+        if (memcmp(&last_cfg, fenrir_config, sizeof(fenrir_config_t)) != 0)
+        {
+
+            options_fill_text();
+            ui_clear();
+            ui_render(options_items);
+        }
+    }
+
+    cnt++;
 }
 
 static void options_destroy()
 {
     options_diag_free_str();
+
+    if (!fenrir_async_req_ready())
+    {
+        while (fenrir_async_data_ready() == 0)
+            ;
+        fenrir_async_read_response(fenrir_config);
+    }
 }
 
+/*****************************************************
+ * Screen
+ ****************************************************/
 screen_t options_screen = {
     .type = screen_options,
     .init = options_init,
