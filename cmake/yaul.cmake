@@ -55,49 +55,36 @@ include_directories(${YAUL_INCDIR}/yaul/)
 include_directories(${YAUL_INCLUDE_DIRS})
 include_directories(SYSTEM ${YAUL_SYSTEM_INCLUDE_DIRS})
 
+macro(yaul_gen_iso TARGET)
+    set(LOADER_IP_BIN ${CMAKE_BINARY_DIR}/${TARGET}.bin)
 
-macro(gen_map target output)
-    add_custom_command(TARGET ${target}
+    add_custom_command(TARGET ${TARGET}
         POST_BUILD
-        DEPENDS ${target}
-        COMMAND ${CMAKE_OBJDUMP}  -x ${target} > ${output}
-        COMMAND ${CMAKE_OBJDUMP}  -S ${target} > ${output}.s
-        COMMENT "Generating map file ${output}" )
-endmacro()
+        DEPENDS ${TARGET}
+        
+        ## elf to bin
+        COMMAND ${CMAKE_OBJCOPY}  --output-format=binary ${TARGET} ${LOADER_IP_BIN}
 
-macro(gen_start_bin target output)
-    add_custom_command(TARGET ${target}
-        POST_BUILD
-        DEPENDS ${target}
-        COMMAND ${CMAKE_OBJCOPY}  --output-format=binary ${target} ${output}
+        ## generate ip bin
+        COMMAND     $(YAUL_INSTALL_ROOT)/bin/make-ip ${LOADER_IP_BIN} ${IP_VERSION} ${IP_RELEASE_DATE} ${IP_AREAS} ${IP_PERIPHERALS} "${IP_TITLE}" ${IP_MASTER_STACK_ADDR} ${IP_SLAVE_STACK_ADDR} ${IP_1ST_READ_ADDR} ${IP_1ST_READ_SIZE} 
+        
+        ## build iso
+        COMMAND     xorrisofs -quiet -sysid "SEGA SEGASATURN" -volid "FENRIR LOADER" -volset "FENRIR LOADER" -publisher "SEGA ENTERPRISES, LTD." -preparer "SEGA ENTERPRISES, LTD." -appid "SEGA ENTERPRISES, LTD." 
+            -full-iso9660-filenames
+            -generic-boot ${CMAKE_BINARY_DIR}/IP.bin -abstract "ABS.TXT" -biblio "BIB.TXT" -copyright "CPY.TXT" -verbose
+            -o "${TARGET}.iso" ${LOADER_IP_BIN} ${ARGN}
+
         COMMENT "Generating bin file ${output}" )
 endmacro()
 
-macro(gen_symbol_size target output)
-    add_custom_command(TARGET ${target}
+macro(yaul_gen_dbg TARGET)
+
+    add_custom_command(TARGET ${TARGET}
         POST_BUILD
-        DEPENDS ${target}
-        COMMAND ${CMAKE_NM} --print-size --size-sort ${target} > ${output}
-        COMMENT "Generating symbol size file ${output}" )
+        DEPENDS ${TARGET}
+        COMMAND ${CMAKE_OBJDUMP}  -x ${TARGET} > ${TARGET}.header.txt
+        COMMAND ${CMAKE_OBJDUMP}  -S ${TARGET} > ${TARGET}.s
+        COMMAND ${CMAKE_NM} --print-size --size-sort ${TARGET} > ${TARGET}.size.txt
+        COMMENT "Generating map file ${output}" )
 endmacro()
 
-macro(gen_iso target bootbin output)
-    add_custom_command(TARGET ${target}
-        POST_BUILD
-        DEPENDS     ${bootbin}
-        COMMAND     $(YAUL_INSTALL_ROOT)/bin/make-ip
-        ARGS        ${bootbin} ${IP_VERSION} ${IP_RELEASE_DATE} ${IP_AREAS} ${IP_PERIPHERALS} "${IP_TITLE}" ${IP_MASTER_STACK_ADDR} ${IP_SLAVE_STACK_ADDR} ${IP_1ST_READ_ADDR} ${IP_1ST_READ_SIZE} 
-        COMMENT     "Generating IP.bin")
-
-    add_custom_command(TARGET ${target}
-        POST_BUILD
-        DEPENDS     ${CMAKE_BINARY_DIR}/IP.bin
-        # COMMAND     $(YAUL_INSTALL_ROOT)/bin/make-iso 
-        # ARGS        ${CMAKE_SOURCE_DIR}/cd ${CMAKE_BINARY_DIR}/IP.BIN ${output}
-
-        COMMAND     xorrisofs -quiet -sysid "SEGA SEGASATURN" -volid "FENRIR LOADER" -volset "FENRIR LOADER" -publisher "SEGA ENTERPRISES, LTD." -preparer "SEGA ENTERPRISES, LTD." -appid "SEGA ENTERPRISES, LTD." 
-                    -full-iso9660-filenames
-                    -generic-boot ${CMAKE_BINARY_DIR}/IP.bin -abstract "ABS.TXT" -biblio "BIB.TXT" -copyright "CPY.TXT" -verbose
-                    -o "${output}" ${bootbin} ${ARGN}
-        COMMENT     "Generating disc image for ${target}")
-endmacro()

@@ -77,15 +77,11 @@ set_target_properties(${PROJECT_NAME} PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SO
 
 set(LOADER_IP_BIN	${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bin)
 
-gen_map(${PROJECT_NAME} ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.map)
-gen_start_bin(${PROJECT_NAME} ${LOADER_IP_BIN})
-gen_symbol_size(${PROJECT_NAME} ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.size.txt)
-gen_iso(${PROJECT_NAME} ${LOADER_IP_BIN} ${CMAKE_BINARY_DIR}/fenrir-yaul.iso -path-list ${CMAKE_CURRENT_SOURCE_DIR}"/iso-path-list")
-
+yaul_gen_iso(${PROJECT_NAME} -path-list ${CMAKE_CURRENT_SOURCE_DIR}"/iso-path-list")
+yaul_gen_dbg(${PROJECT_NAME})
 
 # create boot.bin 
-add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/xxxx_boot.c
-	COMMAND ${CMAKE_ASM_COMPILER} ${CMAKE_CURRENT_SOURCE_DIR}/src/fenrir/boot.s -c ${CMAKE_BINARY_DIR}/boot.o -m2
-	COMMAND ${CMAKE_OBJCOPY} --output-format=binary ${CMAKE_BINARY_DIR}/boot.o ${CMAKE_BINARY_DIR}/xxxx_boot.bin
-	COMMAND xxd -i ${CMAKE_BINARY_DIR}/xxxx_boot.bin ${CMAKE_BINARY_DIR}/xxxx_boot.c
+add_custom_command( TARGET ${PROJECT_NAME} POST_BUILD ${PROJECT_NAME}
+	COMMAND cp ${CMAKE_BINARY_DIR}/fenrir-yaul.iso ${CMAKE_BINARY_DIR}/fenrir-yaul-big.iso
+	COMMAND truncate -s 100M ${CMAKE_BINARY_DIR}/fenrir-yaul-big.iso
 )
