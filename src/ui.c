@@ -25,7 +25,7 @@ static const rgb1555_t active_color = RGB888_RGB1555_INITIALIZER(1, 0, 0xfF, 0xf
 #define SCREEN_W (352)
 #define SCREEN_H (240)
 
-#define V_ADDR(X, Y) (&ui_ctx.shadow[X + ((Y)*512)])
+#define V_ADDR(X, Y) (&ui_ctx.shadow[X + ((Y) * 512)])
 
 static struct ui_ctx
 {
@@ -61,7 +61,6 @@ typedef struct
     int pitch;
     int pal;
 } ui_render_text_param_t;
-
 
 static int ui_render_text(ui_render_text_param_t *param)
 {
@@ -420,13 +419,6 @@ void ui_render(ui_item_t *diag)
     vdp_sync_vblank_out_clear();
 
     int n = 0;
-    // palettes...
-    ui_ctx.cram[COLOR_BACKGROUND] = bg_color.raw;
-    ui_ctx.cram[COLOR_HIGHLIGHT] = highlight_color.raw;
-    ui_ctx.cram[COLOR_ACTIVE] = active_color.raw;
-    ui_ctx.cram[COLOR_REF] = default_color.raw;
-
-    ui_reset_colors();
 
     // erase screen
     for (int i = 0; i < (512 * 256); i++)
@@ -518,10 +510,18 @@ void ui_init(ui_item_init_t *param)
 
     ui_ctx.shadow = ui_shadow;
     ui_ctx.cram = ui_ctx.cram;
+
+        // palettes...
+    ui_ctx.cram[COLOR_BACKGROUND] = bg_color.raw;
+    ui_ctx.cram[COLOR_HIGHLIGHT] = highlight_color.raw;
+    ui_ctx.cram[COLOR_ACTIVE] = active_color.raw;
+    ui_ctx.cram[COLOR_REF] = default_color.raw;
+
+    ui_reset_colors();
 }
 
-
-void ui_clear() {
+void ui_clear()
+{
     memset(ui_shadow, 0, 512 * 240);
     ui_blit(ui_shadow, ui_ctx.vram);
 }

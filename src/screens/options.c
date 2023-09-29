@@ -205,9 +205,10 @@ static void options_init()
     options_diag_allocate_str();
     options_fill_text();
 
-    ui_set_color(COLOR_BACKGROUND, option_bg_color);
-    ui_set_color(COLOR_HIGHLIGHT, option_default_color);
     ui_set_color(COLOR_DEFAULT, option_highlight_color);
+    ui_set_color(COLOR_BACKGROUND, option_default_color);
+    ui_set_color(COLOR_HIGHLIGHT, option_default_color);
+    ui_set_color(COLOR_ACTIVE, option_highlight_color);
 
     ui_clear();
     ui_render(options_items);
@@ -218,43 +219,45 @@ static void options_update()
 {
     ui_update(options_items, options_input_handler, NULL);
 
-    // periodly check for change (every 2 secs)
-    static int cnt = 0;
+    /*
+        // periodly check for change (every 2 secs)
+        static int cnt = 0;
 
-    if ((cnt > (60 * 2)) && fenrir_async_req_ready())
-    {
-        cnt == 0;
-        memcpy(&last_cfg, fenrir_config, sizeof(fenrir_config_t));
-
-        fenrir_read_configuration_req();
-    }
-
-    if (fenrir_async_data_ready())
-    {
-        fenrir_async_read_response(fenrir_config);
-
-        if (memcmp(&last_cfg, fenrir_config, sizeof(fenrir_config_t)) != 0)
+        if ((cnt > (60 * 2)) && fenrir_async_req_ready())
         {
+            cnt == 0;
+            memcpy(&last_cfg, fenrir_config, sizeof(fenrir_config_t));
 
-            options_fill_text();
-            ui_clear();
-            ui_render(options_items);
+            fenrir_read_configuration_req();
         }
-    }
 
-    cnt++;
+        if (fenrir_async_data_ready())
+        {
+            fenrir_async_read_response(fenrir_config);
+
+            if (memcmp(&last_cfg, fenrir_config, sizeof(fenrir_config_t)) != 0)
+            {
+                options_fill_text();
+                ui_clear();
+                ui_render(options_items);
+            }
+        }
+
+        cnt++;
+        */
 }
 
 static void options_destroy()
 {
     options_diag_free_str();
-
-    if (!fenrir_async_req_ready())
-    {
-        while (fenrir_async_data_ready() == 0)
-            ;
-        fenrir_async_read_response(fenrir_config);
-    }
+    /*
+        if (!fenrir_async_req_ready())
+        {
+            while (fenrir_async_data_ready() == 0)
+                ;
+            fenrir_async_read_response(fenrir_config);
+        }
+        */
 }
 
 /*****************************************************

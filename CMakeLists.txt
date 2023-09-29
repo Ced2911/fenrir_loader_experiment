@@ -14,10 +14,11 @@ SET(IP_1ST_READ_SIZE "0")
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/yaul.cmake)
 
 # project...
-PROJECT(FenrirYaul)
+PROJECT("fenrir-yaul")
 
 SET(FENRIR_DEF "")
 
+# not tested
 option(VIDEO_480i "Run in 480i mode" OFF)
 if (VIDEO_480i)
 	SET(FENRIR_DEF ${FENRIR_DEF} FENRIR_480i)
@@ -83,5 +84,5 @@ yaul_gen_dbg(${PROJECT_NAME})
 # create boot.bin 
 add_custom_command( TARGET ${PROJECT_NAME} POST_BUILD ${PROJECT_NAME}
 	COMMAND cp ${CMAKE_BINARY_DIR}/fenrir-yaul.iso ${CMAKE_BINARY_DIR}/fenrir-yaul-big.iso
-	COMMAND truncate -s 100M ${CMAKE_BINARY_DIR}/fenrir-yaul-big.iso
+	COMMAND truncate -s 300M ${CMAKE_BINARY_DIR}/fenrir-yaul-big.iso
 )
