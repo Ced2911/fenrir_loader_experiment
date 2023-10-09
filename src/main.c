@@ -19,6 +19,8 @@ fenrir_config_t *fenrir_config;
 status_sector_t *status_sector;
 sd_dir_entry_t *sd_dir_entries;
 
+extern void midi_init();
+
 int main(void)
 {
     vdp1_vram_partitions_t vdp1_vram_partitions;
@@ -28,6 +30,8 @@ int main(void)
 
     vdp1_init();
     font_init();
+
+    midi_init();
 
     // test_vdp2();
 

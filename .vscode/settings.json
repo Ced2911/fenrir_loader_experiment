@@ -57,7 +57,8 @@
         "stdlib.h": "c",
         "cd-miss.h": "c",
         "region.h": "c",
-        "iosfwd": "c"
+        "iosfwd": "c",
+        "ken.raw.h": "c"
     },
     "rust-analyzer.linkedProjects": [
         "${workspaceFolder}/tools/themes/Cargo.toml"
@@ -65,4 +66,8 @@
     "[c]": {
         "editor.formatOnSave": true
     },
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.autopep8"
+    },
+    "python.formatting.provider": "none",
 }

@@ -39,6 +39,7 @@ set(FENRIR_SRC
 	src/ui.c 
 	src/message_box.c 
 	src/font/font.c 
+	src/dbg.c
 
 	# fenrir
 	src/fenrir/fenrir.c 
@@ -59,6 +60,8 @@ set(FENRIR_SRC
 	src/screens/credits.c 
 	
 	src/sound_driver/pcm.c 
+	src/sound_driver/midi.c 
+	src/sound_driver/midi/midi-parser.c 
 	
 	# compression
 	src/lz4/lz4.c
