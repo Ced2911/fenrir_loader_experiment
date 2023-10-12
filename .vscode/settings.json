@@ -58,7 +58,8 @@
         "cd-miss.h": "c",
         "region.h": "c",
         "iosfwd": "c",
-        "ken.raw.h": "c"
+        "ken.raw.h": "c",
+        "mml_parser.h": "c"
     },
     "rust-analyzer.linkedProjects": [
         "${workspaceFolder}/tools/themes/Cargo.toml"

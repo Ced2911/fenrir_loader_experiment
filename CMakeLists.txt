@@ -69,6 +69,10 @@ set(FENRIR_SRC
 
 	# mssing
 	src/stdlib/qsort.c
+
+	
+	src/sound_driver/mml_parser.c
+
 	)
 
 add_executable(${PROJECT_NAME} ${FENRIR_SRC})

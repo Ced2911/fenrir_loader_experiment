@@ -6,7 +6,7 @@
             "type": "cppdbg",
             "request": "launch",
             "cwd": "${workspaceFolder}/buildcmake/",
-            "program": "${workspaceFolder}/buildcmake/FenrirYaul",
+            "program": "${workspaceFolder}/buildcmake/fenrir-yaul",
             "MIMode": "gdb",
             "miDebuggerPath": "/usr/bin/gdb-multiarch",
             "miDebuggerServerAddress": "host.docker.internal:43434",
