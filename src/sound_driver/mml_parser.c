@@ -57,6 +57,7 @@ int mml_parser_reset(mml_parser_ctx_t *ctx)
     ctx->p = ctx->mml;
     ctx->vsync_cnt = 0;
     ctx->time_ms = 0;
+    ctx->cur_trk = 0;
 
     for (int i = 0; i < TRACK_N; i++)
     {
@@ -165,7 +166,12 @@ static int mml_parse_note(char c, mml_parser_ctx_t *ctx, int trk_n)
     return note;
 }
 
-int mml_parser_play(mml_parser_ctx_t *ctx, int trk_n)
+int mml_parser_play(mml_parser_ctx_t *ctx)
+{
+    mml_parser_play_track(ctx, ctx->cur_trk);
+}
+
+int mml_parser_play_track(mml_parser_ctx_t *ctx, int trk_n)
 {
     int note = -1;
 

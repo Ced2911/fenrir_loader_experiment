@@ -42,6 +42,8 @@ typedef struct
     char *mml;
     char *p;
 
+    int cur_trk;
+
     uint32_t vsync_cnt;
     uint32_t time_ms;
 
@@ -51,7 +53,8 @@ typedef struct
 } mml_parser_ctx_t;
 
 int mml_parser_init(mml_parser_ctx_t *ctx, char *mml);
-int mml_parser_play(mml_parser_ctx_t *ctx, int trk_n);
+int mml_parser_play_track(mml_parser_ctx_t *ctx, int trk_n);
+int mml_parser_play(mml_parser_ctx_t *ctx);
 int mml_parser_reset(mml_parser_ctx_t *ctx);
 void mml_parser_stop(mml_parser_ctx_t *ctx);
 int mml_parser_is_playing(mml_parser_ctx_t *ctx);

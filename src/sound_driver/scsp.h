@@ -113,3 +113,74 @@ scsp_slot_regs_t;
 
 #define get_scsp_slot(x) ((volatile scsp_slot_regs_t *)(SCSP_SLOT_ADDR + (x * 0x20)))
 #define get_scsp_reg() ((volatile scsp_common_reg_t *)SCSP_COMMON_ADDR)
+
+static inline void scsp_slot_exec(scsp_slot_regs_t *s, uint8_t slot_nb)
+{
+    volatile scsp_slot_regs_t *slot = get_scsp_slot(slot_nb);
+
+    slot->raw[0] = (s->raw[0] & 0x7FF);
+    slot->raw[1] = s->raw[1];
+    slot->raw[2] = s->raw[2];
+    slot->raw[3] = s->raw[3];
+    slot->raw[4] = s->raw[4];
+    slot->raw[5] = s->raw[5];
+    slot->raw[6] = s->raw[6];
+    slot->raw[7] = s->raw[7];
+    slot->raw[8] = s->raw[8];
+    slot->raw[9] = s->raw[9];
+    slot->raw[10] = s->raw[10];
+    slot->raw[11] = s->raw[11];
+    slot->raw[12] = s->raw[12];
+    slot->raw[13] = s->raw[13];
+    slot->raw[14] = s->raw[14];
+    slot->raw[15] = s->raw[15];
+
+    slot->raw[0] |= (1 << 12) | (1 << 11); // force keyex
+}
+
+static inline void scsp_slot_set(scsp_slot_regs_t *s, uint8_t slot_nb)
+{
+    volatile scsp_slot_regs_t *slot = get_scsp_slot(slot_nb);
+
+    slot->raw[1] = s->raw[1];
+    slot->raw[2] = s->raw[2];
+    slot->raw[3] = s->raw[3];
+    slot->raw[4] = s->raw[4];
+    slot->raw[5] = s->raw[5];
+    slot->raw[6] = s->raw[6];
+    slot->raw[7] = s->raw[7];
+    slot->raw[8] = s->raw[8];
+    slot->raw[9] = s->raw[9];
+    slot->raw[10] = s->raw[10];
+    slot->raw[11] = s->raw[11];
+    slot->raw[12] = s->raw[12];
+    slot->raw[13] = s->raw[13];
+    slot->raw[14] = s->raw[14];
+    slot->raw[15] = s->raw[15];
+    slot->raw[0] = (s->raw[0] & 0xFFF); // disable keyex
+}
+
+static inline void scsp_slot_key_off(uint8_t slot_nb)
+{
+    volatile scsp_slot_regs_t *slot = get_scsp_slot(slot_nb);
+    slot->raw[0] = (slot->raw[0] & 0x7FF); // remove keyb
+}
+
+static inline void scsp_slot_set_dipan(uint8_t slot_nb, uint8_t pan)
+{
+    volatile scsp_slot_regs_t *slot = get_scsp_slot(slot_nb);
+    slot->dipan = pan;
+}
+
+static inline void scsp_slot_set_disdl(uint8_t slot_nb, uint8_t v)
+{
+    volatile scsp_slot_regs_t *slot = get_scsp_slot(slot_nb);
+    slot->disdl = v;
+}
+
+static inline void scsp_slot_set_fns_oct(uint8_t slot_nb, uint8_t fns, uint8_t oct)
+{
+    volatile scsp_slot_regs_t *slot = get_scsp_slot(slot_nb);
+    slot->fns = fns;
+    slot->oct = oct;
+}

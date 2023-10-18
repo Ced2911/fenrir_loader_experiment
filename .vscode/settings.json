@@ -59,7 +59,10 @@
         "region.h": "c",
         "iosfwd": "c",
         "ken.raw.h": "c",
-        "mml_parser.h": "c"
+        "mml_parser.h": "c",
+        "modplay.h": "c",
+        "mkmod.h": "c",
+        "space_d.h": "c"
     },
     "rust-analyzer.linkedProjects": [
         "${workspaceFolder}/tools/themes/Cargo.toml"

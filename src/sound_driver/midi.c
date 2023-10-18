@@ -5,6 +5,10 @@
 #include "dbg.h"
 #include "mml_parser.h"
 
+#include "mod/modplay.h"
+#include "mkmod.h"
+#include "space_d.h"
+
 // a4
 // 440hz
 const unsigned char note_a4[] = {
@@ -118,12 +122,12 @@ void memcpy_le16(uint16_t *dst, uint16_t *src, size_t sz)
 
 static void mml_handler()
 {
-    if (mml_parser_play(&mml, 0) == -1)
+    if (mml_parser_play(&mml) == -1)
     {
         mml_parser_reset(&mml);
     }
 }
-
+#if 0
 void midi_init()
 {
 
@@ -189,3 +193,77 @@ void midi_init()
     while (1)
         ;
 }
+#else
+
+ModMusic *mod;
+
+static void mod_handler()
+{
+    int t = 1;
+
+    MODPlay(mod, &t);
+}
+void midi_init()
+{
+
+    uint32_t note_c4_addr = (0x2000);
+
+    volatile uint16_t *control = (uint16_t *)0x25b00400;
+    volatile uint16_t *intr = (uint16_t *)0x25b0042a;
+    control[0] = 0xf; // master vol
+    intr[0] = 0;      // irq
+
+    volatile scsp_slot_regs_t *slots = get_scsp_slot(0);
+
+    memcpy(SCSP_RAM + note_c4_addr, note_c4, sizeof(note_c4));
+
+    for (int i = 0; i < 32; i++)
+    {
+        scsp_slot_regs_t slot = {};
+        memset(&slot, 0, sizeof(scsp_slot_regs_t));
+
+        //
+        slot.sa = note_c4_addr;
+        slot.lsa = 0;
+        slot.lea = note_c4_addr + sizeof(note_c4);
+
+        // uned 16 bit
+        slot.pcm8b = 1;
+        slot.sbctl = 0;
+        slot.ssctl = 0;
+
+        slot.lpctl = 0;
+        slot.attack_rate = 31;
+        slot.release_r = 31;
+        slot.loop_start = 0;
+        slot.kr_scale = 0;
+        slot.sdir = 1;
+        slot.disdl = 7;
+        slot.total_l = 0;
+        slot.efsdl = 0;
+
+        slot.fns = 0;
+        slot.oct = 0;
+
+        slot.kyonb = 0;
+        slot.kyonex = 0;
+
+        // memcpy(&slots[i], 0, sizeof(scsp_slot_regs_t));
+        for (int r = 0; r < 16; r++)
+        {
+            slots[i].raw[r] = slot.raw[r];
+        }
+    }
+
+    emu_printf("MODLoad\n");
+    mod = MODLoad(space_d);
+    // mod = MODLoad(mkmod);
+    emu_printf("MODLoad ok\n");
+    MODUploadSamples(mod, SCSP_RAM);
+    emu_printf("MODUploadSamples ok\n");
+    vdp_sync_vblank_in_set(mod_handler, NULL);
+
+    while (1)
+        ;
+}
+#endif
