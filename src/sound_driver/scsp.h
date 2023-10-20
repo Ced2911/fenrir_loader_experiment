@@ -172,6 +172,19 @@ static inline void scsp_slot_set_dipan(uint8_t slot_nb, uint8_t pan)
     slot->dipan = pan;
 }
 
+static inline void scsp_slot_set_sample(uint8_t slot_nb, uint32_t sample_addr, uint32_t sample_len)
+{
+    volatile scsp_slot_regs_t *slot = get_scsp_slot(slot_nb);
+    slot->sa = sample_addr;
+    slot->lea = sample_len;
+}
+
+static inline void scsp_slot_set_total_level(uint8_t slot_nb, uint8_t tl)
+{
+    volatile scsp_slot_regs_t *slot = get_scsp_slot(slot_nb);
+    slot->total_l = tl;
+}
+
 static inline void scsp_slot_set_disdl(uint8_t slot_nb, uint8_t v)
 {
     volatile scsp_slot_regs_t *slot = get_scsp_slot(slot_nb);

@@ -15,15 +15,9 @@ PROVIDE (__stack_end = 0x80000);
  */
 SECTIONS
 {
-/* .vecs : { vectors.obj } > ram1 */
-  VECTORS : {
-     __vectors = .;
-     *(VECTORS)
-  } > ram1
-  .text :
+  .text 0x00000000:
   {
-  PROVIDE (entry_point = .);
-    *(.text)
+    KEEP(*(.text.vectors)) *(.text.*) *(.text)
     . = ALIGN(0x4);
      __CTOR_LIST__ = .;
     ___CTOR_LIST__ = .;
@@ -54,14 +48,14 @@ SECTIONS
 
     _etext = .;
     *(.lit)
-  } > ram2
+  } > ram
 
   .data :
   {
     *(.shdata)
     *(.data)
     _edata = .;
-  } > ram2
+  } > ram
 
   .bss :
   {
@@ -73,7 +67,7 @@ SECTIONS
     __bss_end = .;
     _end =  ALIGN (0x8);
     __end = _end;
-  } > ram2
+  } > ram
 
   .stab 0 (NOLOAD) :
   {
@@ -84,4 +78,12 @@ SECTIONS
   {
     *(.stabstr)
   }
+
+  .eh_frame 0 (NOLOAD) :
+  {
+    *(.eh_frame)
+  }
+
+
+  /DISCARD/ : { *(.note.gnu.build-id) }
 }

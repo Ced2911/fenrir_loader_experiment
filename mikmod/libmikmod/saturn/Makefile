@@ -3,9 +3,9 @@
 CFLAGS = -std=gnu99 -O2 -g -Wall -I$(M68K_INST)/include 
 CFLAGS+= -I$(CURDIR)/../include/ 
 CFLAGS+= -I$(CURDIR)
-CFLAGS+= -DDRV_SCSP_M68K -DHAVE_LIMITS_H -DHAVE_SNPRINTF
+CFLAGS+= -DDRV_SCSP_M68K
 ASFLAGS = 
-LDFLAGS = -nostartfiles -nostdlib
+LDFLAGS = -nostartfiles -nostdlib -Wl,--script,driver.ld -Wl,--no-warn-rwx-segments -Wl,-z,noexecstack -Wl,-Map=driver.map
 M68KPREFIX = m68k-linux-gnu-
 INSTALLDIR = $(M68K_INST)
 CC = $(M68KPREFIX)gcc-13
@@ -66,7 +66,7 @@ SRCS =	../drivers/drv_scsp_m68k.c	\
 #	../playercode/mdulaw.c
 
 
-DRV_SRCS =	driver.c
+DRV_SRCS =	driver.c mem.c vector.s
 
 OBJS = $(SRCS:.c=.o)
 
@@ -80,7 +80,7 @@ driver.bin: driver.elf
 	$(M68KPREFIX)objcopy  --output-format=binary $^ $@
 
 driver.elf: libmikmod.a $(DRV_OBJS)
-	$(CC) -g $^ -o $@ $(LDFLAGS)
+	$(CC) -g $^ -o $@ $(LDFLAGS) -Llibmikmod.a
 
 .PHONY: clean
 clean:

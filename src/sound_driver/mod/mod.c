@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include "modplay.h"
 #include "modtbl.h" // Period -> frequency table for ProTracker MODs
 
@@ -163,6 +164,11 @@ void MODPlay_MOD(ModMusic *m, int *t)
 	int s, p, e, x, y;
 	int do_not_increase_pat = 0;
 	int v1, v2, v3, f;
+	int loop = 0;
+
+	uint16_t cmd = 0;
+	uint16_t xeffect = 0;
+	uint8_t xeffect_value = 0;
 
 	if (m->fmt == MOD_FMT_669)
 	{
@@ -207,7 +213,7 @@ void MODPlay_MOD(ModMusic *m, int *t)
 				f = v3;
 
 				if (m->arpeggio_sam[x] != 0)
-					MODPlay_func(m, x, m->arpeggio_sam[x] - 1, f,
+					MODPlay_func(m, x, m->arpeggio_sam[x] - 1, f, loop,
 								 0x3fff, 0x3fff); // Volume is wrong here !!!
 
 				if (m->arpeggio_timer[x] == 0)
@@ -235,6 +241,9 @@ void MODPlay_MOD(ModMusic *m, int *t)
 		p |= (b[0] & 0xf) << 8;
 		p &= ~(2048 | 1024);
 
+		if (s != 0)
+			m->volume[x] = m->sample[s - 1].volume;
+
 		if (s != 0 && p == 0)
 			p = m->old_periods[x];
 
@@ -245,13 +254,44 @@ void MODPlay_MOD(ModMusic *m, int *t)
 		e = b[3];
 		e |= (b[2] & 0xf) << 8;
 
-		v1 = m->sample[s - 1].volume;
+		xeffect = (e >> 4) & 0xF;
+		xeffect_value = e & 0xf;
+
+		if (s != 0)
+			loop = m->sample[s - 1].repeat_off != 0;
 
 		switch (e & 0xf00)
 		{
 		case 0xc00: // Set volume
 			if (s != 0)
-				v1 = e & 0xff;
+			{
+				m->volume[x] = e & 0xff;
+				MODPlay_SetVolume(m, x, m->volume[x], m->volume[x]);
+			}
+			break;
+
+		default:
+		case (0xE00):
+			switch (xeffect)
+			{
+
+			case 0xA: // fine volume up
+				m->volume[x] = m->volume[x] + xeffect_value;
+				if (m->volume[x] > 63)
+					m->volume[x] = 63;
+				if (m->volume[x] < 0)
+					m->volume[x] = 0;
+				MODPlay_SetVolume(m, x, m->volume[x], m->volume[x]);
+				break;
+			case 0xB: // fine volume down
+				m->volume[x] = m->volume[x] - xeffect_value;
+				if (m->volume[x] > 63)
+					m->volume[x] = 63;
+				if (m->volume[x] < 0)
+					m->volume[x] = 0;
+				MODPlay_SetVolume(m, x, m->volume[x], m->volume[x]);
+				break;
+			}
 			break;
 		}
 
@@ -279,44 +319,60 @@ void MODPlay_MOD(ModMusic *m, int *t)
 		f = p;
 #endif
 
-		v1 <<= 8;
-
-		if (v1 >= 0x4000)
-			v1 = 0x3fff;
-
 		if (s && p != 0)
 		{
+#ifdef YAUL
+			MODPlay_func(m, x, s - 1, f, loop, m->volume[x], m->volume[x]);
+#else
 			if (x == 0 || x == 3 || x == 4 || x == 7)
 				MODPlay_func(m, x, s - 1, f, v1, 0);
 			else
 				MODPlay_func(m, x, s - 1, f, 0, v1);
+#endif
 		}
 
 		switch (e & 0xf00)
 		{
-		/*case 0x000: // arpeggio
-			if(e!=0)
-			{
-				v1 = (e & 0xf0) >> 4;
-				v2 = e & 0xf;
-				//PlayMOD_func(
-				 printf("arpeggio = %d, %d\n", v1, v2);
-
-				for(v3 = 0; v3 < sizeof(modplay_freq_per_tbl) / 4; v3++)
+			/*case 0x000: // arpeggio
+				if(e!=0)
 				{
-					if(modplay_freq_per_tbl[v3 << 1] == p)
-					{
-						PlayMOD_func(m, x+4, s, modplay_freq_per_tbl[(v3<<1)+(v1<<1)], e);
-						PlayMOD_func(m, x+8, s, modplay_freq_per_tbl[(v3<<1)+(v2<<1)], e);
-						break;
-					}
-				}
+					v1 = (e & 0xf0) >> 4;
+					v2 = e & 0xf;
+					//PlayMOD_func(
+					 printf("arpeggio = %d, %d\n", v1, v2);
 
-			}
-		break;
-		case 0x300:
-		//	PlayMOD_func(m, x, s, p, e);
-		break;*/
+					for(v3 = 0; v3 < sizeof(modplay_freq_per_tbl) / 4; v3++)
+					{
+						if(modplay_freq_per_tbl[v3 << 1] == p)
+						{
+							PlayMOD_func(m, x+4, s, modplay_freq_per_tbl[(v3<<1)+(v1<<1)], e);
+							PlayMOD_func(m, x+8, s, modplay_freq_per_tbl[(v3<<1)+(v2<<1)], e);
+							break;
+						}
+					}
+
+				}
+			break;
+			case 0x300:
+			//	PlayMOD_func(m, x, s, p, e);
+			break;*/
+
+		case 0x900: // Sample offset
+			MODPlay_SetSampleOffset(m, x, s, (e & 0xff) << 8);
+			break;
+
+		case 0xa00: // volume slide
+			if (xeffect != 0)
+				m->volume[x] = m->volume[x] + xeffect;
+			if (xeffect_value != 0)
+				m->volume[x] = m->volume[x] - xeffect_value;
+			if (m->volume[x] > 63)
+				m->volume[x] = 63;
+			if (m->volume[x] < 0)
+				m->volume[x] = 0;
+			MODPlay_SetVolume(m, x, m->volume[x], m->volume[x]);
+			break;
+
 		case 0xb00: // Position Jump
 			m->song_pos = e & 0xff;
 			m->pat_pos = 0;

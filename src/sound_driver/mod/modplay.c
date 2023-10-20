@@ -130,72 +130,79 @@ static const int logtbl[] = {
 
 scsp_slot_regs_t mod_slots[32];
 
-void MODPlay_func(ModMusic *m, int c, int s, int period, int vl, int vr)
+#define CLAMP(v, l, h) ((v) > (h) ? (h) : ((v) < (l) ? (l) : (v)))
+
+void MODPlay_SetSampleOffset(ModMusic *m, int c, int s, int offset)
 {
-	// return;
+	int v = c + modplay_base_voice;
+	uint32_t sample_addr = (modplay_samples_off[s] & 0x001fffff);
+	uint32_t sample_len = (modplay_samples_sz[s]) - 2;
+
+	if (offset > modplay_samples_sz[s])
+	{
+		offset = modplay_samples_sz[s];
+	}
+
+	sample_addr += offset;
+
+	mod_slots[v].sa = sample_addr;
+	mod_slots[v].lea = sample_len;
+
+	scsp_slot_set_sample(v, sample_addr, sample_len);
+}
+
+static const uint8_t tl_map[] = {
+	0xff, 96, 80, 71, 64, 59, 55, 51, 48, 45, 43, 41, 39, 37, 35, 34, 32, 31, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 17, 16, 15, 14, 14, 13, 13, 12, 11, 11, 10, 10, 9, 9, 8, 8, 7, 6, 6, 6, 5, 5, 4, 4, 3, 3, 3, 2, 2, 1, 1, 1, 0};
+
+void MODPlay_SetVolume(ModMusic *m, int c, int vl, int vr)
+{
+	vl = CLAMP(vl, 0, 63);
+	vr = CLAMP(vr, 0, 63);
+
+	int v = c + modplay_base_voice;
+	uint8_t pr = (vr >> 4) & 0xf;
+	uint8_t pl = (vl >> 4) & 0xf;
+	uint8_t pan = pr | (pl << 3);
+
+	mod_slots[v].disdl = 7; //(vr >> 3); // 7
+	mod_slots[v].dipan = 0;
+	mod_slots[v].total_l = tl_map[vr & 0x3f];
+
+	scsp_slot_set_total_level(v, mod_slots[v].total_l);
+	scsp_slot_set_dipan(v, mod_slots[v].dipan);
+	scsp_slot_set_disdl(v, mod_slots[v].disdl);
+}
+
+void MODPlay_func(ModMusic *m, int c, int s, int period, int loop, int vl, int vr)
+{
+	// if (c != 0)
+	//	return;
+	//  return;
 	int v = c + modplay_base_voice;
 
-	emu_printf("c: %d / s: %d / p: %d\n", c, s, period);
-	// return;
+	// emu_printf("c: %d / s: %d / p: %d\n", c, s, period);
+	//  return;
 	//	static int mask = 0;
 
 	int octr = 0;
 	int shiftr = 0;
 	int fnsr = 0;
 
-// int sampleRate = (7093790 / 848);
-#if 1
-	int note_frq = 7159090 / 64 / (period);
-	int sampleRate = 7159090 / (period * 2);
-	octr = PCM_CALC_OCT(sampleRate);
-	shiftr = PCM_CALC_SHIFT_FREQ(octr);
-	fnsr = PCM_CALC_FNS(sampleRate, shiftr);
-#elif 0
-	int z = 7159090 / (period * 2);
-	octr = -1;
-	while (z < 1300)
+	if (period)
 	{
-		octr++;
-		z = z << 1;
+		int sampleRate = 7159090 / (period * 2);
+		octr = PCM_CALC_OCT(sampleRate);
+		shiftr = PCM_CALC_SHIFT_FREQ(octr);
+		fnsr = PCM_CALC_FNS(sampleRate, shiftr);
+
+		mod_slots[v].fns = fnsr;
+		mod_slots[v].oct = -octr;
+		scsp_slot_set_fns_oct(v, mod_slots[v].fns, mod_slots[v].oct);
 	}
-	z = 57272720 / z;
-
-	while (z < 22050)
-	{
-		octr--;
-		z = z << 1;
-	}
-	z -= (22050 * 190) >> 12;
-
-	fnsr = z;
-#elif 1
-	int fnd = 0;
-	for (int i = 0; i < 60; i++)
-	{
-		if (per_scsp_fns_oct[i].per == period)
-		{
-			octr = per_scsp_fns_oct[i].oct;
-			fnsr = per_scsp_fns_oct[i].fns;
-
-			fnd = 1;
-			break;
-		}
-	}
-
-	if (fnd == 0)
-	{
-		emu_printf("not found period: %d\n", period);
-	}
-#endif
-
-	// SsVoiceVol(v, vl, vr);
-	uint8_t pr = ((vr >> 10));
-	uint8_t pl = ((vl >> 10));
-	uint8_t pan = pr | (pl << 4);
 
 	mod_slots[v].sbctl = (0 << 1) | (0 << 1);
 	mod_slots[v].pcm8b = 1;
-	mod_slots[v].lpctl = 0;
+	mod_slots[v].lpctl = loop;
 
 	mod_slots[v].sdir = 0;
 
@@ -203,22 +210,15 @@ void MODPlay_func(ModMusic *m, int c, int s, int period, int vl, int vr)
 	mod_slots[v].attack_rate = 31;
 	mod_slots[v].release_r = 31;
 
-	mod_slots[v].fns = fnsr;
-	mod_slots[v].oct = -octr;
-	mod_slots[v].disdl = 7;
-	mod_slots[v].dipan = pan;
-
-	scsp_slot_set_fns_oct(v, mod_slots[v].fns, mod_slots[v].oct);
-	scsp_slot_set_dipan(v, mod_slots[v].dipan);
-	scsp_slot_set_disdl(v, mod_slots[v].disdl);
+	MODPlay_SetVolume(m, c, vl, vr);
 
 	if (s != -1)
 	{
 		scsp_slot_key_off(v);
-		emu_printf("keyoff: %d\n", v);
+		emu_printf("[%d/%d] keyoff: %d\n", m->song_pos, m->pat_pos, v);
 
 		mod_slots[v].sa = modplay_samples_off[s] & 0x001fffff;
-		mod_slots[v].lea = (modplay_samples_sz[s]) - 1;
+		mod_slots[v].lea = (modplay_samples_sz[s]) - 2;
 
 		// scsp_slot_exec(&mod_slots[v], v);
 		modplay_chan_mask |= (1 << v);
@@ -292,7 +292,7 @@ void MODPlay(ModMusic *m, int *t)
 		// if ((modplay_chan_mask & (1 << i)) & (!(old_play_mask < (1 << i))))
 		if (modplay_chan_mask & (1 << i))
 		{
-			emu_printf("key on %d|modplay_chan_mask:%8x\n", i, modplay_chan_mask);
+			emu_printf("[%d] key on %d|modplay_chan_mask:%8x\n", m->pat_pos, i, modplay_chan_mask);
 			scsp_slot_exec(&mod_slots[i], i);
 		}
 	}
@@ -343,11 +343,11 @@ int MODUploadSamples(ModMusic *m, int base_addr)
 		memcpy(modplay_samples_off[x], m->sample[x].data, sz);
 
 		modplay_samples_sz[x] = ALIGN_32(sz);
-		emu_printf("%d %d\n", x, sz);
+		// emu_printf("%d %d\n", x, sz);
 
 		addr += sz;
-		emu_printf("%d %d %08x/%08x\n", x, sz, addr, ALIGN_32(addr));
-		// align
+		// emu_printf("%d %d %08x/%08x\n", x, sz, addr, ALIGN_32(addr));
+		//  align
 		addr = ALIGN_32(addr);
 	}
 

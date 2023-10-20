@@ -9,7 +9,8 @@
                 "/opt/tool-chains/sh2eb-elf/sh2eb-elf/include/yaul/**"
             ],
             "defines": [
-                "FENRIR_LOADER","UNIT_TEST"
+                "FENRIR_LOADER",
+                "UNIT_TEST"
             ],
             "compilerPath": "/opt/tool-chains/sh2eb-elf/bin/sh2eb-elf-gcc",
             "compilerArgs": [
@@ -28,11 +29,28 @@
             "includePath": [
                 "${workspaceFolder}/**"
             ],
-            "defines": ["UNIT_TEST"],
+            "defines": [
+                "UNIT_TEST"
+            ],
             "compilerPath": "/usr/sbin/gcc",
             "cStandard": "gnu17",
             "cppStandard": "gnu++17",
             "intelliSenseMode": "linux-gcc-x64"
+        },
+        {
+            "name": "mikmod",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/mikmod/libmikmod/include"
+            ],
+            "defines": [
+                "DRV_SCSP_M68K=1"
+            ],
+            "cStandard": "c17",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "linux-gcc-x64",
+            "compilerPath": "/usr/bin/m68k-linux-gnu-gcc-13",
+            "compilerArgs": []
         }
     ],
     "version": 4

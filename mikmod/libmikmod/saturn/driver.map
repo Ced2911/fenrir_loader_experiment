@@ -1,0 +1,164 @@
+
+There are no discarded input sections
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+ram              0x00000000         0x00080000         xrw
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD libmikmod.a
+LOAD driver.o
+LOAD mem.o
+LOAD /tmp/ccL88KiD.o
+                0x00000000                        __DYNAMIC = 0x0
+                0x0007fc00                        PROVIDE (__stack_start = 0x7fc00)
+                [!provide]                        PROVIDE (__stack_end = 0x80000)
+
+.text           0x00000000      0x2ac
+ *(.text.vectors)
+ .text.vectors  0x00000000      0x112 /tmp/ccL88KiD.o
+ *(.text.*)
+ *(.text)
+ *fill*         0x00000112        0x2 
+ .text          0x00000114       0x24 driver.o
+                0x00000114                _entry_point
+                0x00000136                intCB
+ .text          0x00000138      0x152 mem.o
+                0x00000138                sbrk
+                0x00000168                malloc_init
+                0x000001ac                free
+                0x000001b8                malloc
+ *fill*         0x0000028a        0x2 
+ .text          0x0000028c        0x0 /tmp/ccL88KiD.o
+                0x0000028c                        . = ALIGN (0x4)
+                0x0000028c                        __CTOR_LIST__ = .
+                0x0000028c                        ___CTOR_LIST__ = .
+                0x0000028c        0x4 LONG 0x0 (((__CTOR_END__ - __CTOR_LIST__) / 0x4) - 0x2)
+ *(.ctors)
+                0x00000290        0x4 LONG 0x0
+                0x00000294                        __CTOR_END__ = .
+                0x00000294                        __DTOR_LIST__ = .
+                0x00000294                        ___DTOR_LIST__ = .
+                0x00000294        0x4 LONG 0x0 (((__DTOR_END__ - __DTOR_LIST__) / 0x4) - 0x2)
+ *(.dtors)
+                0x00000298        0x4 LONG 0x0
+                0x0000029c                        __DTOR_END__ = .
+ *(.rodata)
+ *(.gcc_except_table)
+                0x0000029c                        __INIT_SECTION__ = .
+                0x0000029c        0x4 LONG 0x4e560000
+ *(.init)
+                0x000002a0        0x2 SHORT 0x4e5e
+                0x000002a2        0x2 SHORT 0x4e75
+                0x000002a4                        __FINI_SECTION__ = .
+                0x000002a4        0x4 LONG 0x4e560000
+ *(.fini)
+                0x000002a8        0x2 SHORT 0x4e5e
+                0x000002aa        0x2 SHORT 0x4e75
+                0x000002ac                        _etext = .
+ *(.lit)
+
+.data           0x000002ac        0x4
+ *(.shdata)
+ *(.data)
+ .data          0x000002ac        0x4 driver.o
+                0x000002ac                r
+ .data          0x000002b0        0x0 mem.o
+ .data          0x000002b0        0x0 /tmp/ccL88KiD.o
+                0x000002b0                        _edata = .
+
+.bss            0x000002b0       0x10
+                0x000002b0                        . = ALIGN (0x4)
+                0x000002b0                        __bss_start = .
+ *(.shbss)
+ *(.bss)
+ .bss           0x000002b0        0x0 driver.o
+ .bss           0x000002b0       0x10 mem.o
+                0x000002b0                last_valid_address
+                0x000002b4                managed_memory_start
+                0x000002b8                has_initialized
+ .bss           0x000002c0        0x0 /tmp/ccL88KiD.o
+ *(COMMON)
+                0x000002c0                        __bss_end = .
+                0x000002c0                        _end = ALIGN (0x8)
+                0x000002c0                        __end = _end
+
+.stab
+ *(.stab)
+
+.stabstr
+ *(.stabstr)
+
+.eh_frame
+ *(.eh_frame)
+
+/DISCARD/
+ *(.note.gnu.build-id)
+OUTPUT(driver.elf elf32-m68k)
+
+.debug_info     0x00000000      0x441
+ .debug_info    0x00000000      0x164 driver.o
+ .debug_info    0x00000164      0x2b8 mem.o
+ .debug_info    0x0000041c       0x25 /tmp/ccL88KiD.o
+
+.debug_abbrev   0x00000000      0x2f8
+ .debug_abbrev  0x00000000       0xff driver.o
+ .debug_abbrev  0x000000ff      0x1e5 mem.o
+ .debug_abbrev  0x000002e4       0x14 /tmp/ccL88KiD.o
+
+.debug_loclists
+                0x00000000      0x22b
+ .debug_loclists
+                0x00000000       0x2a driver.o
+ .debug_loclists
+                0x0000002a      0x201 mem.o
+
+.debug_aranges  0x00000000       0x60
+ .debug_aranges
+                0x00000000       0x20 driver.o
+ .debug_aranges
+                0x00000020       0x20 mem.o
+ .debug_aranges
+                0x00000040       0x20 /tmp/ccL88KiD.o
+
+.debug_rnglists
+                0x00000000       0x65
+ .debug_rnglists
+                0x00000000       0x13 driver.o
+ .debug_rnglists
+                0x00000013       0x52 mem.o
+
+.debug_line     0x00000000      0x42b
+ .debug_line    0x00000000       0xfa driver.o
+ .debug_line    0x000000fa      0x2ce mem.o
+ .debug_line    0x000003c8       0x63 /tmp/ccL88KiD.o
+
+.debug_str      0x00000000      0x1de
+ .debug_str     0x00000000      0x1de driver.o
+                                0x142 (size before relaxing)
+ .debug_str     0x000001de      0x1d8 mem.o
+ .debug_str     0x000001de       0x45 /tmp/ccL88KiD.o
+
+.comment        0x00000000       0x1e
+ .comment       0x00000000       0x1e driver.o
+                                 0x1f (size before relaxing)
+ .comment       0x0000001e       0x1f mem.o
+
+.note.GNU-stack
+                0x00000000        0x0
+ .note.GNU-stack
+                0x00000000        0x0 driver.o
+ .note.GNU-stack
+                0x00000000        0x0 mem.o
+
+.debug_frame    0x00000000       0x98
+ .debug_frame   0x00000000       0x3c driver.o
+ .debug_frame   0x0000003c       0x5c mem.o
+
+.debug_line_str
+                0x00000000       0x39
+ .debug_line_str
+                0x00000000       0x39 /tmp/ccL88KiD.o

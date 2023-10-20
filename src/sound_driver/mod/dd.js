@@ -127,3 +127,41 @@ for([k, v] of Object.entries(tbo)) {
 }
 console.log(to_c.join(",\n"))
 }
+
+
+
+
+const amiga_volume = []
+for (let i=0;i < 64;i++) {
+    amiga_volume.push(20*Math.log10(i/64))
+}
+
+const scsp_volume_bit = [0.4, 0.8, 1.5, 3, 6, 12, 24, 48]
+const scsp_volume=[]
+const scsp_volume_map={}
+for (let i=0;i < 256;i++) {
+    v = 0;
+    for (let b=0; b < 8; b++) {
+        if ((1<<b) & i)
+            v+=scsp_volume_bit[b]
+    }
+
+    scsp_volume_map[i]=v
+}
+
+const scsp_map=[]
+amiga_volume.forEach((amiga_vol) => {
+    av = Math.abs(amiga_vol)
+    const idx = Object.entries(scsp_volume_map).reduce(([pk, pv], [ck, cv]) => {
+        //console.log([pk, pv], [ck, cv])
+        return Math.abs(cv - av) < Math.abs(pv - av) ? [ck, cv] : [pk, pv]});
+    scsp_map.push(idx)
+})
+console.log(amiga_volume,scsp_map)
+
+
+const _m = scsp_map.map(([s, a])=> {
+    return s
+})
+
+console.log(_m)

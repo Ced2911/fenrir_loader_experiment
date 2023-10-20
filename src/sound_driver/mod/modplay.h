@@ -16,7 +16,7 @@ typedef struct
 	unsigned short repeat_off;
 	unsigned short repeat_len;
 	unsigned char *data;
-}ModSample;
+} ModSample;
 
 typedef struct
 {
@@ -29,11 +29,11 @@ typedef struct
 	unsigned char id[4];
 	unsigned char pattern_num; // Number of patterns
 	unsigned char *pattern_data;
-	
-	unsigned char tempo_list[128]; // For 669
+
+	unsigned char tempo_list[128];	   // For 669
 	unsigned char break_loc_list[128]; // For 669
-	
-// Runtime data
+
+	// Runtime data
 	unsigned char song_pos;
 	unsigned char pat_pos; // 0-63
 	int divisions_sec;
@@ -41,23 +41,25 @@ typedef struct
 	unsigned char ticks_division;
 	unsigned short old_periods[8];
 	unsigned char old_samples[8];
+	unsigned char old_effect[8];
+	unsigned char volume[8];
 	unsigned char arpeggio_timer[8];
 	unsigned char arpeggio_sam[8];
 	unsigned char arpeggio_x[8];
 	unsigned char arpeggio_y[8];
-	
-	unsigned char cur_tempo; // For 699
-	unsigned short cur_ticks; // For 669, timing
-	
-	int fmt;
-}ModMusic;
 
-// Allocate a ModMusic structure and copy data to it from 
+	unsigned char cur_tempo;  // For 699
+	unsigned short cur_ticks; // For 669, timing
+
+	int fmt;
+} ModMusic;
+
+// Allocate a ModMusic structure and copy data to it from
 // data in memory containing a ProTracker module file
 
 ModMusic *MODLoad(void *d);
 
-// Play a tick of a music 
+// Play a tick of a music
 // This has to be called 60 / 50 times per second
 // t is a pointer to an int which contains how many times
 // the mod file has to be played
@@ -71,7 +73,7 @@ ModMusic *MODLoad(void *d);
 // from the beginning. If t == 0, MODPlay does nothing.
 // Set the variable pointed by t when you want to set the number of times again!
 
-void MODPlay(ModMusic *m,int *t);
+void MODPlay(ModMusic *m, int *t);
 
 // Upload the samples of the module music to Sound RAM
 // base_addr is the Sound RAM address to start from when uploading to Sound RAM
@@ -90,7 +92,9 @@ void MODSetBaseVoice(int base_voice);
 
 // Internal function...
 
-void MODPlay_func(ModMusic *m, int c, int s, int p, int vl, int vr);
+void MODPlay_func(ModMusic *m, int c, int s, int p, int loop, int vl, int vr);
+void MODPlay_SetVolume(ModMusic *m, int c, int vl, int vr);
+void MODPlay_SetSampleOffset(ModMusic *m, int c, int s, int offset);
 
 extern int modplay_int_cnt;
 

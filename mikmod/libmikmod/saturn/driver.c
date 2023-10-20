@@ -1,21 +1,24 @@
 #include <stdint.h>
+#include "../include/mikmod.h"
 
 extern uint32_t const _stack_start;
 extern uint32_t const _stack_end;
-extern uint32_t const _entry_point;
-void lead_function(void) // Link start to main
+
+volatile uint32_t *r = 0x1000;
+
+void _entry_point(void)
 {
-    // note that _start is the ASM label that equates to
-    // the lead function in this compiler. In a normal
-    // compiler, it would be "main".
-    __asm__("jmp _start");
+    malloc_init();
+
+    uint8_t *d = malloc(0x1000);
+
+    d += 0x1000;
+    *d = 1;
+
+    uint32_t *t = 0x2000;
+    *t = d;
 }
 
-void _start(void)
+__attribute__((externally_visible)) void intCB()
 {
-    int i = 0;
-    while (1)
-    {
-        i++;
-    }
 }

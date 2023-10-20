@@ -8,6 +8,8 @@
 #include "mod/modplay.h"
 #include "mkmod.h"
 #include "space_d.h"
+#include "unreal.h"
+#include "elysium.h"
 
 // a4
 // 440hz
@@ -193,7 +195,7 @@ void midi_init()
     while (1)
         ;
 }
-#else
+#elif 1
 
 ModMusic *mod;
 
@@ -256,8 +258,10 @@ void midi_init()
     }
 
     emu_printf("MODLoad\n");
-    mod = MODLoad(space_d);
+    mod = MODLoad(ELYSIUM);
+    // mod = MODLoad(space_d);
     // mod = MODLoad(mkmod);
+    // mod = MODLoad(unreal_pm);
     emu_printf("MODLoad ok\n");
     MODUploadSamples(mod, SCSP_RAM);
     emu_printf("MODUploadSamples ok\n");
@@ -266,4 +270,25 @@ void midi_init()
     while (1)
         ;
 }
+#else
+#define INCBIN_STYLE INCBIN_STYLE_SNAKE
+#define INCBIN_PREFIX
+#include "incbin.h"
+
+INCBIN(m68kdriver, "/workspaces/loader_yaul/mikmod/libmikmod/saturn/driver.bin");
+
+void midi_init()
+{
+
+    *(uint8_t *)(0x25B00400) = 0x02;
+
+    smpc_smc_sndoff_call();
+    smpc_smc_wait(false);
+
+    memcpy(SCSP_RAM, m68kdriver_data, m68kdriver_size);
+
+    smpc_smc_wait(false);
+    smpc_smc_sndon_call();
+}
+
 #endif

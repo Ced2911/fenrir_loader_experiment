@@ -62,7 +62,11 @@
         "mml_parser.h": "c",
         "modplay.h": "c",
         "mkmod.h": "c",
-        "space_d.h": "c"
+        "space_d.h": "c",
+        "midi-parser.h": "c",
+        "scsp.h": "c",
+        "mikmod.h": "c",
+        "mikmod_internals.h": "c"
     },
     "rust-analyzer.linkedProjects": [
         "${workspaceFolder}/tools/themes/Cargo.toml"
@@ -74,4 +78,5 @@
         "editor.defaultFormatter": "ms-python.autopep8"
     },
     "python.formatting.provider": "none",
+    "C_Cpp.default.compilerPath": "/usr/bin/m68k-linux-gnu-gcc-13",
 }

@@ -106,6 +106,7 @@ void MODPlay_669(ModMusic *m, int *t)
 	int cur_pat_pos = m->pat_pos;
 	unsigned char b[3];
 	int p, s, v, e, f, ti;
+	int loop = 0;
 
 	if (*t == 0)
 		return;
@@ -134,9 +135,9 @@ void MODPlay_669(ModMusic *m, int *t)
 		if (b[0] == 0xfe) // Only change volume
 		{
 			if (x & 1)
-				MODPlay_func(m, x, -1, 0, 0, v);
+				MODPlay_func(m, x, -1, 0, loop, 0, v);
 			else
-				MODPlay_func(m, x, -1, 0, v, 0);
+				MODPlay_func(m, x, -1, 0, loop, v, 0);
 
 			modplay_int_cnt = 0;
 			continue;
@@ -158,9 +159,9 @@ void MODPlay_669(ModMusic *m, int *t)
 		// channels = LRLRLRLR
 
 		if (x & 1)
-			MODPlay_func(m, x, s, modplay_c669_pitch_tbl[p - 12], 0, v);
+			MODPlay_func(m, x, s, modplay_c669_pitch_tbl[p - 12], loop, 0, v);
 		else
-			MODPlay_func(m, x, s, modplay_c669_pitch_tbl[p - 12], v, 0);
+			MODPlay_func(m, x, s, modplay_c669_pitch_tbl[p - 12], loop, v, 0);
 
 		modplay_int_cnt = 0;
 	}
